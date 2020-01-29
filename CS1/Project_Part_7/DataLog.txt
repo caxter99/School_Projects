@@ -1,0 +1,14 @@
+25372      stationary bike           35      68.2            318.2                moderate        Tue Nov 07 16:05:49 
+25679      stationary bike           35      68.2            318.2                moderate        Tue Nov 07 16:07:25 
+25983      stationary bike           35      68.2            318.2                moderate        Tue Nov 07 16:08:55 
+18350      treadmill                 35      68.2            397.7                moderate        Tue Nov 07 16:09:10 
+27318      stationary bike           35      68.2            318.2                moderate        Tue Nov 07 16:15:43 
+10170      treadmill                 35      68.2            397.7                moderate        Tue Nov 07 16:16:03 
+27736      stationary bike           35      68.2            318.2                moderate        Tue Nov 07 16:17:50 
+18525      hatha yoga                78      16.8            54.7                 light           Tue Nov 07 17:43:40 
+33500      stationary bike           37      66.8            329.6                moderate        Fri Nov 24 18:20:28 
+52900      stationary bike           59      75.9            597.2                heavy           Fri Nov 24 18:30:30 
+10320      stationary bike           44      34.5            202.7                moderate        Fri Nov 24 18:33:07 
+13000      stationary bike           43      34.5            198.1                light           Fri Nov 24 18:34:24 
+19766      stationary bike           39      443.6           2306.9               heavy           Fri Nov 24 18:34:38 
+96640      workout                   29      171.8           249.1                moderate        Fri Nov 24 18:34:48 

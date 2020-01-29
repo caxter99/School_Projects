@@ -1,0 +1,136 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <fstream>
+#include <ctime>
+#include <cmath>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+
+//  file outlay
+    string name;
+    int amount;
+    string compensation;
+    int tCnt = 0;
+
+    ifstream inputFile; //open file for reading
+    inputFile.open("summer2015.txt");
+
+    ofstream outputFile; //open file for writing
+    outputFile.open("summer2016.txt");
+
+    if (inputFile.fail())
+    {
+       cout << "The input file failed to open with code: " << inputFile.failbit;
+    }
+    else
+    {
+        unsigned seed = time(0);
+        srand(seed);
+        int percent = (rand() % (10));
+        cout << "This years increase is " << percent << " %" << endl << endl;
+
+// *************************************************************************************************************************************
+// WHILE NOT EOF does not always work. For example, if there are whitespace after the last item or a blank record, etc... In our case
+// we will not trigger eof by using (!inputFile.eof()). Here, to ensure that we do, we stream the first item, name, and combine that with
+// a call to eof. The fact that we streamed the item interacts in a way that triggers eofbit, if indeed eof is there. By simply testing
+// for eof, we may not have anything that influences eofbit, and therefore we won't trip the bit until it is too late...
+// *************************************************************************************************************************************
+        while(!(inputFile >> name).eof())
+        {
+
+            inputFile >> amount;
+            inputFile >> compensation;
+            int increase = ceil(amount * percent);
+            amount = amount + increase;
+            outputFile << name << " " << amount << " " << compensation << endl;
+
+        }
+
+    }
+
+    inputFile.close();
+    outputFile.close();
+
+
+//  reopening the new file as input
+
+    ifstream newInputFile; //open file for reading
+    newInputFile.open("summer2016.txt");
+
+    if (newInputFile.fail())
+    {
+       cout << "The new file failed to open with code: " << newInputFile.failbit;
+    }
+    else
+    {
+// *************************************************************************************************************************************
+// We see this method as one that you will find in may examples of processing a file. The construct intends to continue until
+// there are no longer items, i.e., eof. The problem is that we will read the last item twice for the reasons mentioned above.
+// *************************************************************************************************************************************
+        do
+        {
+            newInputFile >> name;
+            newInputFile >> amount;
+            newInputFile >> compensation;
+            if (newInputFile.fail() && !newInputFile.eof())
+            {
+                cout << "The new file failed with bad data: " << newInputFile.failbit;
+                // throw an exception (EXCEPTION HANDLER)
+            }
+            cout << setw(15) << name << "\'s new raise is " << amount << " paid in " << compensation << " per week" << endl;
+
+        }
+        while (!newInputFile.eof());
+
+// *************************************************************************************************************************************
+// This alternative method is where we will read the data or information first, then enter the popular "test for eof" construct. The key
+// is that we will process the eof BEFORE the test (the while condition), and not after. This could be a way to process many files sequentially.
+// *************************************************************************************************************************************
+/* ALT2
+        newInputFile >> name;
+        newInputFile >> amount;
+        newInputFile >> compensation;
+        while (!newInputFile.eof())
+        {
+            if (newInputFile.fail() && !newInputFile.eof())
+            {
+                cout << "The new file failed with bad data: " << newInputFile.failbit;
+                // throw an exception (EXCEPTION HANDLER)
+            }
+            cout << setw(15) << name << "\'s new raise is " << amount << " paid in " << compensation << " per week" << endl;
+            newInputFile >> name;
+            newInputFile >> amount;
+            newInputFile >> compensation;
+        }
+*/
+// *************************************************************************************************************************************
+// This next alternative is one we used above and it is the method that streams the first item, name. In this manner, by streaming
+// the next input item, we combine the action that will update the eofbit and simultaneously ask if we triggered eof.
+// It worked for this particular case where the file contains an extra space at the end of the file.
+// *************************************************************************************************************************************
+/*  ALT 3
+        while (!(newInputFile >> name).eof())
+        {
+
+            if (newInputFile.fail() && !newInputFile.eof())
+            {
+                cout << "The new file failed with bad data: " << newInputFile.failbit;
+                // throw an exception (EXCEPTION HANDLER)
+            }
+            newInputFile >> amount;
+            newInputFile >> compensation;
+            cout << setw(15) << name << "\'s new raise is " << amount << " paid in " << compensation << " per week" << endl;
+        }
+
+*/
+
+    }
+
+    // Close the file.
+    newInputFile.close();
+    return 0;
+}

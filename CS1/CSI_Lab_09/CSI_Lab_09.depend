@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1512062856 source:d:\school_fd\code_blocks\csi_lab_09\main.cpp
+	<iostream>
+	<iomanip>
+	"calcAverage.h"
+	"getDaysOut.h"
+	"getEmployees.h"
+
+1512062656 d:\school_fd\code_blocks\csi_lab_09\calcaverage.h
+
+1512062794 d:\school_fd\code_blocks\csi_lab_09\getdaysout.h
+
+1512062842 d:\school_fd\code_blocks\csi_lab_09\getemployees.h
+

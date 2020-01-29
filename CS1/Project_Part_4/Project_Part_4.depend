@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1508012174 source:c:\users\user\desktop\visual_c++_programs\project_part_4\main.cpp
+	<iostream>
+	<limits>
+	<cstdlib>
+	<ctime>
+	<iomanip>
+

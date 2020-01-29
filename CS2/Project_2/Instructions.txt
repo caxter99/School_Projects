@@ -1,0 +1,51 @@
+
+Project 4: Tower of Hanoi
+----------------------------
+
+In this assignment, you will implement tower of hanoi by using learned static stack and algorithms.
+
+
+## Getting started
+
+Investigate the contents of files. You should
+have the following files:
+
+- `CMakeLists.txt` --- The build system for your homework. Read this file
+   carefully.
+- `mystack.h` --- The definition of your static class template 
+   and its associated functions will go here. You need to finish all functions 
+   that required for the project.
+- `towers.cpp` and `towers.h` --- The definition of your tower of hanoi class
+   and its associated functions will go here. You need to finish all functions 
+   that required for the project.
+- `towerofhanoi.cpp` --- main() function goes into this file. It starts the tower and
+   run the tower. You don't need to modify this file.
+- `results.txt` --- The result after your program runs.
+   Your output must match this file
+
+Make a directory called towerofhanoi, and move all above files into the directory.
+You can try building the project, but it won't work.
+
+## project requirements
+
+1. Some instruction details are provided in files, you must read these instructions 
+   before writing your code.
+2. You must finish all functions that classes require. 
+3. Your results must match to the results provided
+## end of project requirements
+
+
+
+
+The total is out of 100 points.
+- 0  No work is done.
+- 45 You submitted something shows you put minimal effort into doing the work
+- 55 You submitted code that does not compile
+- 75 You submitted code that compiles, but crashes or has errors when executed
+- 90 You submitted a program that compiles and runs with no errors
+- 100 You've gone the extra mile (see above), and your source code is well
+  documented and consistently styled
+   
+   
+   
+   

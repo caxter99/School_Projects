@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1508207222 source:d:\school_fd\code_blocks\assignment_6a\main.cpp
+	<iostream>
+	<fstream>
+	<cstdlib>
+

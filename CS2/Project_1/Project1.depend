@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1520702576 source:d:\school_fd\code_blocks\cs2\project1\main.cpp
+	<string>
+	<iostream>
+	<iomanip>
+	<unistd.h>
+	"rational.hpp"
+
+1520701978 d:\school_fd\code_blocks\cs2\project1\include\rational.hpp
+	<cstdlib>
+	<iosfwd>
+	<iostream>
+	<stdlib.h>
+
+1520911412 source:d:\school_fd\code_blocks\cs2\project1\src\rational.cpp
+	"rational.hpp"
+
+1520022408 source:e:\school_fd\code_blocks\cs2\project1\main.cpp
+	<string>
+	<iostream>
+	<iomanip>
+	<unistd.h>
+	"rational.hpp"
+
+1520386260 e:\school_fd\code_blocks\cs2\project1\include\rational.hpp
+	<cstdlib>
+	<iosfwd>
+	<iostream>
+	<stdlib.h>
+
+1520389108 source:e:\school_fd\code_blocks\cs2\project1\src\rational.cpp
+	"rational.hpp"
+

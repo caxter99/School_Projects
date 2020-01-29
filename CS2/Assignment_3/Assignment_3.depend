@@ -1,0 +1,75 @@
+# depslib dependency file v1.0
+1518481380 source:d:\school_fd\code_blocks\cs2\assignment_3\main.cpp
+	<iostream>
+	<stdexcept>
+	"Rectangle.hpp"
+
+1517684258 d:\school_fd\code_blocks\cs2\assignment_3\rectangle.hpp
+	"Point.hpp"
+
+1517682100 d:\school_fd\code_blocks\cs2\assignment_3\point.hpp
+
+1517682186 source:d:\school_fd\code_blocks\cs2\assignment_3\src\butt.cpp
+
+1517684476 d:\school_fd\code_blocks\cs2\assignment_3\point.cpp
+	"Point.hpp"
+
+1517684476 d:\school_fd\code_blocks\cs2\assignment_3\rectangle.cpp
+	"Rectangle.hpp"
+	<stdlib.h>
+
+1517682186 source:e:\school_fd\code_blocks\cs2\assignment_3\src\butt.cpp
+
+1518474518 source:e:\school_fd\code_blocks\cs2\assignment_3\main.cpp
+	<iostream>
+	<stdexcept>
+	"Rectangle.hpp"
+
+1518472288 e:\school_fd\code_blocks\cs2\assignment_3\rectangle.hpp
+	"Point.hpp"
+
+1517682100 e:\school_fd\code_blocks\cs2\assignment_3\point.hpp
+
+1518473228 e:\school_fd\code_blocks\cs2\assignment_3\rectangle.cpp
+	"Rectangle.hpp"
+	"Point.cpp"
+	<math.h>
+
+1518122044 e:\school_fd\code_blocks\cs2\assignment_3\point.cpp
+	"Point.hpp"
+
+1518122044 source:e:\school_fd\code_blocks\cs2\assignment_3\point.cpp
+	"Point.hpp"
+
+1518473228 source:e:\school_fd\code_blocks\cs2\assignment_3\rectangle.cpp
+	"Rectangle.hpp"
+	"Point.cpp"
+	<math.h>
+
+1518474532 e:\school_fd\code_blocks\cs2\assignment_3\include\rectangle.hpp
+	"Point.hpp"
+
+1517682100 e:\school_fd\code_blocks\cs2\assignment_3\include\point.hpp
+
+1518122044 source:e:\school_fd\code_blocks\cs2\assignment_3\src\point.cpp
+	"Point.hpp"
+
+1518474392 source:e:\school_fd\code_blocks\cs2\assignment_3\src\rectangle.cpp
+	"Rectangle.hpp"
+	<math.h>
+
+1518122044 e:\school_fd\code_blocks\cs2\assignment_3\src\point.cpp
+	"Point.hpp"
+
+1518708518 d:\school_fd\code_blocks\cs2\assignment_3\include\rectangle.hpp
+	"Point.hpp"
+
+1518708518 d:\school_fd\code_blocks\cs2\assignment_3\include\point.hpp
+
+1518708518 source:d:\school_fd\code_blocks\cs2\assignment_3\src\point.cpp
+	"Point.hpp"
+
+1518708518 source:d:\school_fd\code_blocks\cs2\assignment_3\src\rectangle.cpp
+	"Rectangle.hpp"
+	<math.h>
+

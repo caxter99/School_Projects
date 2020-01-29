@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1521228768 source:d:\school_fd\code_blocks\cs2\assignment_7\main.cpp
+	<iostream>
+	<iomanip>
+	<fstream>
+	<map>
+	<vector>
+

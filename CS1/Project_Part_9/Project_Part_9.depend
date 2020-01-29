@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1512194122 source:d:\school_fd\code_blocks\project_part_9\main.cpp
+	<iostream>
+	<limits>
+	<cstdlib>
+	<ctime>
+	<iomanip>
+	<fstream>
+

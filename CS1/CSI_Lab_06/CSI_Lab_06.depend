@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1509034362 source:e:\school_fd\code_blocks\csi_lab_06\main.cpp
+	<iostream>
+	<iomanip>
+	<cassert>
+

@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1506011964 source:e:\school_fd\code_blocks\csi_lab_03\main.cpp
+	<iostream>
+	<iomanip>
+	<limits>
+

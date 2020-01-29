@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1520647846 source:g:\school_fd\code_blocks\cs2\assignment_6\main.cpp
+	<iostream>
+	"Stack.hpp"
+
+1520648346 g:\school_fd\code_blocks\cs2\assignment_6\include\stack.hpp
+	"NumStack.hpp"
+
+1520643884 g:\school_fd\code_blocks\cs2\assignment_6\include\numstack.hpp
+
+1520644542 source:g:\school_fd\code_blocks\cs2\assignment_6\src\numstack.cpp
+	<iostream>
+	"NumStack.hpp"
+
+1520647402 source:g:\school_fd\code_blocks\cs2\assignment_6\src\stack.cpp
+	"stack.hpp"
+
+1520905380 source:d:\school_fd\code_blocks\cs2\assignment_6\main.cpp
+	<iostream>
+	"Stack.hpp"
+	"NumStack.hpp"
+
+1520905316 d:\school_fd\code_blocks\cs2\assignment_6\include\stack.hpp
+	"NumStack.hpp"
+
+1520904134 d:\school_fd\code_blocks\cs2\assignment_6\include\numstack.hpp
+	<iostream>
+
+1520904054 source:d:\school_fd\code_blocks\cs2\assignment_6\src\numstack.cpp
+	"NumStack.hpp"
+
+1520903964 source:d:\school_fd\code_blocks\cs2\assignment_6\src\stack.cpp
+	"stack.hpp"
+

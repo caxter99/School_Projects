@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1518813720 source:d:\school_fd\code_blocks\cs2\assignment_4\complex.cpp
+	<iostream>
+	<sstream>
+	"Complex.hpp"
+
+1518813846 d:\school_fd\code_blocks\cs2\assignment_4\complex.hpp
+	<string>
+
+1518813720 source:d:\school_fd\code_blocks\cs2\assignment_4\main.cpp
+	<iostream>
+	<string>
+	"Complex.hpp"
+
+1518567820 source:e:\school_fd\code_blocks\cs2\assignment_4\complex.cpp
+	<iostream>
+	<sstream>
+	"Complex.hpp"
+	<iostream>
+	<sstream>
+	"Complex.hpp"
+
+1518567104 e:\school_fd\code_blocks\cs2\assignment_4\complex.hpp
+	<string>
+
+1518122686 source:e:\school_fd\code_blocks\cs2\assignment_4\main.cpp
+	<iostream>
+	<string>
+	"Complex.hpp"
+

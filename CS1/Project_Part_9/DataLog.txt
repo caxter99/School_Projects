@@ -1,0 +1,26 @@
+17751      stationary bike           45      68.2            409.1                moderate        Sat Dec 02 00:47:13 
+19384      stationary bike           33      76.4            336.0                moderate        Sat Dec 02 00:55:29 
+16319      workout                   26      34.5            44.9                 light           Sat Dec 02 11:48:51 
+20959      stationary bike           44      2.3             13.3                 light           Sat Dec 02 12:12:50 
+21181      hatha yoga                69      30.9            88.9                 light           Sat Dec 02 12:13:45 
+21567      treadmill                 43      85.0            609.2                heavy           Sat Dec 02 12:15:36 
+21720      treadmill                 43      85.0            609.2                heavy           Sat Dec 02 12:16:25 
+24272      treadmill                 36      34.5            207.3                moderate        Sat Dec 02 12:16:41 
+23691      stationary bike           45      29.5            177.3                light           Sat Dec 02 12:16:58 
+71560      stationary bike           35      79.5            371.2                moderate        Sat Dec 02 12:17:32 
+23588      workout                   20      86.4            86.4                 light           Sat Dec 02 12:23:03 
+13662      treadmill                 46      40.9            313.6                moderate        Sat Dec 02 12:24:16 
+28694      treadmill                 55      39.5            362.5                moderate        Sat Dec 02 12:24:25 
+23804      treadmill                 43      863.6           6189.4               heavy           Sat Dec 02 12:27:16 
+47600      treadmill                 55      34.5            316.7                moderate        Sat Dec 02 12:27:23 
+24248      treadmill                 55      89.5            820.8                heavy           Sat Dec 02 12:29:17 
+20467      treadmill                 33      802.3           4412.5               heavy           Sat Dec 02 12:29:27 
+27837      stationary bike           45      307.3           1843.6               heavy           Mon Dec 04 17:45:23 
+72240      stationary bike           35      39.5            184.5                light           Mon Dec 04 17:45:32 
+11886      treadmill                 34      70.9            401.8                moderate        Mon Dec 04 17:45:37 
+21127      treadmill                 33      35.5            195.0                light           Mon Dec 04 17:45:46 
+24575      hatha yoga                85      7.3             25.8                 light           Mon Dec 04 17:45:54 
+29101      stationary bike           45      80.0            480.0                moderate        Mon Dec 04 17:51:37 
+53220      stationary bike           35      34.5            161.2                light           Mon Dec 04 17:51:52 
+11272      treadmill                 30      399448.6        1997243.1            heavy           Mon Dec 04 17:52:18 
+27518      hatha yoga                90      35.9            134.7                light           Mon Dec 04 17:52:25 

@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1522965442 source:d:\school_fd\code_blocks\cs2\project_2\towerofhanoi.cpp
+	<iostream>
+	"towers.h"
+
+1521509862 d:\school_fd\code_blocks\cs2\project_2\towers.h
+	"mystack.h"
+
+1522964454 d:\school_fd\code_blocks\cs2\project_2\mystack.h
+	<iostream>
+
+1522965398 source:d:\school_fd\code_blocks\cs2\project_2\towers.cpp
+	<iostream>
+	"towers.h"
+	"mystack.h"
+
+1521056410 source:d:\school_fd\code_blocks\cs2\project_2\main.cpp
+
