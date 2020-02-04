@@ -37,6 +37,11 @@ class HelpfulFunctions:
         # Returning the list
         return newList
     
+    # Clears the screen by printing 100 new lines
+    def clearScreen(self):
+        for x in range(100):
+            print("")
+    
     # Returns true if it's a valid list in our case
     def isValidList(self, theList):
         # The list doesn't contain exactly 9 elements
@@ -123,32 +128,42 @@ class GameState:
         # If the list was not pregenerated or pregenerated incorrectly,
         # make a new list
         if (not self.helper.isValidList(initialList)):
-            # Make itself
-            print("not a valid list")
+            # Make a new list
             self.state = self.helper.createRandomList()
         # Otherwise, the list is good to go
         else:
             # The list has laready been made
-            print("a valid list")
             self.state = initialList
-            
+    
+    # Displays the state
     def displayState(self):
+        # This is to keep track of what element the list is on
         count = 0
+        
+        # Looping through and grabbing all of the values in the list
         for x in self.state:
             print(x, end=" ")
+            # Prints a newline every 3 outputs, to keep in touch with the game
             if ((count + 1) % 3 == 0):
                 print("")
-            ++count
+            count = count + 1
+        
+        # Just so the next thing that gets printed isn't on the same line
+        print("")
 
 #def n_puzzle():
 def s():
+    # Initializing the help functions
+    helper = HelpfulFunctions()
+    
     # Initializing the start list
     startStateList = []
     
     # Gathering the numbers the user wants to start their puzzle
+    #
     # This is telling the user what to expect
     print("Enter numbers for the 8 puzzle game (one at a time). This will be the starting state.")
-    print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a puzzle will be generated for you.")
+    print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a starting state will be generated for you.")
     # Looping through to gather their input
     for x in range(9):
         # Displaying what number they're on
@@ -163,4 +178,52 @@ def s():
     
     # Creating the current (initial) state
     currentState = GameState(startStateList)
+    
+    # Making sure the formatting stays nice and neat
+    print("")
+    
+    # Displaying the initial state
+    print("Initial State:")
     currentState.displayState()
+    
+    # Initializing the start list
+    goalStateList = []
+    
+    # Gathering the numbers the user wants to start their puzzle
+    #
+    # This is telling the user what to expect
+    print("Enter numbers for the 8 puzzle game (one at a time). This will be the goal state.")
+    print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a goal will be generated for you.")
+    # Looping through to gather their input
+    for x in range(9):
+        # Displaying what number they're on
+        inputStr = "Number " + str(x + 1) + ": "
+        val = input(inputStr)
+        # They entered something other than a "-1", append it and keep going
+        if (val != "-1"):
+            goalStateList.append(val)
+        # They entered a "-1", so quit
+        else:
+            break;
+            
+    # Creating the end (goal) state
+    goalState = GameState(goalStateList)
+    
+    # Making sure the formatting stays nice and neat
+    helper.clearScreen()
+    
+    # Displaying the initial state
+    print("Initial State:")
+    currentState.displayState()
+    
+    # Displaying the initial state
+    print("Goal State:")
+    goalState.displayState()
+    
+    
+    
+    
+    
+    
+    
+    
