@@ -151,74 +151,98 @@ class GameState:
         # Just so the next thing that gets printed isn't on the same line
         print("")
 
-#def n_puzzle():
-def s():
-    # Initializing the help functions
+# The Game class
+class Game:
+    
+    # Initializing the variables needed for the game
     helper = HelpfulFunctions()
+    previousState = GameState()
+    currentState = GameState()
+    goalState = GameState()
     
-    # Initializing the start list
-    startStateList = []
+    # Constructor
+    def __init__(self):   
+        # Set up the puzzle game
+        self.setUp()
+        
+        # Run the puzzle game
+        self.playGame()
+        
+    # The set up for the game
+    def setUp(self):
+        # Initializing the start list
+        startStateList = []
     
-    # Gathering the numbers the user wants to start their puzzle
-    #
-    # This is telling the user what to expect
-    print("Enter numbers for the 8 puzzle game (one at a time). This will be the starting state.")
-    print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a starting state will be generated for you.")
-    # Looping through to gather their input
-    for x in range(9):
-        # Displaying what number they're on
-        inputStr = "Number " + str(x + 1) + ": "
-        val = input(inputStr)
-        # They entered something other than a "-1", append it and keep going
-        if (val != "-1"):
-            startStateList.append(val)
-        # They entered a "-1", so quit
-        else:
-            break;
+        # Gathering the numbers the user wants to start their puzzle
+        #
+        # This is telling the user what to expect
+        print("Enter numbers for the 8 puzzle game (one at a time). This will be the starting state.")
+        print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a starting state will be generated for you.")
+        # Looping through to gather their input
+        for x in range(9):
+            # Displaying what number they're on
+            inputStr = "Number " + str(x + 1) + ": "
+            val = input(inputStr)
+            # They entered something other than a "-1", append it and keep going
+            if (val != "-1"):
+                startStateList.append(val)
+                # They entered a "-1", so quit
+            else:
+                break;
     
-    # Creating the current (initial) state
-    currentState = GameState(startStateList)
+        # Creating the current (initial) state
+        self.currentState = GameState(startStateList)
     
-    # Making sure the formatting stays nice and neat
-    print("")
+        # Making sure the formatting stays nice and neat
+        print("")
     
-    # Displaying the initial state
-    print("Initial State:")
-    currentState.displayState()
+        # Displaying the initial state
+        print("Initial State:")
+        self.currentState.displayState()
     
-    # Initializing the start list
-    goalStateList = []
+        # Initializing the start list
+        goalStateList = []
     
-    # Gathering the numbers the user wants to start their puzzle
-    #
-    # This is telling the user what to expect
-    print("Enter numbers for the 8 puzzle game (one at a time). This will be the goal state.")
-    print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a goal will be generated for you.")
-    # Looping through to gather their input
-    for x in range(9):
-        # Displaying what number they're on
-        inputStr = "Number " + str(x + 1) + ": "
-        val = input(inputStr)
-        # They entered something other than a "-1", append it and keep going
-        if (val != "-1"):
-            goalStateList.append(val)
-        # They entered a "-1", so quit
-        else:
-            break;
+        # Gathering the numbers the user wants to start their puzzle
+        #
+        # This is telling the user what to expect
+        print("Enter numbers for the 8 puzzle game (one at a time). This will be the goal state.")
+        print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a goal will be generated for you.")
+        # Looping through to gather their input
+        for x in range(9):
+            # Displaying what number they're on
+            inputStr = "Number " + str(x + 1) + ": "
+            val = input(inputStr)
+            # They entered something other than a "-1", append it and keep going
+            if (val != "-1"):
+                goalStateList.append(val)
+                # They entered a "-1", so quit
+            else:
+                break;
             
-    # Creating the end (goal) state
-    goalState = GameState(goalStateList)
+        # Creating the end (goal) state
+        self.goalState = GameState(goalStateList)
     
-    # Making sure the formatting stays nice and neat
-    helper.clearScreen()
+        # Making sure the formatting stays nice and neat
+        self.helper.clearScreen()
     
-    # Displaying the initial state
-    print("Initial State:")
-    currentState.displayState()
+        # Displaying the initial state
+        print("Initial State:")
+        self.currentState.displayState()
     
-    # Displaying the initial state
-    print("Goal State:")
-    goalState.displayState()
+        # Displaying the initial state
+        print("Goal State:")
+        self.goalState.displayState()
+        
+    def playGame(self):
+        # to do
+        print("Play the game!")
+
+#def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
+def s():
+    # Creating and playing the game
+    game = Game()
+    
     
     
     
