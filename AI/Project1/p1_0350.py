@@ -13,6 +13,10 @@ Project 1 for AI
 
 Main class:
 """
+# Global (const) variables
+NUM_OF_X_GRID = 3
+NUM_OF_Y_GRID = 3
+
 # Just a bunch of helpful functions
 from random import randint # just for this class
 class HelpfulFunctions:
@@ -31,7 +35,7 @@ class HelpfulFunctions:
         
         # Creating the new, random list
         newList= []
-        for x in range(9):
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             newList.append((startingVal + (incrementVal * x)) % 9)
         
         # Returning the list
@@ -45,7 +49,7 @@ class HelpfulFunctions:
     # Returns true if it's a valid list in our case
     def isValidList(self, theList):
         # The list doesn't contain exactly 9 elements
-        if (len(theList) != 9):
+        if (len(theList) != NUM_OF_X_GRID * NUM_OF_Y_GRID):
             return False
         
         # Making sure the list has the correct values in it
@@ -63,9 +67,9 @@ class HelpfulFunctions:
                 return False
         
         # Making sure one of each value is included in the list
-        for x in range(9):
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             found = False
-            for y in range(9):
+            for y in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
                 if (theList[y] == str(x)):
                     found = True
             if (not found):
@@ -117,6 +121,7 @@ class HelpfulFunctions:
 
 
 # Game State class
+import math
 class GameState:
     
     # Just some helper functions
@@ -144,18 +149,80 @@ class GameState:
         for x in self.state:
             print(x, end=" ")
             # Prints a newline every 3 outputs, to keep in touch with the game
-            if ((count + 1) % 3 == 0):
+            if ((count + 1) % NUM_OF_Y_GRID == 0):
                 print("")
             count = count + 1
         
         # Just so the next thing that gets printed isn't on the same line
         print("")
+        
+    # Returns the list of the state
+    def getState(self):
+        return self.state
+    
+    # Compares this state to a different state. Returns true if they're the
+    # same, false otherwise
+    def compare(self, otherState):
+        # Going through and comparing each space to each other
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            # If any of them do not match, they are not equal
+            if (self.state[x] != otherState.getState()[x]):
+                return False
+        
+        # If they all match, they're equal
+        return True
+    
+    # Returns the number of steps to the goal puzzle, the Manhatten way.
+    # This assumes that the object executing this function is the current
+    # state
+    def calcManhattenSteps(self, goalState):
+        # Initially, the total distance is 0
+        totalDistance = 0
+        
+        # Looping through each point, calculating its distance
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Getting the number at the point in the current list
+                numAtCurrentPoint = self.state[x1 + NUM_OF_Y_GRID * y1]
+                
+                # Looping through the goal state to find out where that
+                # same number is in the goal state
+                for x2 in range(NUM_OF_X_GRID):
+                    for y2 in range(NUM_OF_Y_GRID):
+                        # Getting the number at the point in the goalt state's list
+                        numAtGoalPoint = goalState.getState()[x2 + NUM_OF_Y_GRID * y2]
+                        
+                        # If they're the same (and not 0), calculate and add the distance
+                        if (numAtCurrentPoint != 0 and numAtCurrentPoint == numAtGoalPoint):
+                            # x distance
+                            totalDistance = totalDistance + math.sqrt(math.pow(x1 - x2, 2))
+                            
+                            # y dstance
+                            totalDistance = totalDistance + math.sqrt(math.pow(y1 - y2, 2))
+        
+        # Return the total distance
+        return totalDistance
+                
 
-# The Game class
+# Move Calculator class
+class MoveCalc:
+    
+    # Constructor
+    def __init__(self):
+        # Nothing now
+        i = 0
+    
+    # Calculates the best move and returns the new state
+    def makeBestMove(self, currentState, goalState):
+        # to do
+        i = 0
+
+# Game class
 class Game:
     
     # Initializing the variables needed for the game
     helper = HelpfulFunctions()
+    mover = MoveCalc()
     previousState = GameState()
     currentState = GameState()
     goalState = GameState()
@@ -164,9 +231,6 @@ class Game:
     def __init__(self):   
         # Set up the puzzle game
         self.setUp()
-        
-        # Run the puzzle game
-        self.playGame()
         
     # The set up for the game
     def setUp(self):
@@ -179,14 +243,14 @@ class Game:
         print("Enter numbers for the 8 puzzle game (one at a time). This will be the starting state.")
         print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a starting state will be generated for you.")
         # Looping through to gather their input
-        for x in range(9):
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             # Displaying what number they're on
             inputStr = "Number " + str(x + 1) + ": "
             val = input(inputStr)
             # They entered something other than a "-1", append it and keep going
             if (val != "-1"):
                 startStateList.append(val)
-                # They entered a "-1", so quit
+            # They entered a "-1", so quit
             else:
                 break;
     
@@ -209,14 +273,14 @@ class Game:
         print("Enter numbers for the 8 puzzle game (one at a time). This will be the goal state.")
         print("You may enter the numbers 0-8 (each once) to make your own or enter -1 and a goal will be generated for you.")
         # Looping through to gather their input
-        for x in range(9):
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             # Displaying what number they're on
             inputStr = "Number " + str(x + 1) + ": "
             val = input(inputStr)
             # They entered something other than a "-1", append it and keep going
             if (val != "-1"):
                 goalStateList.append(val)
-                # They entered a "-1", so quit
+            # They entered a "-1", so quit
             else:
                 break;
             
@@ -235,14 +299,19 @@ class Game:
         self.goalState.displayState()
         
     def playGame(self):
-        # to do
+        # Test line to know where the code is at
         print("Play the game!")
+        print(self.currentState.calcManhattenSteps(self.goalState))
+        
+        # This will loop while the current and goal state do not match
+        #while(not self.currentState.compare(self.goalState)):
+            # this is the game here
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
 def s():
     # Creating and playing the game
     game = Game()
-    
+    game.playGame()
     
     
     
