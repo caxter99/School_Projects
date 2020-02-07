@@ -36,7 +36,10 @@ class HelpfulFunctions:
         # Creating the new, random list
         newList= []
         for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
-            newList.append((startingVal + (incrementVal * x)) % 9)
+            # They must be entered as strings, because if the user entered the
+            # other grid, the other grid will be all strings. The rest of the
+            # program assumes these values will be strings
+            newList.append(str((startingVal + (incrementVal * x)) % 9))
         
         # Returning the list
         return newList
@@ -80,41 +83,11 @@ class HelpfulFunctions:
     
     # Returns true if the string contains a digit that's allowed (0-8)
     def isThisStringAValidDigit(self, string):
-        # 0
-        if (string == "0"):
-            return True
-    
-        # 1
-        if (string == "1"):
-            return True
-    
-        # 2
-        if (string == "2"):
-            return True
-        
-        # 3
-        if (string == "3"):
-            return True
-    
-        # 4
-        if (string == "4"):
-            return True
-    
-        # 5
-        if (string == "5"):
-            return True
-    
-        # 6
-        if (string == "6"):
-            return True
-    
-        # 7
-        if (string == "7"):
-            return True
-    
-        # 8
-        if (string == "8"):
-            return True
+        # Going through all of the possible numbers
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            # If the string matches that of an appropriate number, return true
+            if (string == str(x)):
+                return True
     
         # Not a correct digit then
         return False
@@ -124,9 +97,11 @@ class HelpfulFunctions:
 import math
 class GameState:
     
-    # Just some helper functions
+    # Just some helper functions and variables
     helper = HelpfulFunctions()
     state = []
+    totalManhattanSteps = 0
+    totalHammingSteps = 0
     
     # Constructor, can take nothing or a pre-generated list
     def __init__(self, initialList = []):
@@ -185,20 +160,22 @@ class GameState:
                 # Getting the number at the point in the current list
                 numAtCurrentPoint = self.state[x1 + NUM_OF_Y_GRID * y1]
                 
-                # Looping through the goal state to find out where that
-                # same number is in the goal state
-                for x2 in range(NUM_OF_X_GRID):
-                    for y2 in range(NUM_OF_Y_GRID):
-                        # Getting the number at the point in the goalt state's list
-                        numAtGoalPoint = goalState.getState()[x2 + NUM_OF_Y_GRID * y2]
-                        
-                        # If they're the same (and not 0), calculate and add the distance
-                        if (numAtCurrentPoint != 0 and numAtCurrentPoint == numAtGoalPoint):
-                            # x distance
-                            totalDistance = totalDistance + math.sqrt(math.pow(x1 - x2, 2))
-                            
-                            # y dstance
-                            totalDistance = totalDistance + math.sqrt(math.pow(y1 - y2, 2))
+                # Making sure the number 0 isn't counted
+                if (not (numAtCurrentPoint == 0)):
+                     # Looping through the goal state to find out where that
+                     # same number is in the goal state
+                     for x2 in range(NUM_OF_X_GRID):
+                         for y2 in range(NUM_OF_Y_GRID):
+                             # Getting the number at the point in the goalt state's list
+                             numAtGoalPoint = goalState.getState()[x2 + NUM_OF_Y_GRID * y2]
+                             
+                             # If they're the same (and not 0), calculate and add the distance
+                             if (numAtCurrentPoint == numAtGoalPoint):
+                                 # x distance
+                                 totalDistance = totalDistance + math.sqrt(math.pow(x1 - x2, 2))
+                                 
+                                 # y dstance
+                                 totalDistance = totalDistance + math.sqrt(math.pow(y1 - y2, 2))
         
         # Return the total distance
         return totalDistance
