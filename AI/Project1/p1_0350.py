@@ -14,8 +14,11 @@ Project 1 for AI
 Main class:
 """
 # Global (const) variables
-NUM_OF_X_GRID = 3
-NUM_OF_Y_GRID = 3
+NUM_OF_X_GRID = 3 # The width of the grid
+NUM_OF_Y_GRID = 3 # The height of the grid
+NULL = "null" # The null value
+MAX_STEPS = float('inf') # This is used for states that have no way of finishing (or other error methods for
+                # checking steps remaining)
 
 # Just a bunch of helpful functions
 from random import randint # just for this class
@@ -91,6 +94,53 @@ class HelpfulFunctions:
     
         # Not a correct digit then
         return False
+    
+    # Returns true if the position is on the left of the grid
+    def posIsOnLeft(self, position):
+        for x in range(NUM_OF_X_GRID):
+            if (str(x * NUM_OF_X_GRID) == str(position)):
+                return True
+        
+        # Not on the left
+        return False
+    
+    # Returns true if the position is on the right of the grid
+    def posIsOnRight(self, position):
+        for x in range(NUM_OF_X_GRID):
+            if (str((x * NUM_OF_X_GRID) + (NUM_OF_X_GRID - 1)) == str(position)):
+                return True
+        
+        # Not on the right
+        return False
+    
+    # Returns true if the position is on the top of the grid
+    def posIsOnTop(self, position):
+        for x in range(NUM_OF_X_GRID):
+            if (str(x) == str(position)):
+                return True
+        
+        # Not on the top
+        return False
+    
+    # Returns true if the position is on the top of the grid
+    def posIsOnBottom(self, position):
+        for x in range(NUM_OF_X_GRID):
+            if (str((NUM_OF_X_GRID * NUM_OF_Y_GRID) - NUM_OF_X_GRID + x) == str(position)):
+                return True
+        
+        # Not on the top
+        return False
+    
+    # Creates a copy of the list sent in
+    def createDuplicateList(self, theList):
+        # Creating the new list
+        newList = []
+        
+        # Looping through and copying the list
+        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            newList.append(theList[x])
+        
+        return newList
 
 
 # Game State class
@@ -128,9 +178,112 @@ class GameState:
                 print("")
             count = count + 1
         
-        # Just so the next thing that gets printed isn't on the same line
-        print("")
+    # Resets the list to a new list (can also be used as a reset)
+    def setList(self, newList = []):
+        # If the list was not pregenerated or pregenerated incorrectly,
+        # make a new list
+        if (not self.helper.isValidList(newList)):
+            self.state = self.helper.createRandomList()
+        # The list is valid, set to the game state's list
+        else:
+            self.state = newList
         
+    # Creates a list for a state that would look like as though a move to the left was made
+    def moveLeft(self):
+        # Creating the left state
+        leftStateList = NULL
+        
+        # Looping through to find the 0 in the puzzle
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Just in case we need this position several times later
+                position = x1 + NUM_OF_Y_GRID * y1
+                
+                # The 0 has been found
+                if (self.state[position] == "0"):
+                    # If the 0 is not on the left of the grid
+                    if (not self.helper.posIsOnLeft(position)):
+                        # Copying the old list to the new one
+                        leftStateList = self.helper.createDuplicateList(self.state)
+                        
+                        # Switching the positions of the 0 and the spot to the left
+                        leftStateList[position - 1], leftStateList[position] = leftStateList[position], leftStateList[position - 1]
+                        
+        # Returning the left state (as null or a new state)
+        return leftStateList
+    
+    # Creates a list for a state that would look like as though a move to the right was made
+    def moveRight(self):
+        # Creating the right state
+        rightStateList = NULL
+        
+        # Looping through to find the 0 in the puzzle
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Just in case we need this position several times later
+                position = x1 + NUM_OF_Y_GRID * y1
+                
+                # The 0 has been found
+                if (self.state[position] == "0"):
+                    # If the 0 is not on the left of the grid
+                    if (not self.helper.posIsOnRight(position)):
+                        # Copying the old list to the new one
+                        rightStateList = self.helper.createDuplicateList(self.state)
+                        
+                        # Switching the positions of the 0 and the spot to the right
+                        rightStateList[position], rightStateList[position + 1] = rightStateList[position + 1], rightStateList[position]
+                        
+        # Returning the left state (as null or a new state)
+        return rightStateList
+    
+    # Creates a list for a state that would look like as though a move up was made
+    def moveUp(self):
+        # Creating the up state
+        upStateList = NULL
+        
+        # Looping through to find the 0 in the puzzle
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Just in case we need this position several times later
+                position = x1 + NUM_OF_Y_GRID * y1
+                
+                # The 0 has been found
+                if (self.state[position] == "0"):
+                    # If the 0 is not on the left of the grid
+                    if (not self.helper.posIsOnTop(position)):
+                        # Copying the old list to the new one
+                        upStateList = self.helper.createDuplicateList(self.state)
+                        
+                        # Switching the positions of the 0 and the spot up one
+                        upStateList[position], upStateList[position - NUM_OF_X_GRID] = upStateList[position - NUM_OF_X_GRID], upStateList[position]
+                        
+        # Returning the left state (as null or a new state)
+        return upStateList
+    
+    # Creates a list for a state that would look like as though a move down was made
+    def moveDown(self):
+        # Creating the down state
+        downStateList = NULL
+        
+        # Looping through to find the 0 in the puzzle
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Just in case we need this position several times later
+                position = x1 + NUM_OF_Y_GRID * y1
+                
+                # The 0 has been found
+                if (self.state[position] == "0"):
+                    # If the 0 is not on the bottom of the grid
+                    if (not self.helper.posIsOnBottom(position)):
+                        # Copying the old list to the new one
+                        downStateList = self.helper.createDuplicateList(self.state)
+                        
+                        # Switching the positions of the 0 and the spot down one
+                        downStateList[position], downStateList[position + NUM_OF_X_GRID] = downStateList[position + NUM_OF_X_GRID], downStateList[position]
+                        
+        # Returning the left state (as null or a new state)
+        return downStateList
+    
     # Returns the list of the state
     def getState(self):
         return self.state
@@ -191,8 +344,46 @@ class MoveCalc:
     
     # Calculates the best move and returns the new state
     def makeBestMove(self, currentState, goalState):
+        # Getting lists of each of the possible states
+        leftStateList = currentState.moveLeft()
+        rightStateList = currentState.moveRight()
+        downStateList = currentState.moveDown()
+        upStateList = currentState.moveUp()
+        
+        # Variables to possibly hold new states
+        leftState = GameState()
+        rightState = GameState()
+        upState = GameState()
+        downState = GameState()
+        
+        # Creating states out the lists, so long as they aren't null
+        if (not leftStateList == NULL):
+            leftState.setList(leftStateList)
+        if (not rightStateList == NULL):
+            rightState.setList(rightStateList)
+        if (not downStateList == NULL):
+            upState.setList(upStateList)
+        if (not upStateList == NULL):
+            downState.setList(downStateList)
+        
+        # Creating variables to hold how many steps remain for each possible move
+        leftSteps = MAX_STEPS
+        rightSteps = MAX_STEPS
+        upSteps = MAX_STEPS
+        downSteps = MAX_STEPS
+        
+        # Seeing how many Manhattan steps each state has, making sure they're not null first
+        if (not leftStateList == NULL):
+            leftSteps = leftState.calcManhattenSteps(goalState)
+        if (not rightStateList == NULL):
+            rightSteps = rightState.calcManhattenSteps(goalState)
+        if (not upStateList == NULL):
+            upSteps = upState.calcManhattenSteps(goalState)
+        if (not downStateList == NULL):
+            downSteps = downState.calcManhattenSteps(goalState)
+        
+        # Figuring out which move is the best move
         # to do
-        i = 0
 
 # Game class
 class Game:
@@ -278,7 +469,7 @@ class Game:
     def playGame(self):
         # Test line to know where the code is at
         print("Play the game!")
-        print(self.currentState.calcManhattenSteps(self.goalState))
+        self.mover.makeBestMove(self.currentState, self.goalState)
         
         # This will loop while the current and goal state do not match
         #while(not self.currentState.compare(self.goalState)):
