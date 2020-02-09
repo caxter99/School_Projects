@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <stdlib.h> 
+#include <fstream>
 
 // 'BigIntegerLibrary.hh' includes all of the library headers.
 #include "BigIntegerLibrary.hh"
@@ -11,6 +12,8 @@ BigUnsigned createPrimeNumber(int numberOfDigits); // Takes the number of base 1
 bool testForPrimeStatus(BigUnsigned* num); // This function takes in a prime number and returns true if it is almost 100% likely to be prime, false otherwise
 BigUnsigned* getBigger(BigUnsigned* num1, BigUnsigned* num2); // Returns a pointer to the larger big int number
 BigUnsigned* getSmaller(BigUnsigned* num1, BigUnsigned* num2); // Returns a pointer to the smaller big int number
+void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigInteger* d); // Writes all of the integers to the file
+unsigned long createLargeE(); // Creates a large intiger to act as the initial e value
 
    // NOT MINE, USING AS A REFERENCE
    // Given m and e, finds gcd d and numbers x, y such that x*m + y*e == d.
@@ -20,7 +23,11 @@ BigUnsigned* getSmaller(BigUnsigned* num1, BigUnsigned* num2); // Returns a poin
 const int NUM_OF_DIGITS = 155; // Number of digits that will be in each big integer number (must be 155 or larger)
 const int FERMANTS_FIRST_TEST = 2; // The first test using Fermant's Little Theorem will use this number
 const int FERMANTS_SECOND_TEST = 3; // The second test using Fermant's Little Theorem will use this number
-const int INITIAL_E = 7; // The initial starting point for e (must be an odd number)
+//const int INITIAL_E = 7; // The initial starting point for e (must be an odd number)
+const unsigned long INITIAL_E = createLargeE(); // The initial starting point for e (must be an odd number)
+const std::string PQ_FILENAME = "p_q.txt"; // The filename of the file that will store the integers p and q
+const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
+const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
 
 int main(){
 	/* The library throws 'const char *' error messages when things go
@@ -70,8 +77,8 @@ int main(){
       // Creating the m (omega n thing)
       BigUnsigned m = BigUnsigned(1);
       m = (p - 1) * (q - 1);
-      // Displaying the fourth big integer (m)
-      std::cout << "Fourth Big Integer (m):\n";
+      // Displaying the fourth big integer (phi of n, m)
+      std::cout << "Fourth Big Integer (phi of n, m):\n";
       std::cout << m << "\n\n";
 
       // Creating and displaying e, d, x, and y
@@ -90,6 +97,13 @@ int main(){
          // Using the Extended Euclidean Algorithm to find x, y, and d
          extendedEuclidean(*getBigger(&m, &e), *getSmaller(&m, &e), d, x, y);
       }while(correct != d);
+      // Displaying d
+      std::cout << "Fifth Big Integer (d):\n";
+      std::cout << d << "\n\n";
+      // Displaying e
+      std::cout << "Fifth Big Integer (e):\n";
+      std::cout << e << "\n\n";
+
 
       // AT THIS POINT:
       /*
@@ -101,6 +115,10 @@ int main(){
          std::cout << "\n\n\n\n\n\n\nx:" << x << "\nm:" << m << "\ny:" << y << "\ne:" << e << "\nd:" << d << "\n";
          std::cout << "x*m + y*e = " << ((x * m) + (y * e)) << "\n";
       */
+
+      std::cout << "Writing the integers to files now..." << std::endl;
+      writeAllToFiles(&p, &q, &e, &n, &d); // Writes all of the integers to the file
+      std::cout << "Done writing the integers to files." << std::endl;
       
       
 	} catch(char const* err) {
@@ -195,6 +213,87 @@ BigUnsigned* getSmaller(BigUnsigned* num1, BigUnsigned* num2)
       // Return the second number
       return num2;
    }
+}
+
+// Writes all of the integers to the file
+void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigInteger* d)
+{
+   // Craeting the write file object
+   std::ofstream writingObject;
+
+   // Writing the p and q integers
+   writingObject.open(PQ_FILENAME);
+   if (writingObject)
+   {
+      writingObject << (*p) << "\n" << (*q);
+   }
+   else
+   {
+      std::cout << "could not write p and q to filename " << PQ_FILENAME << std::endl;
+   }
+   writingObject.close();
+
+   // Writing the p and q integers
+   writingObject.open(EN_FILENAME);
+   if (writingObject)
+   {
+      writingObject << (*e) << "\n" << (*n);
+   }
+   else
+   {
+      std::cout << "could not write e and e to filename " << EN_FILENAME << std::endl;
+   }
+   writingObject.close();
+
+   // Writing the p and q integers
+   writingObject.open(DN_FILENAME);
+   if (writingObject)
+   {
+      writingObject << (*d) << "\n" << (*n);
+   }
+   else
+   {
+      std::cout << "could not write d and n to filename " << DN_FILENAME << std::endl;
+   }
+   writingObject.close();
+}
+
+// Creates a large intiger to act as the initial e value
+unsigned long createLargeE()
+{
+   // Initializing the temporary e
+   unsigned long tempE = 1;
+
+   // Creating the limit for how many digits the tempE can be
+   int limit = NUM_OF_DIGITS / 2;
+   if (limit > 8)
+   {
+      limit = 8;
+   }
+   else if (limit == 0)
+   {
+      limit = 1;
+   }
+
+   // Looping through and making e as big as possible
+   for (int x = 0; x < limit; ++x)
+   {
+      tempE = tempE * 10 + rand() % 10;
+   }
+
+   // Making sure the last digit is an odd digit
+   int lastInt;
+   do{
+      lastInt = rand() % 10;
+   }while(lastInt % 2 == 0);
+
+   // Adding the last digit to the number
+   tempE = tempE * 10 + lastInt;
+
+   std::cout << "tempE: " << tempE << std::endl;
+
+   // Returning the e value
+   return tempE;
 }
 
 
