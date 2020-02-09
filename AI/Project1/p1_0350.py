@@ -1,16 +1,11 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Mon Feb  3 19:54:20 2020
-
 @author: devin
-
 Devin Hopkins
 4190350
-
 Project 1 for AI
-
 Main class:
 """
 # Global (const) variables
@@ -76,12 +71,19 @@ class HelpfulFunctions:
         incrementVal = randint(1, 2)
         
         # Creating the new, random list
-        newList= []
-        for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+        #newList= [] # TEMP COMMENT
+        #for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID): # TEMP COMMENT
             # They must be entered as strings, because if the user entered the
             # other grid, the other grid will be all strings. The rest of the
             # program assumes these values will be strings
-            newList.append(str((startingVal + (incrementVal * x)) % 9))
+            #newList.append(str((startingVal + (incrementVal * x)) % 9)) # TEMP COMMENT
+        
+        # TESTING SECTION
+        if (incrementVal == 1):
+            newList = [1, 2, 3, 5, 6, 0, 7, 8, 4]
+        else:
+            newList = [1, 2, 3, 5, 0, 6, 7, 8, 4]
+        # END TESTING
         
         # Returning the list
         return newList
@@ -368,21 +370,12 @@ class GameState:
                                  
                                  # y distance
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
-                                 
-                                 # TESTING
-                                 #print("point 1: (", x1, ", ", y1, ")")
-                                 #print("point 2: (", x2, ", ", y2, ")")
-                                 #print("distance: ", math.sqrt(math.pow(x1 - x2, 2)) + math.sqrt(math.pow(y1 - y2, 2)))
         
         # Getting the previous amount of Manhattan steps
         self.totalManhattanSteps = self.totalManhattanSteps + newDistance
         
-        # TESTING
-        #print("total distance: ", self.totalManhattanSteps)
-        #print("")
-        
         # Return the total new distance
-        return newDistance
+        return self.totalManhattanSteps
     
     # Takes in a lists of lists with the previous game states stored inside of them.
     # Returns true if the current state matches none of the state found inside
@@ -454,13 +447,13 @@ class MoveCalc:
         if (not nullState4):
             step4 = state4.calcManhattenSteps(goalState)
         
-        if ((not nullState1) and (not state1.comparePrevious(previousState)) and self.helper.compareFourLoose(step1, step2, step3, step4)):
+        if ((not nullState1) and (not state1.compare(previousState)) and self.helper.compareFourLoose(step1, step2, step3, step4)):
             return state1
-        elif ((not nullState2) and (not state2.comparePrevious(previousState)) and self.helper.compareFourLoose(step2, step1, step3, step4)):
+        elif ((not nullState2) and (not state2.compare(previousState)) and self.helper.compareFourLoose(step2, step1, step3, step4)):
             return state2
-        elif ((not nullState3) and (not state3.comparePrevious(previousState)) and self.helper.compareFourLoose(step3, step2, step1, step4)):
+        elif ((not nullState3) and (not state3.compare(previousState)) and self.helper.compareFourLoose(step3, step2, step1, step4)):
             return state3
-        elif ((not nullState4) and (not state4.comparePrevious(previousState)) and self.helper.compareFourLoose(step4, step2, step3, step1)):
+        elif ((not nullState4) and (not state4.compare(previousState)) and self.helper.compareFourLoose(step4, step2, step3, step1)):
             return state4
         
         # At this point, there's not a clear best choice. This is where things get fun
@@ -469,16 +462,16 @@ class MoveCalc:
         state3MatchesPrevious = False
         state4MatchesPrevious = False
         
-        if ((not nullState1) and state1.comparePrevious(previousState)):
+        if ((not nullState1) and state1.compare(previousState)):
             state1MatchesPrevious = True
             step1 = MAX_STEPS
-        if ((not nullState2) and state2.comparePrevious(previousState)):
+        if ((not nullState2) and state2.compare(previousState)):
             state2MatchesPrevious = True
             step2 = MAX_STEPS
-        if ((not nullState3) and state3.comparePrevious(previousState)):
+        if ((not nullState3) and state3.compare(previousState)):
             state3MatchesPrevious = True
             step3 = MAX_STEPS
-        if ((not nullState4) and state4.comparePrevious(previousState)):
+        if ((not nullState4) and state4.compare(previousState)):
             state4MatchesPrevious = True
             step4 = MAX_STEPS
         
@@ -634,19 +627,19 @@ class MoveCalc:
         
         # Figuring out which move is the best move
         #if ((not previousState.compare(leftState)) and self.helper.compareFourTight(leftSteps, rightSteps, upSteps, downSteps)):
-        if ((not leftState == NULL) and (not leftState.comparePrevious(previousState)) and self.helper.compareFourLoose(leftSteps, rightSteps, upSteps, downSteps)):
+        if ((not leftState == NULL) and (not leftState.compare(previousState)) and self.helper.compareFourLoose(leftSteps, rightSteps, upSteps, downSteps)):
             clearBestMove = True
             leftMoveIsBest = True
         #elif ((not previousState.compare(rightState)) and self.helper.compareFourTight(rightSteps, leftSteps, upSteps, downSteps)):
-        elif ((not rightState == NULL) and (not rightState.comparePrevious(previousState)) and self.helper.compareFourLoose(rightSteps, leftSteps, upSteps, downSteps)):
+        elif ((not rightState == NULL) and (not rightState.compare(previousState)) and self.helper.compareFourLoose(rightSteps, leftSteps, upSteps, downSteps)):
             clearBestMove = True
             rightMoveIsBest = True
         #elif ((not previousState.compare(upState)) and self.helper.compareFourTight(upSteps, leftSteps, rightSteps, downSteps)):
-        elif ((not upState == NULL) and (not upState.comparePrevious(previousState)) and self.helper.compareFourLoose(upSteps, leftSteps, rightSteps, downSteps)):
+        elif ((not upState == NULL) and (not upState.compare(previousState)) and self.helper.compareFourLoose(upSteps, leftSteps, rightSteps, downSteps)):
             clearBestMove = True
             upMoveIsBest = True
         #elif ((not previousState.compare(downState)) and self.helper.compareFourTight(downSteps, leftSteps, upSteps, rightSteps)):
-        elif ((not downState == NULL) and (not downState.comparePrevious(previousState)) and self.helper.compareFourLoose(downSteps, leftSteps, upSteps, rightSteps)):
+        elif ((not downState == NULL) and (not downState.compare(previousState)) and self.helper.compareFourLoose(downSteps, leftSteps, upSteps, rightSteps)):
             clearBestMove = True
             downMoveIsBest = True
         
@@ -655,9 +648,7 @@ class MoveCalc:
             #raise Exception("Shouldn't be here")
             # Getting the best move (the function also returns an integer, but that's not necesary for
             # what comes after this)
-            previousState.append(currentState.getState())
             bestMoveState = self.lookAheadOneStep(previousState, rightState, leftState, upState, downState, goalState, timesThrough + 1)
-            currentState.removeSelfFromPrevious(previousState)
             
             if (bestMoveState == NULL):
                 return NULL, timesThrough
@@ -675,10 +666,8 @@ class MoveCalc:
             if (bestMoveState == NULL):
                 return NULL, timesThrough
         elif (not clearBestMove):
-            previousState.append(currentState.getState())
             bestMoveState = self.chooseBestState(previousState, rightState, leftState, upState, downState, goalState)
-            currentState.removeSelfFromPrevious(previousState)
-            
+                        
             if (bestMoveState == NULL):
                 return NULL, timesThrough
             
@@ -714,7 +703,7 @@ class Game:
     # Initializing the variables needed for the game
     helper = HelpfulFunctions()
     mover = MoveCalc()
-    previousStates = []
+    previousState = GameState()
     currentState = GameState()
     goalState = GameState()
     
@@ -799,25 +788,17 @@ class Game:
         # This will loop while the current and goal state do not match
         while(not self.currentState.compare(self.goalState)):
             tempPreviousState.setList(self.currentState.getState())
-            self.currentState, dud = self.mover.makeBestMove(self.previousStates, self.currentState, self.goalState)
-            if (not self.currentState == NULL):
-                self.previousStates.append(tempPreviousState.getState())
-            else:
-                break
+            self.currentState, dud = self.mover.makeBestMove(self.previousState, self.currentState, self.goalState)
+            self.previousState.setList(tempPreviousState.getState())
         
-        if (self.currentState == NULL):
-            print("Game lost :(")
-        else:
-            print("Game won!")
+        print("Game won!")
+            
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
 def s():
     # Creating and playing the game
     game = Game()
     game.playGame()
-    
-    
-    
     
     
     
