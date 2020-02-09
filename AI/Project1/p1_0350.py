@@ -368,12 +368,21 @@ class GameState:
                                  
                                  # y distance
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
+                                 
+                                 # TESTING
+                                 #print("point 1: (", x1, ", ", y1, ")")
+                                 #print("point 2: (", x2, ", ", y2, ")")
+                                 #print("distance: ", math.sqrt(math.pow(x1 - x2, 2)) + math.sqrt(math.pow(y1 - y2, 2)))
         
         # Getting the previous amount of Manhattan steps
         self.totalManhattanSteps = self.totalManhattanSteps + newDistance
         
+        # TESTING
+        #print("total distance: ", self.totalManhattanSteps)
+        #print("")
+        
         # Return the total new distance
-        return self.totalManhattanSteps
+        return newDistance
                 
 
 # Move Calculator class
@@ -574,7 +583,7 @@ class MoveCalc:
                 fourTimesThrough = MAX_STEPS
             
             # Returning the best option
-            return self.goForwardToFindCurrentBestMove(previousState, bestOfStateOne, bestOfStateTwo, bestOfStateThree, bestOfStateFour)
+            return self.goForwardToFindCurrentBestMove(previousState, bestOfStateOne, bestOfStateTwo, bestOfStateThree, bestOfStateFour, goalState, timesThrough + 1)
         
         # Returning the best move
         if (oneMoveIsBest):
@@ -585,10 +594,139 @@ class MoveCalc:
             return stateThreeCopy, timesThrough
         return stateFourCopy, timesThrough
     
+    def lookAheadOneStep(self, previousState, state1, state2, state3, state4, goalState, timesThrough = 0):
+        if (state1 == NULL and state2 == NULL and state3 == NULL and state4 == NULL):
+            print("all null")
+            return NULL
+        
+        newGameState1 = GameState()
+        newGameState2 = GameState()
+        newGameState3 = GameState()
+        newGameState4 = GameState()
+        
+        if (not state1 == NULL):
+            newGameState1, dud = self.makeBestMove(previousState, state1, goalState, timesThrough)
+        else:
+            newGameState1 = NULL
+        if (not state2 == NULL):
+            newGameState2, dud = self.makeBestMove(previousState, state2, goalState, timesThrough)
+        else:
+            newGameState2 = NULL
+        if (not state3 == NULL):
+            newGameState3, dud = self.makeBestMove(previousState, state3, goalState, timesThrough)
+        else:
+            newGameState3 = NULL
+        if (not state4 == NULL):
+            newGameState4, dud = self.makeBestMove(previousState, state4, goalState, timesThrough)
+        else:
+            newGameState4 = NULL
+        
+        while(True):        
+            step1 = MAX_STEPS
+            step2 = MAX_STEPS
+            step3 = MAX_STEPS
+            step4 = MAX_STEPS
+            
+            if (not newGameState1 == NULL):
+                step1 = newGameState1.calcManhattenSteps(goalState)
+            if (not newGameState2 == NULL):
+                step2 = newGameState2.calcManhattenSteps(goalState)
+            if (not newGameState3 == NULL):
+                step3 = newGameState3.calcManhattenSteps(goalState)
+            if (not newGameState4 == NULL):
+                step4 = newGameState4.calcManhattenSteps(goalState)
+        
+            if ((not newGameState1 == NULL) and (not previousState.compare(newGameState1)) and self.helper.compareFourLoose(step1, step2, step3, step4)):
+                return state1
+            elif ((not newGameState2 == NULL) and (not previousState.compare(newGameState2)) and self.helper.compareFourLoose(step2, step1, step3, step4)):
+                return state2
+            elif ((not newGameState3 == NULL) and (not previousState.compare(newGameState3)) and self.helper.compareFourLoose(step3, step2, step1, step4)):
+                return state3
+            elif ((not newGameState4 == NULL) and (not previousState.compare(newGameState4)) and self.helper.compareFourLoose(step4, step2, step3, step1)):
+                return state4
+            
+            tempGameStateLeft = GameState()
+            tempGameStateRight = GameState()
+            tempGameStateUp = GameState()
+            tempGameStateDown = GameState()
+        
+            if (not newGameState1 == NULL):
+                if (not newGameState1.moveLeft() == NULL):
+                    tempGameStateLeft.setList(newGameState1.moveLeft())
+                else:
+                    tempGameStateLeft = NULL
+                if (not newGameState1.moveRight() == NULL):
+                    tempGameStateRight.setList(newGameState1.moveRight())
+                else:
+                    tempGameStateRight = NULL
+                if (not newGameState1.moveUp() == NULL):
+                    tempGameStateUp.setList(newGameState1.moveUp())
+                else:
+                    tempGameStateUp = NULL
+                if (not newGameState1.moveDown() == NULL):
+                    tempGameStateDown.setList(newGameState1.moveDown())
+                else:
+                    tempGameStateDown = NULL
+                newGameState1 = self.lookAheadOneStep(newGameState1, tempGameStateLeft, tempGameStateRight, tempGameStateUp, tempGameStateDown, goalState, timesThrough + 1)
+            if (not newGameState2 == NULL):
+                if (not newGameState2.moveLeft() == NULL):
+                    tempGameStateLeft.setList(newGameState2.moveLeft())
+                else:
+                    tempGameStateLeft = NULL
+                if (not newGameState2.moveRight() == NULL):
+                    tempGameStateRight.setList(newGameState2.moveRight())
+                else:
+                    tempGameStateRight = NULL
+                if (not newGameState2.moveUp() == NULL):
+                    tempGameStateUp.setList(newGameState2.moveUp())
+                else:
+                    tempGameStateUp = NULL
+                if (not newGameState2.moveDown() == NULL):
+                    tempGameStateDown.setList(newGameState2.moveDown())
+                else:
+                    tempGameStateDown = NULL
+                newGameState2 = self.lookAheadOneStep(newGameState2, tempGameStateLeft, tempGameStateRight, tempGameStateUp, tempGameStateDown, goalState, timesThrough + 1)
+            if (not newGameState3 == NULL):
+                if (not newGameState3.moveLeft() == NULL):
+                    tempGameStateLeft.setList(newGameState3.moveLeft())
+                else:
+                    tempGameStateLeft = NULL
+                if (not newGameState3.moveRight() == NULL):
+                    tempGameStateRight.setList(newGameState3.moveRight())
+                else:
+                    tempGameStateRight = NULL
+                if (not newGameState3.moveUp() == NULL):
+                    tempGameStateUp.setList(newGameState3.moveUp())
+                else:
+                    tempGameStateUp = NULL
+                if (not newGameState3.moveDown() == NULL):
+                    tempGameStateDown.setList(newGameState3.moveDown())
+                else:
+                    tempGameStateDown = NULL
+                newGameState3 = self.lookAheadOneStep(newGameState3, tempGameStateLeft, tempGameStateRight, tempGameStateUp, tempGameStateDown, goalState, timesThrough + 1)
+            if (not newGameState4 == NULL):
+                if (not newGameState1.moveLeft() == NULL):
+                    tempGameStateLeft.setList(newGameState4.moveLeft())
+                else:
+                    tempGameStateLeft = NULL
+                if (not newGameState4.moveRight() == NULL):
+                    tempGameStateRight.setList(newGameState4.moveRight())
+                else:
+                    tempGameStateRight = NULL
+                if (not newGameState4.moveUp() == NULL):
+                    tempGameStateUp.setList(newGameState4.moveUp())
+                else:
+                    tempGameStateUp = NULL
+                if (not newGameState4.moveDown() == NULL):
+                    tempGameStateDown.setList(newGameState4.moveDown())
+                else:
+                    tempGameStateDown = NULL
+                newGameState4 = self.lookAheadOneStep(newGameState4, tempGameStateLeft, tempGameStateRight, tempGameStateUp, tempGameStateDown, goalState, timesThrough + 1)
+    
     # Calculates the best move and returns the new state
     def makeBestMove(self, previousState, currentState, goalState, timesThrough = 0):
-        print("make best function")
-        # If the currentState matches the goal state, return it immediately
+        print("\n\n\n\n\n\n\nmake best function")
+        # If the currentState matches the goal state, return it immediately (cause it's the best move)
         if (currentState.compare(goalState)):
             return currentState, timesThrough
         
@@ -605,20 +743,38 @@ class MoveCalc:
         downState = GameState()
         
         # Creating states out the lists, so long as they aren't null
+        print("current state:")
+        currentState.displayState()
+        print("goal state:")
+        goalState.displayState()
+        print("previous state:")
+        previousState.displayState()
         if (not leftStateList == NULL):
             leftState.setList(leftStateList)
+            print("left state:")
+            print("steps: ", leftState.calcManhattenSteps(goalState))
+            leftState.displayState()
         else:
             leftState = NULL
         if (not rightStateList == NULL):
             rightState.setList(rightStateList)
+            print("right state:")
+            print("steps: ", rightState.calcManhattenSteps(goalState))
+            rightState.displayState()
         else:
             rightState = NULL
         if (not upStateList == NULL):
             upState.setList(upStateList)
+            print("up state:")
+            print("steps: ", upState.calcManhattenSteps(goalState))
+            upState.displayState()
         else:
             upState = NULL
         if (not downStateList == NULL):
             downState.setList(downStateList)
+            print("down state:")
+            print("steps: ", downState.calcManhattenSteps(goalState))
+            downState.displayState()
         else:
             downState = NULL
         
@@ -647,38 +803,53 @@ class MoveCalc:
         leftMoveIsBest = False
         
         # Figuring out which move is the best move
-        if (not previousState.compare(currentState) and self.helper.compareFourTight(leftSteps, rightSteps, upSteps, downSteps)):
-            print("left")
+        #if ((not previousState.compare(leftState)) and self.helper.compareFourTight(leftSteps, rightSteps, upSteps, downSteps)):
+        if ((not leftState == NULL) and (not previousState.compare(leftState)) and self.helper.compareFourLoose(leftSteps, rightSteps, upSteps, downSteps)):
+            print("move left")
             clearBestMove = True
             leftMoveIsBest = True
-        elif (not previousState.compare(currentState) and self.helper.compareFourTight(rightSteps, leftSteps, upSteps, downSteps)):
-            print("right")
+        #elif ((not previousState.compare(rightState)) and self.helper.compareFourTight(rightSteps, leftSteps, upSteps, downSteps)):
+        elif ((not rightState == NULL) and (not previousState.compare(rightState)) and self.helper.compareFourLoose(rightSteps, leftSteps, upSteps, downSteps)):
+            print("move right")
             clearBestMove = True
             rightMoveIsBest = True
-        elif (not previousState.compare(currentState) and self.helper.compareFourTight(upSteps, leftSteps, rightSteps, downSteps)):
-            print("up")
+        #elif ((not previousState.compare(upState)) and self.helper.compareFourTight(upSteps, leftSteps, rightSteps, downSteps)):
+        elif ((not upState == NULL) and (not previousState.compare(upState)) and self.helper.compareFourLoose(upSteps, leftSteps, rightSteps, downSteps)):
+            print("move up")
             clearBestMove = True
             upMoveIsBest = True
-        elif (not previousState.compare(currentState) and self.helper.compareFourTight(downSteps, leftSteps, upSteps, rightSteps)):
-            print("down")
+        #elif ((not previousState.compare(downState)) and self.helper.compareFourTight(downSteps, leftSteps, upSteps, rightSteps)):
+        elif ((not downState == NULL) and (not previousState.compare(downState)) and self.helper.compareFourLoose(downSteps, leftSteps, upSteps, rightSteps)):
+            print("move down")
             clearBestMove = True
             downMoveIsBest = True
         
         # If there's not a clear best move and it's the first time
-        if (not clearBestMove):
+        if ((not clearBestMove) and timesThrough < 1):
+            #raise Exception("Shouldn't be here")
             print("none")
             # Getting the best move (the function also returns an integer, but that's not necesary for
             # what comes after this)
-            bestMoveState, dud = self.goForwardToFindCurrentBestMove(currentState, rightState, leftState, upState, downState, goalState, timesThrough + 1)
+            #bestMoveState, dud = self.goForwardToFindCurrentBestMove(currentState, rightState, leftState, upState, downState, goalState, timesThrough + 1)
+            bestMoveState = self.lookAheadOneStep(currentState, rightState, leftState, upState, downState, goalState, timesThrough + 1)
             
             # Figuring out which move is the best move
-            if (bestMoveState.compare(leftState)):
+            if ((not leftState == NULL) and bestMoveState.compare(leftState)):
                 leftMoveIsBest = True
-            elif (bestMoveState.compare(rightState)):
+            elif ((not rightState == NULL) and bestMoveState.compare(rightState)):
                 rightMoveIsBest = True
-            elif (bestMoveState.compare(upState)):
+            elif ((not upState == NULL) and bestMoveState.compare(upState)):
                 upMoveIsBest = True
-            elif (bestMoveState.compare(downState)):
+            elif ((not downState == NULL) and bestMoveState.compare(downState)):
+                downMoveIsBest = True
+        elif (not clearBestMove):
+            if ((not leftState == NULL) and self.helper.compareFourLoose(leftSteps, rightSteps, upSteps, downSteps)):
+                leftMoveIsBest = True
+            elif ((not rightState == NULL) and self.helper.compareFourLoose(rightSteps, leftSteps, upSteps, downSteps)):
+                rightMoveIsBest = True
+            elif ((not upState == NULL) and self.helper.compareFourLoose(upSteps, rightSteps, leftSteps, downSteps)):
+                upMoveIsBest = True
+            elif ((not downState == NULL) and self.helper.compareFourLoose(downSteps, rightSteps, upSteps, leftSteps)):
                 downMoveIsBest = True
         
         # Returning the best move
@@ -688,6 +859,8 @@ class MoveCalc:
             return rightState, timesThrough
         elif (upMoveIsBest):
             return upState, timesThrough
+        elif (downMoveIsBest):
+            return downState, timesThrough
         return downState, timesThrough
 
 # Game class
@@ -775,11 +948,22 @@ class Game:
         # Test line to know where the code is at
         print("Play the game!")
         
-        # This will loop while the current and goal state do not match
+        # This is the tempPreviousState
+        tempPreviousState = GameState()
+        
+        # Setting up the previous state for the first round
         previousState = GameState()
+        if (not self.currentState.calcManhattenSteps(self.goalState) == 1):
+            previousState.setList(self.goalState.getState())
+        else:
+            while (self.currentState.calcManhattenSteps(self.goalState) == 1):
+                previousState.setList([0, 1])
+        
+        # This will loop while the current and goal state do not match
         while(not self.currentState.compare(self.goalState)):
-            previousState.setList(self.currentState.getState())
+            tempPreviousState.setList(self.currentState.getState())
             self.currentState, dud = self.mover.makeBestMove(previousState, self.currentState, self.goalState)
+            previousState.setList(tempPreviousState.getState())
         
         print("Game complete!")
 
