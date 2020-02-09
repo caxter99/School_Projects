@@ -18,6 +18,8 @@ TRUE_RANDOM = False # This is to say if the created states (if not created by th
                 # will be randomly made or not
 SHUFFLE_TIMES = 5 # The number of times the goal state will be shuffled to create
                 # the starting state (if applicable)
+SINGLE_PREVIOUS_STATE = False # This is if the previousState variable represents
+                # a single previous state
 
 # Just a bunch of helpful functions
 class HelpfulFunctions:
@@ -413,19 +415,18 @@ class GameState:
     def comparePrevious(self, previousLists):
         # Making sure it's not empty
         if (len(previousLists) == 0):
-            return True
+            return False
         
         # If there's legit lists inside of it
         for y in range(len(previousLists)):
-            for x in range(len(previousLists[y])):
-                tempGameState = GameState(previousLists[y][x])
+            tempGameState = GameState(previousLists[y])
                 
-                # It matches a previous game state
-                if (self.compare(tempGameState)):
-                    return False
+            # It matches a previous game state
+            if (self.compare(tempGameState)):
+                return True
         
         # It doesn't match any previous game state
-        return True
+        return False
     
     # Removes the state from the list of previous states
     def removeSelfFromPrevious(self, previousLists):
@@ -480,33 +481,53 @@ class MoveCalc:
             print("state 1 is null")
         else:
             step1 = state1.calcManhattenSteps(goalState)
-            if (state1.compare(previousState)):
-                duplicateOfPreviousState1 = True
-                print("state 1 is a duplicate of the previous state")
+            if (SINGLE_PREVIOUS_STATE):
+                if (state1.compare(previousState)):
+                    duplicateOfPreviousState1 = True
+                    print("state 1 is a duplicate of the previous state")
+            else:
+                if (state1.comparePrevious(previousState)):
+                    duplicateOfPreviousState1 = True
+                    print("state 1 is a duplicate of the previous state")
         if (state2 == NULL):
             isNull2 = True
             print("state 2 is null")
         else:
             step2 = state2.calcManhattenSteps(goalState)
-            if (state2.compare(previousState)):
-                duplicateOfPreviousState2 = True
-                print("state 2 is a duplicate of the previous state")
+            if (SINGLE_PREVIOUS_STATE):
+                if (state2.compare(previousState)):
+                    duplicateOfPreviousState2 = True
+                    print("state 2 is a duplicate of the previous state")
+            else:
+                if (state2.comparePrevious(previousState)):
+                    duplicateOfPreviousState2 = True
+                    print("state 2 is a duplicate of the previous state")
         if (state3 == NULL):
             isNull3 = True
             print("state 3 is null")
         else:
             step3 = state3.calcManhattenSteps(goalState)
-            if (state3.compare(previousState)):
-                duplicateOfPreviousState3 = True
-                print("state 3 is a duplicate of the previous state")
+            if (SINGLE_PREVIOUS_STATE):
+                if (state3.compare(previousState)):
+                    duplicateOfPreviousState3 = True
+                    print("state 3 is a duplicate of the previous state")
+            else:
+                if (state3.comparePrevious(previousState)):
+                    duplicateOfPreviousState3 = True
+                    print("state 3 is a duplicate of the previous state")
         if (state4 == NULL):
             isNull4 = True
             print("state 4 is null")
         else:
             step4 = state4.calcManhattenSteps(goalState)
-            if (state4.compare(previousState)):
-                duplicateOfPreviousState4 = True
-                print("state 4 is a duplicate of the previous state")
+            if (SINGLE_PREVIOUS_STATE):
+                if (state4.compare(previousState)):
+                    duplicateOfPreviousState4 = True
+                    print("state 4 is a duplicate of the previous state")
+            else:
+                if (state4.comparePrevious(previousState)):
+                    duplicateOfPreviousState4 = True
+                    print("state 4 is a duplicate of the previous state")
         
         if (isNull1 or duplicateOfPreviousState1):
             pos1 = False
@@ -586,6 +607,7 @@ class Game:
     helper = HelpfulFunctions()
     mover = MoveCalc()
     previousState = GameState()
+    previousStates = []
     currentState = GameState()
     goalState = GameState()
     
@@ -675,10 +697,16 @@ class Game:
         # This will loop while the current and goal state do not match
         while(not self.currentState.compare(self.goalState)):
             tempPreviousState.setList(self.currentState.getState())
-            self.currentState = self.mover.makeBestMove(self.previousState, self.currentState, self.goalState)
-            self.previousState.setList(tempPreviousState.getState())
+            if (SINGLE_PREVIOUS_STATE):
+                self.currentState = self.mover.makeBestMove(self.previousState, self.currentState, self.goalState)
+                self.previousState.setList(tempPreviousState.getState())
+            else:
+                self.currentState = self.mover.makeBestMove(self.previousStates, self.currentState, self.goalState)
+                self.previousStates.append(tempPreviousState.getState())
             # TESTING
+            print("current state:")
             self.currentState.displayState()
+            print("goal state:")
             self.goalState.displayState()
         
         print("current state:")
