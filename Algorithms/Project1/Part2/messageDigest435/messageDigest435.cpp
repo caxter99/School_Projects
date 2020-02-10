@@ -5,12 +5,14 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "sha256.h"
 #include "BigIntegerLibrary.hh"
 
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
 BigInteger convertBase16CharArrayToBase10Int(char charArray[], int sizeOfArray); // Takes a base 16 char array and converts it to a BigInteger
+int getValueFromChar(char c); // Returns an integer based on the character sent. Assumes base 16
  
 int main(int argc, char *argv[])
 {
@@ -60,7 +62,7 @@ int main(int argc, char *argv[])
          // Getting the hash string
          std::string messageString = sha256(memblock);
 
-         // Getting how long the string is
+         /*// Getting how long the string is
          const int HASH_SIZE = messageString.length();
          const int CHAR_ARRAY_SIZE = HASH_SIZE + 1;
 
@@ -70,10 +72,11 @@ int main(int argc, char *argv[])
 
          // Displaying both the string and char array
          std::cout << "string:" << messageString << ":\nchar a:";
-         display(messageCharArray, CHAR_ARRAY_SIZE);
+         display(messageCharArray, CHAR_ARRAY_SIZE);*/
 
-         BigInteger messageBase10 = BigInteger(convertBase16CharArrayToBase10Int(messageCharArray, CHAR_ARRAY_SIZE));
-         std::cout << "messageBase10:" << messageBase10 << ":\n";
+         BigUnsignedInABase message = BigUnsignedInABase(messageString, 16);
+         std::cout << "messageString:" << messageString << ":\n";
+         std::cout << "      message:" << message << ":\n";
       }
       else
       {
@@ -87,12 +90,6 @@ int main(int argc, char *argv[])
     std::cout << "\n";
 
     return 0;
-}
-
-// Takes a base 16 char array and converts it to a BigInteger
-BigInteger convertBase16CharArrayToBase10Int(char charArray[], int sizeOfArray)
-{
-   return 0;
 }
 
 // Displays the char star
