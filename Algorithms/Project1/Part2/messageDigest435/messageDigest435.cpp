@@ -8,6 +8,8 @@
 #include "sha256.h"
 #include "BigIntegerLibrary.hh"
 
+// Function headers
+void display(char chr[], int sizeOfArray); // Displays the char array
  
 int main(int argc, char *argv[])
 {
@@ -40,7 +42,7 @@ int main(int argc, char *argv[])
       //std::cout << "size of the file: " << size << " bytes.\n"; //size of the file
       
       myfile.seekg (0, std::ios::beg);
-      char * memblock = new char[size];
+      char* memblock = new char[size];
       myfile.read (memblock, size); //read file; it's saved in the char array memblock
       myfile.close();
       
@@ -52,16 +54,53 @@ int main(int argc, char *argv[])
       //std::cout<<memblock;
         
       if (argv[1][0]=='s') {
-         std::cout << "\n"<<"Need to sign the doc.\n";
-         //.....
+         std::cout << "\nSigning the doc...\n";
          
+         // Getting the hash string
+         std::string messageString = sha256(memblock);
+
+         // Getting how long the string is
+         const int HASH_SIZE = messageString.length();
+         const int CHAR_ARRAY_SIZE = HASH_SIZE + 1;
+
+         // Creating and copying the string to a char array
+         char messageCharArray[CHAR_ARRAY_SIZE];
+         strcpy(messageCharArray, messageString.c_str());
+
+         // Displaying both the string and char array
+         std::cout << "string:" << messageString << ":\nchar a:";
+         display(messageCharArray, CHAR_ARRAY_SIZE);
+
+         //int base10Hash = toNewBase(messageCharArray, CHAR_ARRAY_SIZE);
       }
-      else {
+      else
+      {
          std::cout << "\n"<<"Need to verify the doc.\n";
          //.....
-         
       }
       delete[] memblock;
     }
+
+    // It doesn't always end with a newline, so I'm making sure it does
+    std::cout << "\n";
+
     return 0;
 }
+
+// Displays the char star
+void display(char chr[], int sizeOfArray)
+{
+   // Looping through and displaying each bit
+   for (int i = 0; i < sizeOfArray; i++)
+   {
+      std::cout << chr[i];
+   }
+
+   // Ending on a new line
+   std::cout << "\n";
+}
+
+
+
+
+
