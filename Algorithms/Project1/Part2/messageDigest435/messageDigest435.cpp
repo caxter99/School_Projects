@@ -9,6 +9,11 @@
 #include "sha256.h"
 #include "BigIntegerLibrary.hh"
 
+// PUT THIS INTO COMMAND LINE TO DO PART 1
+//./messageDigest435 s file.txt
+// PUT THIS INTO COMMAND LINE TO DO PART 2
+//./messageDigest435 v file.txt.signature
+
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
 
@@ -20,19 +25,6 @@ const std::string SIGNATURE_FILENAME = "file.txt.signature"; // The filename of 
  
 int main(int argc, char *argv[])
 {
-   //demonstrating how sha256 works
-   std::string input = "testing";
-   std::string output1 = sha256(input);
-   std::cout << "sha256('"<< input << "'):" << output1 << "\n";
-   
-   //demo bigInt works here
-   BigUnsigned a = stringToBigUnsigned("124338907642982722929222542626327282");
-   BigUnsigned b = stringToBigUnsigned("124338907642977775546469426263278643");
-   std::cout << "big a = " <<a<<"\n";
-   std::cout << "big b = " <<b<<"\n";
-   std::cout << "big a*b = " <<a*b<<"\n";
-
-   //Second part of your project starts here
    if (argc != 3 || (argv[1][0]!='s' && argv[1][0]!='v')) 
       std::cout << "wrong format! should be \"a.exe s filename\"";
    else {
@@ -71,8 +63,8 @@ int main(int argc, char *argv[])
          std::string dString, nString;
          getline(dnFile, dString);
          getline(dnFile, nString);
-         dString = dString.substr(0, dString.length() - 1);
-         nString = nString.substr(0, nString.length() - 1);
+         //dString = dString.substr(0, dString.length() - 1);
+         //nString = nString.substr(0, nString.length() - 1);
 
          BigUnsignedInABase d = BigUnsignedInABase(dString, 10);
          BigUnsignedInABase n = BigUnsignedInABase(nString, 10);
@@ -98,11 +90,11 @@ int main(int argc, char *argv[])
          BigUnsignedInABase tempMessage = BigUnsignedInABase(messageString, 16);
          BigInteger message = BigInteger(tempMessage);
          BigUnsigned codedMessage = modexp(message, d, n);
-         std::cout << "messageString:" << messageString << ":\n";
+         /*std::cout << "messageString:" << messageString << ":\n";
          std::cout << "  tempMessage:" << tempMessage << ":\n";
          std::cout << "      message:" << message << ":\n";
          std::cout << "            d:" << d << ":\n";
-         std::cout << "            n:" << n << ":\n";
+         std::cout << "            n:" << n << ":\n";*/
          std::cout << " codedMessage:" << codedMessage << ":\n";
 
          std::ofstream newFile;
@@ -115,8 +107,42 @@ int main(int argc, char *argv[])
       }
       else
       {
-         std::cout << "\n"<<"Need to verify the doc.\n";
-         //.....
+         std::cout << "\nVerifying the doc...\n";
+         
+         std::string messageString = sha256(memblock);
+
+         std::ifstream messageFile;
+         messageFile.open(SIGNATURE_FILENAME);
+         std::string codedMessageString;
+         getline(messageFile, codedMessageString);
+         messageFile.close();
+
+         std::ifstream enFile;
+         enFile.open(EN_FILENAME);
+         std::string eString, nString;
+         getline(enFile, eString);
+         getline(enFile, nString);
+         enFile.close();
+
+         BigUnsignedInABase tempCodedMessage = BigUnsignedInABase(codedMessageString, 10);
+         BigUnsigned codedMessage = BigUnsigned(tempCodedMessage);
+         BigUnsigned e = BigUnsignedInABase(eString, 10);
+         BigUnsigned n = BigUnsignedInABase(nString, 10);
+
+         BigUnsigned oldMessage = modexp(codedMessage, e, n);
+         //std::string oldMessageString = std::string(oldMessage);
+
+         std::cout << "  oldMessage:" << oldMessage << ":\n";
+         std::cout << "codedMessage:" << codedMessage << ":\n";
+
+         if (oldMessage == codedMessage)
+         {
+            std::cout << "they're the same!\n";
+         }
+         else
+         {
+            std::cout << "they're not the same\n";
+         }
       }
       delete[] memblock;
     }
