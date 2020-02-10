@@ -11,8 +11,12 @@
 
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
-BigInteger convertBase16CharArrayToBase10Int(char charArray[], int sizeOfArray); // Takes a base 16 char array and converts it to a BigInteger
-int getValueFromChar(char c); // Returns an integer based on the character sent. Assumes base 16
+
+// const variables
+const std::string PQ_FILENAME = "p_q.txt"; // The filename of the file that will store the integers p and q
+const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
+const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
+const std::string SIGNATURE_FILENAME = "file.txt.signature"; // The filename of the file that will store the coded message
  
 int main(int argc, char *argv[])
 {
@@ -62,6 +66,23 @@ int main(int argc, char *argv[])
          // Getting the hash string
          std::string messageString = sha256(memblock);
 
+         std::ifstream dnFile;
+         dnFile.open(DN_FILENAME);
+         std::string dString, nString;
+         getline(dnFile, dString);
+         getline(dnFile, nString);
+         dString = dString.substr(0, dString.length() - 1);
+         nString = nString.substr(0, nString.length() - 1);
+
+         BigUnsignedInABase d = BigUnsignedInABase(dString, 10);
+         BigUnsignedInABase n = BigUnsignedInABase(nString, 10);
+
+
+         dnFile.close();
+
+         //EN_FILENAME
+         //BigInteger d = 
+
          /*// Getting how long the string is
          const int HASH_SIZE = messageString.length();
          const int CHAR_ARRAY_SIZE = HASH_SIZE + 1;
@@ -74,9 +95,23 @@ int main(int argc, char *argv[])
          std::cout << "string:" << messageString << ":\nchar a:";
          display(messageCharArray, CHAR_ARRAY_SIZE);*/
 
-         BigUnsignedInABase message = BigUnsignedInABase(messageString, 16);
+         BigUnsignedInABase tempMessage = BigUnsignedInABase(messageString, 16);
+         BigInteger message = BigInteger(tempMessage);
+         BigUnsigned codedMessage = modexp(message, d, n);
          std::cout << "messageString:" << messageString << ":\n";
+         std::cout << "  tempMessage:" << tempMessage << ":\n";
          std::cout << "      message:" << message << ":\n";
+         std::cout << "            d:" << d << ":\n";
+         std::cout << "            n:" << n << ":\n";
+         std::cout << " codedMessage:" << codedMessage << ":\n";
+
+         std::ofstream newFile;
+
+         newFile.open(SIGNATURE_FILENAME);
+         newFile << codedMessage;
+
+         newFile.close();
+
       }
       else
       {
