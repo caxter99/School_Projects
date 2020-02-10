@@ -10,6 +10,7 @@
 
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
+BigInteger convertBase16CharArrayToBase10Int(char charArray[], int sizeOfArray); // Takes a base 16 char array and converts it to a BigInteger
  
 int main(int argc, char *argv[])
 {
@@ -71,7 +72,8 @@ int main(int argc, char *argv[])
          std::cout << "string:" << messageString << ":\nchar a:";
          display(messageCharArray, CHAR_ARRAY_SIZE);
 
-         //int base10Hash = toNewBase(messageCharArray, CHAR_ARRAY_SIZE);
+         BigInteger messageBase10 = BigInteger(convertBase16CharArrayToBase10Int(messageCharArray, CHAR_ARRAY_SIZE));
+         std::cout << "messageBase10:" << messageBase10 << ":\n";
       }
       else
       {
@@ -85,6 +87,12 @@ int main(int argc, char *argv[])
     std::cout << "\n";
 
     return 0;
+}
+
+// Takes a base 16 char array and converts it to a BigInteger
+BigInteger convertBase16CharArrayToBase10Int(char charArray[], int sizeOfArray)
+{
+   return 0;
 }
 
 // Displays the char star
