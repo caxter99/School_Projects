@@ -61,8 +61,7 @@ int main(){
       //
       //
       // Creating the third large integer (n)
-      BigUnsigned n = BigUnsigned(1);
-      n = p * q;
+      BigUnsigned n = p * q;
       // Displaying the third big integer (n)
       std::cout << "Third Big Integer (n):\n";
       std::cout << n << "\n\n";
@@ -91,18 +90,26 @@ int main(){
          // Incrementing e by 2
          e = e + 2;
          // Using the Extended Euclidean Algorithm to find x, y, and d
-         extendedEuclidean(*getBigger(&m, &e), *getSmaller(&m, &e), d, x, y);
+         extendedEuclidean(m, e, d, x, y);
       }while(correct != d);
       // Displaying d
       std::cout << "Fifth Big Integer (d):\n";
       std::cout << d << "\n\n";
       // Displaying e
-      std::cout << "Fifth Big Integer (e):\n";
+      std::cout << "Sixth Big Integer (e):\n";
       std::cout << e << "\n\n";
+      // Displaying x
+      std::cout << "Seventh Big Integer (x):\n";
+      std::cout << x << "\n\n";
+      // Displaying y
+      std::cout << "Eighth Big Integer (y):\n";
+      std::cout << y << "\n\n";
 
       std::cout << "Writing the integers to files..." << std::endl;
-      writeAllToFiles(&p, &q, &e, &n, &d); // Writes all of the integers to the file
+      writeAllToFiles(&p, &q, &e, &n, &y); // Writes all of the integers to the file (p, q, e, n, and d)
       std::cout << "Done writing the integers to files." << std::endl;
+
+      //std::cout << "gcd(a, b) = x * a + y * b:\n" << d << " = " << x * m + y * e << std::endl;
       
 	} catch(char const* err) {
       // Telling the user the library threw an exception
@@ -158,7 +165,7 @@ bool testForPrimeStatus(BigUnsigned* num)
    BigUnsigned base2 = FERMANTS_SECOND_TEST; // Base for the second test
    BigUnsigned exponent = (*num) - 1; // The exponent for both tests
    BigUnsigned mod = (*num); // The mod for both tests
-   BigUnsigned passes = 1; // The number the result should return if the integers pass the test
+   BigUnsigned passes = BigUnsigned(1); // The number the result should return if the integers pass the test
 
    // This is the easy, non-special way
    return (passes == modexp(base1, exponent, mod) && passes == modexp(base2, exponent, mod));
@@ -224,7 +231,7 @@ void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned
    }
    else
    {
-      std::cout << "could not write e and e to filename " << EN_FILENAME << std::endl;
+      std::cout << "could not write e and n to filename " << EN_FILENAME << std::endl;
    }
    writingObject.close();
 
@@ -253,7 +260,7 @@ unsigned long createLargeE()
    {
       limit = 8;
    }
-   else if (limit == 0)
+   else if (limit <= 0)
    {
       limit = 1;
    }
