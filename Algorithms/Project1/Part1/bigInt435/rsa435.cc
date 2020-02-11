@@ -10,17 +10,18 @@
 
 BigUnsigned createPrimeNumber(int numberOfDigits); // Takes the number of base 10 digits and generates a number that is extremely likely to be prime
 bool testForPrimeStatus(BigUnsigned* num); // This function takes in a prime number and returns true if it is almost 100% likely to be prime, false otherwise
-BigUnsigned* getBigger(BigUnsigned* num1, BigUnsigned* num2); // Returns a pointer to the larger big int number
-BigUnsigned* getSmaller(BigUnsigned* num1, BigUnsigned* num2); // Returns a pointer to the smaller big int number
-void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigInteger* d); // Writes all of the integers to the file
-unsigned long createLargeE(); // Creates a large intiger to act as the initial e value
+void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigUnsigned* d); // Writes all of the integers to the file
+unsigned long createInitialE(); // Creates a large integer to act as the initial e value
+BigUnsigned createE(BigUnsigned m); // Creates a big unsigned e based on the big unsigned sent in
+BigInteger createX(BigUnsigned m, BigUnsigned e); // Returns a big unsigned x (assumes a correct e value)
 
 // Global const variables
+const bool SHOW_RESULTS = true; // If true, shows the results of every number that gets created (includes the tests)
+const bool SHOW_TESTS = true; // If true (along with SHOW_RESULTS), the tests will be displayed
 const int NUM_OF_DIGITS = 200; // Number of digits that will be in each big integer number (must be 155 or larger)
 const int FERMANTS_FIRST_TEST = 2; // The first test using Fermant's Little Theorem will use this number
 const int FERMANTS_SECOND_TEST = 3; // The second test using Fermant's Little Theorem will use this number
-//const int INITIAL_E = 7; // The initial starting point for e (must be an odd number)
-const unsigned long INITIAL_E = createLargeE(); // The initial starting point for e (must be an odd number)
+const unsigned long INITIAL_E = createInitialE(); // The initial starting point for e (must be an odd number)
 const std::string PQ_FILENAME = "p_q.txt"; // The filename of the file that will store the integers p and q
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
 const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
@@ -34,83 +35,78 @@ int main(){
       // Making sure it's actually random
       srand(time(NULL));
 		
-      // Displaying that it's my project
-      std::cout << "Devin Hopkins' Algorithms Project 1\n\n";
+      // Displaying that it's my project and that creating the integers has started
+      std::cout << "\nDevin Hopkins' Algorithms Project 1\nCreating all necessary integers...\n";
 
-      // Creating and displaying p
-      //
-      //
-      // Creating the first big integer (p)
-      BigUnsigned p = createPrimeNumber(NUM_OF_DIGITS); // Correct
-      //BigUnsigned p = BigUnsigned(11); // Testing
-      // Displaying the first big integer
-      std::cout << "First Bit Integer (p):\n";
-      std::cout << p << "\n\n";
+      // Creating p
+      BigUnsigned p = createPrimeNumber(NUM_OF_DIGITS);
 
-      // Creating and displaying q
-      //
-      //
-      // Creating the second big integer (q)
-      BigUnsigned q = createPrimeNumber(NUM_OF_DIGITS); // Correct
-      //BigUnsigned q = BigUnsigned(13); // Testing
-      // Displaying the second big number (q)
-      std::cout << "Second Big Integer (q):\n";
-      std::cout << q << "\n\n";
-      
-      // Creating and displaying n
-      //
-      //
-      // Creating the third large integer (n)
+      // Creating q
+      BigUnsigned q = createPrimeNumber(NUM_OF_DIGITS);
+
+      // Creating n
       BigUnsigned n = p * q;
-      // Displaying the third big integer (n)
-      std::cout << "Third Big Integer (n):\n";
-      std::cout << n << "\n\n";
 
-      // Creating and displaying m (aka phi of n)
-      //
-      //
-      // Creating the m (phi of n)
-      BigUnsigned m = BigUnsigned(1);
-      m = (p - 1) * (q - 1);
-      // Displaying the fourth big integer (phi of n, m)
-      std::cout << "Fourth Big Integer (phi of n, m):\n";
-      std::cout << m << "\n\n";
+      // Creating phi of n (stored in variable m)
+      BigUnsigned m = (p - 1) * (q - 1);
 
-      // Creating and displaying e, d, x, and y
-      //
-      //
-      // Creating big integers x, y, and d are for the x value, y value, and gcd respectively
-      BigInteger x, y, d;
-      BigInteger correct = BigInteger(1);
-      // Creating e, starting with the initial value minus 2 (since the first thing that happens after this is
-      // that 2 is added to e, hence negating this minus 2)
-      BigUnsigned e = BigUnsigned(INITIAL_E - 2);
-      // Goes until the GCD of m and e is 1
-      do {
-         // Incrementing e by 2
-         e = e + 2;
-         // Using the Extended Euclidean Algorithm to find x, y, and d
-         extendedEuclidean(m, e, d, x, y);
-      }while(correct != d);
-      // Displaying d
-      std::cout << "Fifth Big Integer (d):\n";
-      std::cout << d << "\n\n";
-      // Displaying e
-      std::cout << "Sixth Big Integer (e):\n";
-      std::cout << e << "\n\n";
-      // Displaying x
-      std::cout << "Seventh Big Integer (x):\n";
-      std::cout << x << "\n\n";
-      // Displaying y
-      std::cout << "Eighth Big Integer (y):\n";
-      std::cout << y << "\n\n";
+      // Creating e
+      BigUnsigned e = createE(m);
 
-      std::cout << "Writing the integers to files..." << std::endl;
-      writeAllToFiles(&p, &q, &e, &n, &y); // Writes all of the integers to the file (p, q, e, n, and d)
-      std::cout << "Done writing the integers to files." << std::endl;
+      // Creating d
+      BigUnsigned d = modinv(e, m);
 
-      //std::cout << "gcd(a, b) = x * a + y * b:\n" << d << " = " << x * m + y * e << std::endl;
+      // Letting the user know all of the integers have been created
+      std::cout << "All of the integers have been created.\n";
       
+      // Writes all of the integers to the file (p, q, e, n, and d)
+      writeAllToFiles(&p, &q, &e, &n, &d);
+
+      // Chcking to see if they are to be displayed
+      if (SHOW_RESULTS)
+      {
+         // Letting the user know they're about to see all of the results
+         std::cout << "Displaying all of the integers:\n";
+
+         // Displaying p
+         std::cout << "p:\n";
+         std::cout << p << "\n\n";
+
+         // Displaying q
+         std::cout << "q:\n";
+         std::cout << q << "\n\n";
+
+         // Displaying n
+         std::cout << "n:\n";
+         std::cout << n << "\n\n";
+
+         // Displaying phi of n (stored in variable m)
+         std::cout << "phi of n:\n";
+         std::cout << m << "\n\n";
+
+         // Displaying e
+         std::cout << "e:\n";
+         std::cout << e << "\n\n";
+
+         // Displaying d
+         std::cout << "d:\n";
+         std::cout << d << "\n\n";
+
+         // Checking to see if the user wants to see the tests
+         if (SHOW_TESTS)
+         {
+            // Telling the user about the tests
+            std::cout << "Tests:\n";
+
+            // First test
+            std::cout << "Test #1: (e * d) % phi of n = 1\n";
+            std::cout << "                          " << (e * d) % m << " = 1\n\n";
+
+            // Second test
+            //std::cout << "Test #2: (x * phi of n) + d * e = 1\n";
+            //std::cout << "                              " << (createX(m, e) * m) + (d * e) << " = 1\n\n";
+         }
+      }      
 	} catch(char const* err) {
       // Telling the user the library threw an exception
 		std::cout << "The library threw an exception:\n" << err << "\n";
@@ -171,44 +167,13 @@ bool testForPrimeStatus(BigUnsigned* num)
    return (passes == modexp(base1, exponent, mod) && passes == modexp(base2, exponent, mod));
 }
 
-// Returns a pointer to the larger big int number
-BigUnsigned* getBigger(BigUnsigned* num1, BigUnsigned* num2)
-{
-   // The first number is larger than the second number
-   if ((*num1) > (*num2))
-   {
-      // Return the first number
-      return num1;
-   }
-   // The second number is larger than the first number (or they're equal)
-   else
-   {
-      // Return the second number
-      return num2;
-   }
-}
-
-// Returns a pointer to the smaller big int number
-BigUnsigned* getSmaller(BigUnsigned* num1, BigUnsigned* num2)
-{
-   // The first number is smaller than the second number
-   if ((*num1) < (*num2))
-   {
-      // Return the first number
-      return num1;
-   }
-   // The second number is smaller than the first number (or they're equal)
-   else
-   {
-      // Return the second number
-      return num2;
-   }
-}
-
 // Writes all of the integers to the file
-void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigInteger* d)
+void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned* n, BigUnsigned* d)
 {
-   // Craeting the write file object
+   // Letting the user know that the integers are being written to the file
+   std::cout << "Writing the integers to files..." << std::endl;
+
+   // Creating the write file object
    std::ofstream writingObject;
 
    // Writing the p and q integers
@@ -219,7 +184,7 @@ void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned
    }
    else
    {
-      std::cout << "could not write p and q to filename " << PQ_FILENAME << std::endl;
+      std::cout << "Could not write p and q to filename " << PQ_FILENAME << std::endl;
    }
    writingObject.close();
 
@@ -231,7 +196,7 @@ void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned
    }
    else
    {
-      std::cout << "could not write e and n to filename " << EN_FILENAME << std::endl;
+      std::cout << "Could not write e and n to filename " << EN_FILENAME << std::endl;
    }
    writingObject.close();
 
@@ -243,22 +208,25 @@ void writeAllToFiles(BigUnsigned* p, BigUnsigned* q, BigUnsigned* e, BigUnsigned
    }
    else
    {
-      std::cout << "could not write d and n to filename " << DN_FILENAME << std::endl;
+      std::cout << "Could not write d and n to filename " << DN_FILENAME << std::endl;
    }
    writingObject.close();
+
+   // Letting the user know that everything has been written
+   std::cout << "Done writing the integers to files." << std::endl;
 }
 
-// Creates a large intiger to act as the initial e value
-unsigned long createLargeE()
+// Creates a large integer to act as the initial e value
+unsigned long createInitialE()
 {
    // Initializing the temporary e (tempE)
    unsigned long tempE = 1;
 
    // Creating the limit for how many digits the tempE can be
    int limit = NUM_OF_DIGITS / 2;
-   if (limit > 8)
+   if (limit > 7)
    {
-      limit = 8;
+      limit = 7;
    }
    else if (limit <= 0)
    {
@@ -282,6 +250,43 @@ unsigned long createLargeE()
 
    // Returning the e value
    return tempE;
+}
+
+// Creates a big unsigned e based on the big unsigned sent in
+BigUnsigned createE(BigUnsigned m)
+{
+   // Creating everything necessary to find e
+   BigInteger x, y, d;
+   BigInteger correct = BigInteger(1);
+
+   // Creating e, starting with the initial value minus 2 (since the first thing that happens after this is
+   // that 2 is added to e, hence negating this minus 2)
+   BigUnsigned e = BigUnsigned(INITIAL_E - 2);
+
+   // Goes until the GCD of m and e is 1
+   do {
+      // Incrementing e by 2
+      e = e + 2;
+
+      // Using the Extended Euclidean Algorithm to find x, y, and d
+      extendedEuclidean(m, e, d, x, y);
+   }while(correct != d);
+
+   // Return e
+   return e;
+}
+
+// Returns a big integer x (assumes a correct e value)
+BigInteger createX(BigUnsigned m, BigUnsigned e)
+{
+   // Creating all the variables necessary for the Extended Euclidean Algorithm
+   BigInteger x, y, d;
+
+   // Running the Extended Euclidean Algorithm
+   extendedEuclidean(m, e, d, x, y);
+
+   // Returning x
+   return x;
 }
 
 
