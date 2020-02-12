@@ -12,10 +12,7 @@
 // PUT THIS INTO COMMAND LINE TO DO PART 1
 //./messageDigest435 s file.txt
 // THEN, PUT THIS INTO COMMAND LINE TO DO PART 2
-//./messageDigest435 v file.txt file.txt.signature 
-
-// Function headers
-void display(char chr[], int sizeOfArray); // Displays the char array
+//./messageDigest435 v file.txt file.txt.signature
 
 // const variables
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
@@ -55,12 +52,9 @@ int main(int argc, char *argv[])
         
       if (argv[1][0]=='s') {
          std::cout << "\nSigning the doc...\n";
-         
-         // Getting the hash string from the file.txt
-         std::string originalMessageString = sha256(memblock);
 
          // Making the original message into an integer
-         BigInteger originalMessageInt = BigInteger(BigUnsignedInABase(originalMessageString, 16));
+         BigInteger originalMessageInt = BigInteger(BigUnsignedInABase(sha256(memblock), 16));
 
          // Reading in integers d and n from the file
          std::ifstream dnFile;
@@ -88,13 +82,11 @@ int main(int argc, char *argv[])
       }
       else
       {
+         // Letting the user know what's going on
          std::cout << "\nVerifying the doc...\n";
 
-         // Getting the hash from the file.txt
-         std::string originalMessageString = sha256(memblock);
-         
          // Making the original message into an integer
-         BigUnsigned originalMessageInt = BigUnsigned(BigUnsignedInABase(originalMessageString, 16));
+         BigUnsigned originalMessageInt = BigUnsigned(BigUnsignedInABase(sha256(memblock), 16));
 
          // Getting the encrpyted message integer in the form of a string from the original file
          std::string sigFilename = argv[3];
@@ -117,8 +109,7 @@ int main(int argc, char *argv[])
          BigUnsigned n = BigUnsignedInABase(nString, 10);
 
          // Getting the encrpyted message integer by using the string from earlier
-         BigUnsignedInABase tempCodedMessage = BigUnsignedInABase(codedMessageString, 10);
-         BigUnsigned codedMessage = BigUnsigned(tempCodedMessage);
+         BigUnsigned codedMessage = BigUnsigned(BigUnsignedInABase(codedMessageString, 10));
 
          // Decrpyting the coded message
          BigUnsigned oldMessage = modexp(codedMessage, e, n);
@@ -145,21 +136,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-// Displays the char star
-void display(char chr[], int sizeOfArray)
-{
-   // Looping through and displaying each bit
-   for (int i = 0; i < sizeOfArray; i++)
-   {
-      std::cout << chr[i];
-   }
-
-   // Ending on a new line
-   std::cout << "\n";
-}
-
-
-
-
-

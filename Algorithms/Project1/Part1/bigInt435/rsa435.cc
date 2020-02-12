@@ -121,7 +121,7 @@ int main(){
 // Takes the number of base 10 digits and generates a number that is extremely likely to be prime
 BigUnsigned createPrimeNumber(int numberOfDigits)
 {
-   // Creating the big integer (bigIntNum)
+   // Creating the big integer
    BigUnsigned bigIntNum = BigUnsigned(1);
 
    // Puts 1 less than the total number of digits into the number
