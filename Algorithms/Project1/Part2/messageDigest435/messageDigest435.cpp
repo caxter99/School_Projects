@@ -12,7 +12,7 @@
 // PUT THIS INTO COMMAND LINE TO DO PART 1
 //./messageDigest435 s file.txt
 // THEN, PUT THIS INTO COMMAND LINE TO DO PART 2
-//./messageDigest435 v file.txt file.txt.signature
+//./messageDigest435 v file.txt signature_file
 
 // const variables
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
