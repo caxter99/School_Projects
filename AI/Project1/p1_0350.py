@@ -27,6 +27,8 @@ MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of time
 RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
 # that the program will stop the program from trying to spawn a new state from
 # the current one
+ORGINAL_DEPTH_CAP = 0 # This is the depth cap (note: this will be changed throughout
+# the program)
                 
 from random import randint # just for this class
 import sys
@@ -463,7 +465,11 @@ class MoveCalc:
         i = 0
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
-    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, selectionType, timesThrough = 0):
+    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, selectionType, depth, depthCap):
+        # Making sure the depth cap hasn't been reached before it dives deeper
+        if (depth >= depthCap):
+            return False
+        
         # Variables for state 1
         step1 = MAX_STEPS
         pos1 = True
@@ -538,7 +544,7 @@ class MoveCalc:
                 statesOnTheWay.append(state1.getState())
             
                 # Checking to see if state1 will lead to the goal state
-                if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, timesThrough + 1)):
+                if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, depth, depthCap)):
                     # It lead to the goal state
                     return True
                 else:
@@ -549,7 +555,7 @@ class MoveCalc:
                 statesOnTheWay.append(state2.getState())
             
                 # Checking to see if state2 will lead to the goal state
-                if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, timesThrough + 1)):
+                if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, depth, depthCap)):
                     # It lead to the goal state
                     return True
                 else:
@@ -560,7 +566,7 @@ class MoveCalc:
                 statesOnTheWay.append(state3.getState())
                 
                 # Checking to see if state3 will lead to the goal state
-                if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, timesThrough + 1)):
+                if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, depth, depthCap)):
                     # It lead to the goal state
                     return True
                 else:
@@ -571,7 +577,7 @@ class MoveCalc:
                 statesOnTheWay.append(state4.getState())
             
                 # Checking to see if state4 will lead to the goal state
-                if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, timesThrough + 1)):
+                if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, depth, depthCap)):
                     # It lead to the goal state
                     return True
                 else:
@@ -589,7 +595,7 @@ class MoveCalc:
                     statesOnTheWay.append(state1.getState())
             
                     # Checking to see if state1 will lead to the goal state
-                    if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, timesThrough + 1)):
+                    if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, depth, depthCap)):
                         # It lead to the goal state
                         return True
                     else:
@@ -605,7 +611,7 @@ class MoveCalc:
                     statesOnTheWay.append(state2.getState())
             
                     # Checking to see if state2 will lead to the goal state
-                    if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, timesThrough + 1)):
+                    if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, depth, depthCap)):
                         # It lead to the goal state
                         return True
                     else:
@@ -621,7 +627,7 @@ class MoveCalc:
                     statesOnTheWay.append(state3.getState())
                 
                     # Checking to see if state3 will lead to the goal state
-                    if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, timesThrough + 1)):
+                    if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, depth, depthCap)):
                         # It lead to the goal state
                         return True
                     else:
@@ -637,7 +643,7 @@ class MoveCalc:
                     statesOnTheWay.append(state4.getState())
             
                     # Checking to see if state4 will lead to the goal state
-                    if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, timesThrough + 1)):
+                    if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, depth, depthCap)):
                         # It lead to the goal state
                         return True
                     else:
@@ -656,11 +662,7 @@ class MoveCalc:
         return False
     
     # Calculates the best move and returns the new state
-    def solve(self, previousStates, statesOnTheWay, currentState, goalState, selectionType, timesThrough = 0):
-        # TESTING
-        #print("Current State:")
-        #currentState.displayState()
-        #print("")
+    def solve(self, previousStates, statesOnTheWay, currentState, goalState, selectionType, depth, depthCap):
         # Checking to see if the current state matches the goal state
         if (currentState.compare(goalState)):
             return True
@@ -669,7 +671,7 @@ class MoveCalc:
         previousStates.append(currentState.getState())
         
         # Making sure the program isn't near the limit for recursion
-        if (timesThrough >= MAX_RECURSION - RECURSION_SAFETY_NET):
+        if (depth * 2 >= MAX_RECURSION - RECURSION_SAFETY_NET):
             # If it is, can't go on any longer or risk crashing
             return False
         
@@ -698,7 +700,7 @@ class MoveCalc:
             downState = NULL
         
         # Returning the best state to step to
-        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, selectionType, timesThrough + 1)
+        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, selectionType, depth + 1, depthCap)
 
 # Game class
 class Game:
@@ -830,16 +832,20 @@ class Game:
         # Keeping track of whether or not it was solved
         solved = False
         
+        # Setting the depth cap to the original
+        depthCap = ORGINAL_DEPTH_CAP
+        
         # Trying to solve the puzzle
         while (not solved):
-            if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT)):
+            if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT, 0, depthCap)):
                 print("Puzzle solved!")
                 print("")
                 solved = True
                 self.viewAllSteps()
             else:
-                solved = True # TEMP LINE
-                print("Unsolvable puzzle.")
+                #print("Unsolvable puzzle.")
+                # Increase the depth cap
+                depthCap = depthCap + 1
         
         # Part 2: Random Selection
         # Making sure we actually want to try and take on this adventure
@@ -849,17 +855,21 @@ class Game:
         
             # Keeping track of whether or not it was solved
             solved = False
+            
+            # Setting the depth cap to the original
+            depthCap = ORGINAL_DEPTH_CAP
         
             # Trying to solve the puzzle
             while (not solved):
-                if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, RANDOM_SELECT_INT)):
+                if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, RANDOM_SELECT_INT, 0, depthCap)):
                     print("Puzzle solved!")
                     print("")
                     solved = True
                     self.viewAllSteps()
                 else:
-                    solved = True # TEMP LINE
-                    print("Unsolvable puzzle.")
+                    #print("Unsolvable puzzle.")
+                    # Increase the depth cap
+                    depthCap = depthCap + 1
             
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
