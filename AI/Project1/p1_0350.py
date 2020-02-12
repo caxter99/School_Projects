@@ -827,7 +827,7 @@ class Game:
     def playGame(self):
         # Part 1: Smart Selection
         # Letting the user know the AI is currently trying to solve the puzzle
-        print("Currently trying to solve the puzzle by using smart selection...")
+        print("Currently trying to solve the puzzle by using the Progressive Deepening Method...")
         
         # Keeping track of whether or not it was solved
         solved = False
