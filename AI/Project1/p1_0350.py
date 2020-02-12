@@ -449,7 +449,7 @@ class MoveCalc:
         i = 0
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
-    def goDeeper(self, previousStates, state1, state2, state3, state4, goalState):
+    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState):
         # Variables for state 1
         step1 = MAX_STEPS
         pos1 = True
@@ -518,34 +518,59 @@ class MoveCalc:
         #print("state 4 steps:", step4)
         
         if (pos1):
+            # Adding state1 to the list of states on the way
+            statesOnTheWay.append(state1.getState())
+            
             # Checking to see if state1 will lead to the goal state
-            if (self.solve(previousStates, state1, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state1, goalState)):
                 # It lead to the goal state
                 return True
+            else:
+                # Removing state1 because it wasn't on the way
+                statesOnTheWay.remove(state1.getState())
         if (pos2):
+            # Adding state2 to the list of states on the way
+            statesOnTheWay.append(state2.getState())
+            
             # Checking to see if state2 will lead to the goal state
-            if (self.solve(previousStates, state2, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state2, goalState)):
                 # It lead to the goal state
                 return True
+            else:
+                # Removing state2 because it wasn't on the way
+                statesOnTheWay.remove(state2.getState())
         if (pos3):
+            # Adding state3 to the list of states on the way
+            statesOnTheWay.append(state3.getState())
+            
             # Checking to see if state3 will lead to the goal state
-            if (self.solve(previousStates, state3, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state3, goalState)):
                 # It lead to the goal state
                 return True
+            else:
+                # Removing state3 because it wasn't on the way
+                statesOnTheWay.remove(state3.getState())
         if (pos4):
+            # Adding state4 to the list of states on the way
+            statesOnTheWay.append(state4.getState())
+            
             # Checking to see if state4 will lead to the goal state
-            if (self.solve(previousStates, state4, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state4, goalState)):
                 # It lead to the goal state
                 return True
+            else:
+                # Removing state4 because it wasn't on the way
+                statesOnTheWay.remove(state4.getState())
         
         # No state led to the goal state
         return False
     
     # Calculates the best move and returns the new state
-    def solve(self, previousStates, currentState, goalState):
-        print("Current State:")
-        currentState.displayState()
-        print("")
+    def solve(self, previousStates, statesOnTheWay, currentState, goalState):
+        # TESTING
+        #print("Current State:")
+        #currentState.displayState()
+        #print("")
         # Checking to see if the current state matches the goal state
         if (currentState.compare(goalState)):
             return True
@@ -578,7 +603,7 @@ class MoveCalc:
             downState = NULL
         
         # Returning the best state to step to
-        return self.goDeeper(previousStates, leftState, rightState, upState, downState, goalState)
+        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState)
 
 # Game class
 class Game:
@@ -586,6 +611,7 @@ class Game:
     # Initializing the variables needed for the game
     helper = HelpfulFunctions()
     mover = MoveCalc()
+    statesOnTheWay = []
     previousStates = []
     currentState = GameState()
     goalState = GameState()
@@ -598,24 +624,25 @@ class Game:
     # Displays every single step taken, including the initial and goal states
     def viewAllSteps(self):
         # Displaying the current state
-        print("Current State:")
+        print("Initial State (Step 0)")
         self.currentState.displayState()
         print("")
         
         # Displaying every step
-        self.viewPreviousStatesInReverse()
+        self.viewPreviousSteps()
         
         # Displaying the goal state
-        print("Goal State:")
+        print("Goal State (Step ", len(self.statesOnTheWay) - 1, ")", sep = "")
         self.goalState.displayState()
         print("")
     
     # Displays all of the game states in previousStates in reverse order
-    def viewPreviousStatesInReverse(self):
+    def viewPreviousSteps(self):
         count = 0
         # Looping backwards through the previous states
-        for x in range(len(self.previousStates) - 1, -1, -1):
-            tempState = GameState(self.previousStates[x])
+        #for x in range(len(self.statesOnTheWay) - 1, -1, -1):
+        for x in range(1, len(self.statesOnTheWay) - 1):
+            tempState = GameState(self.statesOnTheWay[x])
             count = count + 1
             print("Step Number", count)
             tempState.displayState()
@@ -683,9 +710,9 @@ class Game:
         if (not TRUE_RANDOM):
             self.currentState.shuffle(SHUFFLE_TIMES - 1)
             self.goalState.shuffle(SHUFFLE_TIMES - 1)
-    
-        # Making sure the formatting stays nice and neat
-        #self.helper.clearScreen()
+        
+        # Adding the initial state to the list of states on the way
+        self.statesOnTheWay.append(self.currentState.getState())
     
         # Displaying the initial state
         print("Initial State:")
@@ -706,7 +733,7 @@ class Game:
         
         # Trying to solve the puzzle
         while (not solved):
-            if (self.mover.solve(self.previousStates, self.currentState, self.goalState)):
+            if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState)):
                 print("Puzzle solved!")
                 print("")
                 solved = True
