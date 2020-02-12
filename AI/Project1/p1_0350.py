@@ -16,6 +16,9 @@ MAX_STEPS = float('inf') # This is used for states that have no way of finishing
                 # checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by the user)
                 # will be randomly made or not
+ALWAYS_BE_SMART = True # If true, it won't run the random selection method
+RANDOM_SELECT_INT = 0 # The integer to signify that it should do random selection
+SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should do smart selection
 SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to create
                 # the starting state (if applicable)
 MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times recursion can occur
@@ -71,7 +74,7 @@ class HelpfulFunctions:
         if (first <= second and first <= third and first <= fourth):
             return True
         
-        # It's not the smallest value
+        # It's not the smallest value or tied with the smallest value
         return False
     
     # Creates a random, valid list and returns it
@@ -455,7 +458,7 @@ class MoveCalc:
         i = 0
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
-    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, timesThrough = 0):
+    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, selectionType, timesThrough = 0):
         # Variables for state 1
         step1 = MAX_STEPS
         pos1 = True
@@ -523,56 +526,132 @@ class MoveCalc:
         #print("state 3 steps:", step3)
         #print("state 4 steps:", step4)
         
-        if (pos1):
-            # Adding state1 to the list of states on the way
-            statesOnTheWay.append(state1.getState())
+        # The selection type is random
+        if (selectionType == RANDOM_SELECT_INT):
+            if (pos1):
+                # Adding state1 to the list of states on the way
+                statesOnTheWay.append(state1.getState())
             
-            # Checking to see if state1 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state1, goalState, timesThrough + 1)):
-                # It lead to the goal state
-                return True
-            else:
-                # Removing state1 because it wasn't on the way
-                statesOnTheWay.remove(state1.getState())
-        if (pos2):
-            # Adding state2 to the list of states on the way
-            statesOnTheWay.append(state2.getState())
+                # Checking to see if state1 will lead to the goal state
+                if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, timesThrough + 1)):
+                    # It lead to the goal state
+                    return True
+                else:
+                    # Removing state1 because it wasn't on the way
+                    statesOnTheWay.remove(state1.getState())
+            if (pos2):
+                # Adding state2 to the list of states on the way
+                statesOnTheWay.append(state2.getState())
             
-            # Checking to see if state2 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state2, goalState, timesThrough + 1)):
-                # It lead to the goal state
-                return True
-            else:
-                # Removing state2 because it wasn't on the way
-                statesOnTheWay.remove(state2.getState())
-        if (pos3):
-            # Adding state3 to the list of states on the way
-            statesOnTheWay.append(state3.getState())
+                # Checking to see if state2 will lead to the goal state
+                if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, timesThrough + 1)):
+                    # It lead to the goal state
+                    return True
+                else:
+                    # Removing state2 because it wasn't on the way
+                    statesOnTheWay.remove(state2.getState())
+            if (pos3):
+                # Adding state3 to the list of states on the way
+                statesOnTheWay.append(state3.getState())
+                
+                # Checking to see if state3 will lead to the goal state
+                if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, timesThrough + 1)):
+                    # It lead to the goal state
+                    return True
+                else:
+                    # Removing state3 because it wasn't on the way
+                    statesOnTheWay.remove(state3.getState())
+            if (pos4):
+                # Adding state4 to the list of states on the way
+                statesOnTheWay.append(state4.getState())
             
-            # Checking to see if state3 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state3, goalState, timesThrough + 1)):
-                # It lead to the goal state
-                return True
-            else:
-                # Removing state3 because it wasn't on the way
-                statesOnTheWay.remove(state3.getState())
-        if (pos4):
-            # Adding state4 to the list of states on the way
-            statesOnTheWay.append(state4.getState())
+                # Checking to see if state4 will lead to the goal state
+                if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, timesThrough + 1)):
+                    # It lead to the goal state
+                    return True
+                else:
+                    # Removing state4 because it wasn't on the way
+                    statesOnTheWay.remove(state4.getState())
+        # The selection type is smart
+        elif (selectionType == SMART_SELECT_INT):
+            # Gathering if there are still options left
+            optionsLeftToTry = ((pos1 or pos2) or (pos3 or pos4))
             
-            # Checking to see if state4 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state4, goalState, timesThrough + 1)):
-                # It lead to the goal state
-                return True
-            else:
-                # Removing state4 because it wasn't on the way
-                statesOnTheWay.remove(state4.getState())
+            # Looping while there are still options to try
+            while(optionsLeftToTry):
+                if (pos1 and self.helper.compareFourLoose(step1, step2, step3, step4)):
+                    # Adding state1 to the list of states on the way
+                    statesOnTheWay.append(state1.getState())
+            
+                    # Checking to see if state1 will lead to the goal state
+                    if (self.solve(previousStates, statesOnTheWay, state1, goalState, selectionType, timesThrough + 1)):
+                        # It lead to the goal state
+                        return True
+                    else:
+                        # Removing state1 because it wasn't on the way
+                        statesOnTheWay.remove(state1.getState())
+                        
+                        # Making sure the number of steps doesn't mess up any future
+                        # calculations and that state1 is no longer an option to pick
+                        step1 = MAX_STEPS
+                        pos1 = False
+                if (pos2 and self.helper.compareFourLoose(step2, step1, step3, step4)):
+                    # Adding state2 to the list of states on the way
+                    statesOnTheWay.append(state2.getState())
+            
+                    # Checking to see if state2 will lead to the goal state
+                    if (self.solve(previousStates, statesOnTheWay, state2, goalState, selectionType, timesThrough + 1)):
+                        # It lead to the goal state
+                        return True
+                    else:
+                        # Removing state2 because it wasn't on the way
+                        statesOnTheWay.remove(state2.getState())
+                        
+                        # Making sure the number of steps doesn't mess up any future
+                        # calculations and that state2 is no longer an option to pick
+                        step2 = MAX_STEPS
+                        pos2 = False
+                if (pos3 and self.helper.compareFourLoose(step3, step2, step1, step4)):
+                    # Adding state3 to the list of states on the way
+                    statesOnTheWay.append(state3.getState())
+                
+                    # Checking to see if state3 will lead to the goal state
+                    if (self.solve(previousStates, statesOnTheWay, state3, goalState, selectionType, timesThrough + 1)):
+                        # It lead to the goal state
+                        return True
+                    else:
+                        # Removing state3 because it wasn't on the way
+                        statesOnTheWay.remove(state3.getState())
+                        
+                        # Making sure the number of steps doesn't mess up any future
+                        # calculations and that state3 is no longer an option to pick
+                        step3 = MAX_STEPS
+                        pos3 = False
+                if (pos4 and self.helper.compareFourLoose(step4, step2, step3, step1)):
+                    # Adding state4 to the list of states on the way
+                    statesOnTheWay.append(state4.getState())
+            
+                    # Checking to see if state4 will lead to the goal state
+                    if (self.solve(previousStates, statesOnTheWay, state4, goalState, selectionType, timesThrough + 1)):
+                        # It lead to the goal state
+                        return True
+                    else:
+                        # Removing state4 because it wasn't on the way
+                        statesOnTheWay.remove(state4.getState())
+                        
+                        # Making sure the number of steps doesn't mess up any future
+                        # calculations and that state4 is no longer an option to pick
+                        step4 = MAX_STEPS
+                        pos4 = False
+                        
+                # Gathering if there are still options left
+                optionsLeftToTry = ((pos1 or pos2) or (pos3 or pos4))
         
         # No state led to the goal state
         return False
     
     # Calculates the best move and returns the new state
-    def solve(self, previousStates, statesOnTheWay, currentState, goalState, timesThrough = 0):
+    def solve(self, previousStates, statesOnTheWay, currentState, goalState, selectionType, timesThrough = 0):
         # TESTING
         #print("Current State:")
         #currentState.displayState()
@@ -585,7 +664,7 @@ class MoveCalc:
         previousStates.append(currentState.getState())
         
         # Making sure the program isn't near the limit for recursion
-        if (timesThrough >= MAX_RECURSION - RECURSION_SAFETY_NET):
+        if (timesThrough >= MAX_RECURSION):
             # If it is, can't go on any longer or risk crashing
             return False
         
@@ -614,7 +693,7 @@ class MoveCalc:
             downState = NULL
         
         # Returning the best state to step to
-        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, timesThrough + 1)
+        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, selectionType, timesThrough + 1)
 
 # Game class
 class Game:
@@ -747,7 +826,7 @@ class Game:
         
         # Trying to solve the puzzle
         while (not solved):
-            if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState)):
+            if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT)):
                 print("Puzzle solved!")
                 print("")
                 solved = True
