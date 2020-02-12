@@ -11,7 +11,7 @@ This will make the necessary files. To run the program, type:
 
 - ./rsa435
 
-This will create all of the integers necessary for part 2.
+This will create all of the integers necessary for part 2. You do not, however, have to run part 1 before running part 2 as I have provided integers.
 
 # For Part 2
 In a terminal, navigate to the directory containing part 2.
