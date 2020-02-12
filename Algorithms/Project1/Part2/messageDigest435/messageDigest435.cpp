@@ -17,14 +17,14 @@
 // const variables
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
 const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
-const std::string SIGNATURE_FILENAME = "file.txt.signature"; // The filename of the file that will store the coded message
+const std::string SIGNATURE_FILENAME = "signature_file"; // The filename of the file that will store the coded message
  
 int main(int argc, char *argv[])
 {
    if (!(argc == 3 && argv[1][0] == 's') && !(argc == 4 && argv[1][0] == 'v'))
    {
       std::cout << "wrong format! should be \"a.exe s file.txt\"\n";
-      std::cout << "                     or \"a.exe v file.txt file.txt.signature\"";
+      std::cout << "                     or \"a.exe v file.txt signature_file\"";
    }
    else {
       std::string filename = argv[2];
