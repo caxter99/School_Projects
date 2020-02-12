@@ -12,16 +12,21 @@ Main class:
 NUM_OF_X_GRID = 3 # The width of the grid
 NUM_OF_Y_GRID = 3 # The height of the grid
 NULL = "null" # The null value
-MAX_STEPS = float('inf') # This is used for states that have no way of finishing (or other error methods for
-                # checking steps remaining)
-TRUE_RANDOM = False # This is to say if the created states (if not created by the user)
-                # will be randomly made or not
+MAX_STEPS = float('inf') # This is used for states that have no way of finishing
+# (or other error methods for checking steps remaining)
+TRUE_RANDOM = False # This is to say if the created states (if not created by
+# the user) will be randomly made or not
 ALWAYS_BE_SMART = True # If true, it won't run the random selection method
+# (because that could take an extremely long time)
 RANDOM_SELECT_INT = 0 # The integer to signify that it should do random selection
-SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should do smart selection
-SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to create
-                # the starting state (if applicable)
+SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
+# do smart selection
+SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to
+# create the starting state (if applicable)
 MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times recursion can occur
+RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
+# that the program will stop the program from trying to spawn a new state from
+# the current one
                 
 from random import randint # just for this class
 import sys
@@ -95,7 +100,7 @@ class HelpfulFunctions:
                 # They must be entered as strings, because if the user entered the
                 # other grid, the other grid will be all strings. The rest of the
                 # program assumes these values will be strings
-                newList.append(str((startingVal + (incrementVal * x)) % 9))
+                newList.append(str((startingVal + (incrementVal * x)) % (NUM_OF_X_GRID * NUM_OF_Y_GRID)))
        # Not truly random
         else:
             # Creating a straight up normal list
@@ -664,7 +669,7 @@ class MoveCalc:
         previousStates.append(currentState.getState())
         
         # Making sure the program isn't near the limit for recursion
-        if (timesThrough >= MAX_RECURSION):
+        if (timesThrough >= MAX_RECURSION - RECURSION_SAFETY_NET):
             # If it is, can't go on any longer or risk crashing
             return False
         
@@ -818,8 +823,9 @@ class Game:
         print("")
         
     def playGame(self):
+        # Part 1: Smart Selection
         # Letting the user know the AI is currently trying to solve the puzzle
-        print("Currently trying to solve the puzzle...")
+        print("Currently trying to solve the puzzle by using smart selection...")
         
         # Keeping track of whether or not it was solved
         solved = False
@@ -834,6 +840,26 @@ class Game:
             else:
                 solved = True # TEMP LINE
                 print("Unsolvable puzzle.")
+        
+        # Part 2: Random Selection
+        # Making sure we actually want to try and take on this adventure
+        if (not ALWAYS_BE_SMART):
+            # Letting the user know the AI is currently trying to solve the puzzle
+            print("Currently trying to solve the puzzle by using random selection...")
+        
+            # Keeping track of whether or not it was solved
+            solved = False
+        
+            # Trying to solve the puzzle
+            while (not solved):
+                if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, RANDOM_SELECT_INT)):
+                    print("Puzzle solved!")
+                    print("")
+                    solved = True
+                    self.viewAllSteps()
+                else:
+                    solved = True # TEMP LINE
+                    print("Unsolvable puzzle.")
             
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
