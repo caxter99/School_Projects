@@ -16,10 +16,12 @@ MAX_STEPS = float('inf') # This is used for states that have no way of finishing
                 # checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by the user)
                 # will be randomly made or not
-SHUFFLE_TIMES = 3 # The number of times the goal state will be shuffled to create
+SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to create
                 # the starting state (if applicable)
+MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times recursion can occur
                 
 from random import randint # just for this class
+import sys
 
 # Just a bunch of helpful functions
 class HelpfulFunctions:
@@ -27,6 +29,10 @@ class HelpfulFunctions:
     def __init__(self):
         # Empty, nothing to do
         i = 0
+    
+    # Set the recursion limit
+    def setRecursionLimit(self, limit):
+        sys.setrecursionlimit(limit)
     
     # Compares four values and returns the largest value of the four (does not
     # count values equal to MAX_STEPS)
@@ -449,7 +455,7 @@ class MoveCalc:
         i = 0
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
-    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState):
+    def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, timesThrough = 0):
         # Variables for state 1
         step1 = MAX_STEPS
         pos1 = True
@@ -522,7 +528,7 @@ class MoveCalc:
             statesOnTheWay.append(state1.getState())
             
             # Checking to see if state1 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state1, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state1, goalState, timesThrough + 1)):
                 # It lead to the goal state
                 return True
             else:
@@ -533,7 +539,7 @@ class MoveCalc:
             statesOnTheWay.append(state2.getState())
             
             # Checking to see if state2 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state2, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state2, goalState, timesThrough + 1)):
                 # It lead to the goal state
                 return True
             else:
@@ -544,7 +550,7 @@ class MoveCalc:
             statesOnTheWay.append(state3.getState())
             
             # Checking to see if state3 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state3, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state3, goalState, timesThrough + 1)):
                 # It lead to the goal state
                 return True
             else:
@@ -555,7 +561,7 @@ class MoveCalc:
             statesOnTheWay.append(state4.getState())
             
             # Checking to see if state4 will lead to the goal state
-            if (self.solve(previousStates, statesOnTheWay, state4, goalState)):
+            if (self.solve(previousStates, statesOnTheWay, state4, goalState, timesThrough + 1)):
                 # It lead to the goal state
                 return True
             else:
@@ -566,7 +572,7 @@ class MoveCalc:
         return False
     
     # Calculates the best move and returns the new state
-    def solve(self, previousStates, statesOnTheWay, currentState, goalState):
+    def solve(self, previousStates, statesOnTheWay, currentState, goalState, timesThrough = 0):
         # TESTING
         #print("Current State:")
         #currentState.displayState()
@@ -577,6 +583,11 @@ class MoveCalc:
         
         # Adding the current state to the list of previous states
         previousStates.append(currentState.getState())
+        
+        # Making sure the program isn't near the limit for recursion
+        if (timesThrough >= MAX_RECURSION - RECURSION_SAFETY_NET):
+            # If it is, can't go on any longer or risk crashing
+            return False
         
         # All of new vriables to hold the new game states
         leftState = GameState()
@@ -603,7 +614,7 @@ class MoveCalc:
             downState = NULL
         
         # Returning the best state to step to
-        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState)
+        return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, timesThrough + 1)
 
 # Game class
 class Game:
@@ -650,6 +661,9 @@ class Game:
         
     # The set up for the game
     def setUp(self):
+        # Setting the recursion limit
+        self.helper.setRecursionLimit(MAX_RECURSION)
+        
         # Initializing the start list
         startStateList = []
     
