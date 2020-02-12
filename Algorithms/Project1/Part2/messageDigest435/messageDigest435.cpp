@@ -12,7 +12,7 @@
 // PUT THIS INTO COMMAND LINE TO DO PART 1
 //./messageDigest435 s file.txt
 // THEN, PUT THIS INTO COMMAND LINE TO DO PART 2
-//./messageDigest435 v file.txt.signature
+//./messageDigest435 v file.txt file.txt.signature 
 
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
@@ -20,15 +20,17 @@ void display(char chr[], int sizeOfArray); // Displays the char array
 // const variables
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
 const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
-const std::string SIGNATURE_FILENAME = "file.txt.signature.Copy"; // The filename of the file that will store the coded message
+const std::string SIGNATURE_FILENAME = "file.txt.signature"; // The filename of the file that will store the coded message
  
 int main(int argc, char *argv[])
 {
-   if (argc != 3 || (argv[1][0]!='s' && argv[1][0]!='v')) 
-      std::cout << "wrong format! should be \"a.exe s filename\"";
+   if (!(argc == 3 && argv[1][0] == 's') && !(argc == 4 && argv[1][0] == 'v'))
+   {
+      std::cout << "wrong format! should be \"a.exe s file.txt\"\n";
+      std::cout << "                     or \"a.exe v file.txt file.txt.signature\"";
+   }
    else {
       std::string filename = argv[2];
-      
             
       //read the file
       std::streampos begin,end;
@@ -54,60 +56,13 @@ int main(int argc, char *argv[])
       if (argv[1][0]=='s') {
          std::cout << "\nSigning the doc...\n";
          
-         // Getting the hash string
+         // Getting the hash string from the file.txt
          std::string originalMessageString = sha256(memblock);
-         std::cout << "message string:" << originalMessageString << std::endl;
 
-         std::ifstream enFile;
-         enFile.open(EN_FILENAME);
-         std::string eString, nString;
-         getline(enFile, eString);
-         getline(enFile, nString);
-         enFile.close();
+         // Making the original message into an integer
+         BigInteger originalMessageInt = BigInteger(BigUnsignedInABase(originalMessageString, 16));
 
-         BigUnsignedInABase e = BigUnsignedInABase(eString, 10);
-         BigUnsignedInABase n = BigUnsignedInABase(nString, 10);
-
-         //BigUnsignedInABase tempMessage = BigUnsignedInABase(messageString, 16);
-         //BigInteger message = BigInteger(tempMessage);
-         BigInteger originalMessage = BigInteger(BigUnsignedInABase(originalMessageString, 16));
-         //                         modexp(base, exponent, mod)
-         BigUnsigned codedMessage = modexp(originalMessage, e, n);
-         /*std::cout << "messageString:" << messageString << ":\n";
-         std::cout << "  tempMessage:" << tempMessage << ":\n";
-         std::cout << "      message:" << message << ":\n";
-         std::cout << "            e:" << e << ":\n";
-         std::cout << "            n:" << n << ":\n";*/
-         //std::cout << " originalMessage:" << originalMessage << ":\n";
-         //std::cout << "    codedMessage:" << codedMessage << ":\n";
-
-         std::ofstream newFile;
-
-         newFile.open(SIGNATURE_FILENAME);
-         newFile << codedMessage;
-
-         newFile.close();
-
-      }
-      else
-      {
-         std::cout << "\nVerifying the doc...\n";
-
-         std::string originalMessageString = sha256(memblock);
-         std::cout << "message string:" << originalMessageString << std::endl;
-         
-         // Getting the original message into an integer
-         /*std::string originalMessageString = sha256(memblock);
-         BigUnsignedInABase originalMessageInt = BigUnsignedInABase(originalMessageString, 16);
-         BigUnsigned OGMessage = BigUnsigned(originalMessageInt);*/
-         BigUnsigned originalMessageInt = BigUnsigned(BigUnsignedInABase(sha256(memblock), 16));
-
-         std::ifstream messageFile;
-         messageFile.open(SIGNATURE_FILENAME);
-         std::string codedMessageString;
-         getline(messageFile, codedMessageString);
-         messageFile.close();
-
+         // Reading in integers d and n from the file
          std::ifstream dnFile;
          dnFile.open(DN_FILENAME);
          std::string dString, nString;
@@ -115,26 +70,72 @@ int main(int argc, char *argv[])
          getline(dnFile, nString);
          dnFile.close();
 
-         BigUnsignedInABase tempCodedMessage = BigUnsignedInABase(codedMessageString, 10);
-         BigUnsigned codedMessage = BigUnsigned(tempCodedMessage);
-         BigUnsigned d = BigUnsignedInABase(dString, 10);
+         // Creating integers d and n out of the strings of d and n
+         BigUnsignedInABase d = BigUnsignedInABase(dString, 10);
+         BigUnsignedInABase n = BigUnsignedInABase(nString, 10);
+
+         // Encrypting the original message
+         BigUnsigned codedMessage = modexp(originalMessageInt, d, n);
+
+         // Writing the newly encrpyted message to the file
+         std::ofstream newFile;
+         newFile.open(SIGNATURE_FILENAME);
+         newFile << codedMessage;
+         newFile.close();
+
+         // Letting the user know the document was signed
+         std::cout << "The document was signed.\n";
+      }
+      else
+      {
+         std::cout << "\nVerifying the doc...\n";
+
+         // Getting the hash from the file.txt
+         std::string originalMessageString = sha256(memblock);
+         
+         // Making the original message into an integer
+         BigUnsigned originalMessageInt = BigUnsigned(BigUnsignedInABase(originalMessageString, 16));
+
+         // Getting the encrpyted message integer in the form of a string from the original file
+         std::string sigFilename = argv[3];
+         std::ifstream messageFile;
+         messageFile.open(sigFilename);
+         std::string codedMessageString;
+         getline(messageFile, codedMessageString);
+         messageFile.close();
+
+         // Reading in integers e and n from the file
+         std::ifstream enFile;
+         enFile.open(EN_FILENAME);
+         std::string eString, nString;
+         getline(enFile, eString);
+         getline(enFile, nString);
+         enFile.close();
+
+         // Making e and n into integers from strings
+         BigUnsigned e = BigUnsignedInABase(eString, 10);
          BigUnsigned n = BigUnsignedInABase(nString, 10);
 
-         //                       modexp(base, exponent, mod)
-         BigUnsigned oldMessage = modexp(codedMessage, d, n);
+         // Getting the encrpyted message integer by using the string from earlier
+         BigUnsignedInABase tempCodedMessage = BigUnsignedInABase(codedMessageString, 10);
+         BigUnsigned codedMessage = BigUnsigned(tempCodedMessage);
 
-         /*std::cout << "        oldMessage:" << oldMessage << ":\n";
-         std::cout << "originalMessageInt:" << originalMessageInt << ":\n";
-         std::cout << "      codedMessage:" << codedMessage << ":\n";*/
+         // Decrpyting the coded message
+         BigUnsigned oldMessage = modexp(codedMessage, e, n);
 
+         // Checking to see if they're the same or not (they should be). If they're the same,
+         // they're authentic. Otherwise, someone's hacked in!
          if (oldMessage == originalMessageInt)
          {
-            std::cout << "they're the same!\n";
+            std::cout << "The document IS authentic.\n";
          }
          else
          {
-            std::cout << "they're not the same\n";
+            std::cout << "The document IS NOT authentic.\n";
          }
+
+         // Letting the user know the document has been checked for authenticity
+         std::cout << "The document has been checked for authenticity, with the results diplayed above.\n";
       }
       delete[] memblock;
     }
