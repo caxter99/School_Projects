@@ -11,17 +11,16 @@
 
 // PUT THIS INTO COMMAND LINE TO DO PART 1
 //./messageDigest435 s file.txt
-// PUT THIS INTO COMMAND LINE TO DO PART 2
+// THEN, PUT THIS INTO COMMAND LINE TO DO PART 2
 //./messageDigest435 v file.txt.signature
 
 // Function headers
 void display(char chr[], int sizeOfArray); // Displays the char array
 
 // const variables
-const std::string PQ_FILENAME = "p_q.txt"; // The filename of the file that will store the integers p and q
 const std::string EN_FILENAME = "e_n.txt"; // The filename of the file that will store the key(e, n)
 const std::string DN_FILENAME = "d_n.txt"; // The filename of the file that will store the key(d, n)
-const std::string SIGNATURE_FILENAME = "file.txt.signature"; // The filename of the file that will store the coded message
+const std::string SIGNATURE_FILENAME = "file.txt.signature.Copy"; // The filename of the file that will store the coded message
  
 int main(int argc, char *argv[])
 {
@@ -56,46 +55,31 @@ int main(int argc, char *argv[])
          std::cout << "\nSigning the doc...\n";
          
          // Getting the hash string
-         std::string messageString = sha256(memblock);
+         std::string originalMessageString = sha256(memblock);
+         std::cout << "message string:" << originalMessageString << std::endl;
 
-         std::ifstream dnFile;
-         dnFile.open(DN_FILENAME);
-         std::string dString, nString;
-         getline(dnFile, dString);
-         getline(dnFile, nString);
-         //dString = dString.substr(0, dString.length() - 1);
-         //nString = nString.substr(0, nString.length() - 1);
+         std::ifstream enFile;
+         enFile.open(EN_FILENAME);
+         std::string eString, nString;
+         getline(enFile, eString);
+         getline(enFile, nString);
+         enFile.close();
 
-         BigUnsignedInABase d = BigUnsignedInABase(dString, 10);
+         BigUnsignedInABase e = BigUnsignedInABase(eString, 10);
          BigUnsignedInABase n = BigUnsignedInABase(nString, 10);
 
-
-         dnFile.close();
-
-         //EN_FILENAME
-         //BigInteger d = 
-
-         /*// Getting how long the string is
-         const int HASH_SIZE = messageString.length();
-         const int CHAR_ARRAY_SIZE = HASH_SIZE + 1;
-
-         // Creating and copying the string to a char array
-         char messageCharArray[CHAR_ARRAY_SIZE];
-         strcpy(messageCharArray, messageString.c_str());
-
-         // Displaying both the string and char array
-         std::cout << "string:" << messageString << ":\nchar a:";
-         display(messageCharArray, CHAR_ARRAY_SIZE);*/
-
-         BigUnsignedInABase tempMessage = BigUnsignedInABase(messageString, 16);
-         BigInteger message = BigInteger(tempMessage);
-         BigUnsigned codedMessage = modexp(message, d, n);
+         //BigUnsignedInABase tempMessage = BigUnsignedInABase(messageString, 16);
+         //BigInteger message = BigInteger(tempMessage);
+         BigInteger originalMessage = BigInteger(BigUnsignedInABase(originalMessageString, 16));
+         //                         modexp(base, exponent, mod)
+         BigUnsigned codedMessage = modexp(originalMessage, e, n);
          /*std::cout << "messageString:" << messageString << ":\n";
          std::cout << "  tempMessage:" << tempMessage << ":\n";
          std::cout << "      message:" << message << ":\n";
-         std::cout << "            d:" << d << ":\n";
+         std::cout << "            e:" << e << ":\n";
          std::cout << "            n:" << n << ":\n";*/
-         std::cout << " codedMessage:" << codedMessage << ":\n";
+         //std::cout << " originalMessage:" << originalMessage << ":\n";
+         //std::cout << "    codedMessage:" << codedMessage << ":\n";
 
          std::ofstream newFile;
 
@@ -108,8 +92,15 @@ int main(int argc, char *argv[])
       else
       {
          std::cout << "\nVerifying the doc...\n";
+
+         std::string originalMessageString = sha256(memblock);
+         std::cout << "message string:" << originalMessageString << std::endl;
          
-         std::string messageString = sha256(memblock);
+         // Getting the original message into an integer
+         /*std::string originalMessageString = sha256(memblock);
+         BigUnsignedInABase originalMessageInt = BigUnsignedInABase(originalMessageString, 16);
+         BigUnsigned OGMessage = BigUnsigned(originalMessageInt);*/
+         BigUnsigned originalMessageInt = BigUnsigned(BigUnsignedInABase(sha256(memblock), 16));
 
          std::ifstream messageFile;
          messageFile.open(SIGNATURE_FILENAME);
@@ -117,25 +108,26 @@ int main(int argc, char *argv[])
          getline(messageFile, codedMessageString);
          messageFile.close();
 
-         std::ifstream enFile;
-         enFile.open(EN_FILENAME);
-         std::string eString, nString;
-         getline(enFile, eString);
-         getline(enFile, nString);
-         enFile.close();
+         std::ifstream dnFile;
+         dnFile.open(DN_FILENAME);
+         std::string dString, nString;
+         getline(dnFile, dString);
+         getline(dnFile, nString);
+         dnFile.close();
 
          BigUnsignedInABase tempCodedMessage = BigUnsignedInABase(codedMessageString, 10);
          BigUnsigned codedMessage = BigUnsigned(tempCodedMessage);
-         BigUnsigned e = BigUnsignedInABase(eString, 10);
+         BigUnsigned d = BigUnsignedInABase(dString, 10);
          BigUnsigned n = BigUnsignedInABase(nString, 10);
 
-         BigUnsigned oldMessage = modexp(codedMessage, e, n);
-         //std::string oldMessageString = std::string(oldMessage);
+         //                       modexp(base, exponent, mod)
+         BigUnsigned oldMessage = modexp(codedMessage, d, n);
 
-         std::cout << "  oldMessage:" << oldMessage << ":\n";
-         std::cout << "codedMessage:" << codedMessage << ":\n";
+         /*std::cout << "        oldMessage:" << oldMessage << ":\n";
+         std::cout << "originalMessageInt:" << originalMessageInt << ":\n";
+         std::cout << "      codedMessage:" << codedMessage << ":\n";*/
 
-         if (oldMessage == codedMessage)
+         if (oldMessage == originalMessageInt)
          {
             std::cout << "they're the same!\n";
          }
@@ -147,7 +139,7 @@ int main(int argc, char *argv[])
       delete[] memblock;
     }
 
-    // It doesn't always end with a newline, so I'm making sure it does
+    // MAking sure the program ends with a newline
     std::cout << "\n";
 
     return 0;
