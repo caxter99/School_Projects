@@ -16,10 +16,8 @@ MAX_STEPS = float('inf') # This is used for states that have no way of finishing
                 # checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by the user)
                 # will be randomly made or not
-SHUFFLE_TIMES = 5 # The number of times the goal state will be shuffled to create
+SHUFFLE_TIMES = 3 # The number of times the goal state will be shuffled to create
                 # the starting state (if applicable)
-SINGLE_PREVIOUS_STATE = False # This is if the previousState variable represents
-                # a single previous state
                 
 from random import randint # just for this class
 
@@ -30,7 +28,8 @@ class HelpfulFunctions:
         # Empty, nothing to do
         i = 0
     
-    # Compares four values and returns the largest value of the four
+    # Compares four values and returns the largest value of the four (does not
+    # count values equal to MAX_STEPS)
     def getLargest(self, first, second, third, fourth):
         # Making sure none of the values are infinite, otherwise that'll screw up the calculations
         if (first == MAX_STEPS):
@@ -451,7 +450,6 @@ class MoveCalc:
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
     def goDeeper(self, previousStates, state1, state2, state3, state4, goalState):
-        print("\n\n\n\n\nin choose best state function")
         # Variables for state 1
         step1 = MAX_STEPS
         pos1 = True
@@ -478,93 +476,76 @@ class MoveCalc:
         
         if (state1 == NULL):
             isNull1 = True
-            print("state 1 is null")
         else:
             if (state1.comparePrevious(previousStates)):
                 duplicateOfPreviousState1 = True
-                print("state 1 is a duplicate of the previous state")
             else:
                 step1 = state1.calcManhattenSteps(goalState)
         if (state2 == NULL):
             isNull2 = True
-            print("state 2 is null")
         else:
             if (state2.comparePrevious(previousStates)):
                 duplicateOfPreviousState2 = True
-                print("state 2 is a duplicate of the previous state")
             else:
                 step2 = state2.calcManhattenSteps(goalState)
         if (state3 == NULL):
             isNull3 = True
-            print("state 3 is null")
         else:
             if (state3.comparePrevious(previousStates)):
                 duplicateOfPreviousState3 = True
-                print("state 3 is a duplicate of the previous state")
             else:
                 step3 = state3.calcManhattenSteps(goalState)
         if (state4 == NULL):
             isNull4 = True
-            print("state 4 is null")
         else:
             if (state4.comparePrevious(previousStates)):
                 duplicateOfPreviousState4 = True
-                print("state 4 is a duplicate of the previous state")
             else:
                 step4 = state4.calcManhattenSteps(goalState)
         
         if (isNull1 or duplicateOfPreviousState1 or step1 == MAX_STEPS):
             pos1 = False
-            print("state 1 is not fit to be the next state")
         if (isNull2 or duplicateOfPreviousState2 or step2 == MAX_STEPS):
             pos2 = False
-            print("state 2 is not fit to be the next state")
         if (isNull3 or duplicateOfPreviousState3 or step3 == MAX_STEPS):
             pos3 = False
-            print("state 3 is not fit to be the next state")
         if (isNull4 or duplicateOfPreviousState4 or step4 == MAX_STEPS):
             pos4 = False
-            print("state 4 is not fit to be the next state")
         
-        print("state 1 steps:", step1)
-        print("state 2 steps:", step2)
-        print("state 3 steps:", step3)
-        print("state 4 steps:", step4)
+        #print("state 1 steps:", step1)
+        #print("state 2 steps:", step2)
+        #print("state 3 steps:", step3)
+        #print("state 4 steps:", step4)
         
         if (pos1):
-            print("state 1 was chosen as the best possible next state")
             # Checking to see if state1 will lead to the goal state
             if (self.solve(previousStates, state1, goalState)):
                 # It lead to the goal state
                 return True
         if (pos2):
-            print("state 2 was chosen as the best possible next state")
             # Checking to see if state2 will lead to the goal state
             if (self.solve(previousStates, state2, goalState)):
                 # It lead to the goal state
                 return True
         if (pos3):
-            print("state 3 was chosen as the best possible next state")
             # Checking to see if state3 will lead to the goal state
             if (self.solve(previousStates, state3, goalState)):
                 # It lead to the goal state
                 return True
         if (pos4):
-            print("state 4 was chosen as the best possible next state")
             # Checking to see if state4 will lead to the goal state
             if (self.solve(previousStates, state4, goalState)):
                 # It lead to the goal state
                 return True
         
-        print("error, no good state")
+        # No state led to the goal state
         return False
     
-    def lookAheadOneStep(self, previousState, state1, state2, state3, state4, goalState, timesThrough = 0):
-        # to do
-        i = 0
-    
     # Calculates the best move and returns the new state
-    def solve(self, previousStates, currentState, goalState, timesThrough = 0):
+    def solve(self, previousStates, currentState, goalState):
+        print("Current State:")
+        currentState.displayState()
+        print("")
         # Checking to see if the current state matches the goal state
         if (currentState.compare(goalState)):
             return True
@@ -605,7 +586,6 @@ class Game:
     # Initializing the variables needed for the game
     helper = HelpfulFunctions()
     mover = MoveCalc()
-    previousState = GameState()
     previousStates = []
     currentState = GameState()
     goalState = GameState()
@@ -614,6 +594,32 @@ class Game:
     def __init__(self):   
         # Set up the puzzle game
         self.setUp()
+        
+    # Displays every single step taken, including the initial and goal states
+    def viewAllSteps(self):
+        # Displaying the current state
+        print("Current State:")
+        self.currentState.displayState()
+        print("")
+        
+        # Displaying every step
+        self.viewPreviousStatesInReverse()
+        
+        # Displaying the goal state
+        print("Goal State:")
+        self.goalState.displayState()
+        print("")
+    
+    # Displays all of the game states in previousStates in reverse order
+    def viewPreviousStatesInReverse(self):
+        count = 0
+        # Looping backwards through the previous states
+        for x in range(len(self.previousStates) - 1, -1, -1):
+            tempState = GameState(self.previousStates[x])
+            count = count + 1
+            print("Step Number", count)
+            tempState.displayState()
+            print("")
         
     # The set up for the game
     def setUp(self):
@@ -666,6 +672,9 @@ class Game:
             # They entered a "-1", so quit
             else:
                 break;
+        
+        # Making sure the output stays somewhat nice and organized
+        self.helper.clearScreen()
             
         # Creating the end (goal) state
         self.goalState = GameState(goalStateList, TRUE_RANDOM)
@@ -681,20 +690,30 @@ class Game:
         # Displaying the initial state
         print("Initial State:")
         self.currentState.displayState()
+        print("")
     
         # Displaying the initial state
         print("Goal State:")
         self.goalState.displayState()
+        print("")
         
     def playGame(self):
-        # Test line to know where the code is at
-        print("Play the game!")
+        # Letting the user know the AI is currently trying to solve the puzzle
+        print("Currently trying to solve the puzzle...")
+        
+        # Keeping track of whether or not it was solved
+        solved = False
         
         # Trying to solve the puzzle
-        if (self.mover.solve(self.previousStates, self.currentState, self.goalState)):
-            print("Solved!")
-        else:
-            print("Unsolvable Puzzle.")
+        while (not solved):
+            if (self.mover.solve(self.previousStates, self.currentState, self.goalState)):
+                print("Puzzle solved!")
+                print("")
+                solved = True
+                self.viewAllSteps()
+            else:
+                solved = True # TEMP LINE
+                print("Unsolvable puzzle.")
             
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
