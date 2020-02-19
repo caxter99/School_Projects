@@ -40,10 +40,6 @@ import sys
 # Just a bunch of helpful functions
 class HelpfulFunctions:
     
-    def __init__(self):
-        # Empty, nothing to do
-        i = 0
-    
     # Set the recursion limit
     def setRecursionLimit(self, limit):
         sys.setrecursionlimit(limit)
@@ -247,6 +243,22 @@ class GameState:
                 file.write("\n")
             count = count + 1
     
+    # Returns a tring of the state
+    def getStringState(self):
+        # This is to keep track of what element the list is on
+        count = 0
+        string = ""
+        
+        # Looping through and grabbing all of the values in the list
+        for x in self.state:
+            string = string + str(x) + " "
+            # Prints a newline every 3 outputs, to keep in touch with the game
+            if ((count + 1) % NUM_OF_Y_GRID == 0):
+                string = string + "\n"
+            count = count + 1
+        
+        return string
+    
     # Displays the state
     def displayState(self):
         # This is to keep track of what element the list is on
@@ -417,7 +429,7 @@ class GameState:
                 numAtCurrentPoint = self.state[x1 + NUM_OF_Y_GRID * y1]
                 
                 # Making sure the number 0 isn't counted
-                if (not (numAtCurrentPoint == 0)):
+                if (not (str(numAtCurrentPoint) == "0")):
                      # Looping through the goal state to find out where that
                      # same number is in the goal state
                      for x2 in range(NUM_OF_X_GRID):
@@ -434,7 +446,32 @@ class GameState:
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
         
         # Return the total new distance
-        #return self.totalManhattanSteps
+        return newDistance
+    
+    # Returns the number of steps to the goal puzzle, the Hamming way.
+    # This assumes that the object executing this function is the current
+    # state
+    def calcHammingSteps(self, goalState):
+        # Initially, the total distance is 0
+        newDistance = 0
+        
+        # Looping through each point, calculating its distance
+        for x1 in range(NUM_OF_X_GRID):
+            for y1 in range(NUM_OF_Y_GRID):
+                # Getting the number at the point in the current list
+                numAtCurrentPoint = self.state[x1 + NUM_OF_Y_GRID * y1]
+                
+                # Making sure the number 0 isn't counted
+                if (not (str(numAtCurrentPoint) == "0")):
+                    # Getting the number at the point in the goalt state's list
+                    numAtGoalPoint = goalState.getState()[x1 + NUM_OF_Y_GRID * y1]
+                             
+                    # If they're the same (and not 0), add one to the distance
+                    if (not numAtCurrentPoint == numAtGoalPoint):
+                        # Adding one to the distance
+                        newDistance = newDistance + 1
+        
+        # Return the total new distance
         return newDistance
     
     # Takes in a lists of lists with the previous game states stored inside of them.
@@ -471,11 +508,6 @@ class MoveCalc:
     
     # Variables
     helper = HelpfulFunctions()
-    
-    # Constructor
-    def __init__(self):
-        # Nothing now
-        i = 0
     
     # Receives the previous state, 4 possible new states, and the goal state and returns the best
     def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, selectionType, depth, depthCap):
@@ -754,62 +786,71 @@ class Game:
             
         # Writing the initial state
         file.write("Initial State (Step 0)\n")
+        extraString = "Manhatten Steps: " + str(self.currentState.calcManhattenSteps(self.goalState)) + "\n"
+        file.write(extraString)
+        extraString = "Hamming Steps: " + str(self.currentState.calcHammingSteps(self.goalState)) + "\n"
+        file.write(extraString)
         self.currentState.writeState(file)
         file.write("\n")
         
-        # Writing all of the middle states
-        self.writeMiddleSteps(file)
+        # Getting all of the middle steps in a string, as well as the total
+        # Manhatten and Hamming distances
+        extraString, manhattenSteps, hammingSteps = self.createMiddleStepsString(self.currentState.calcManhattenSteps(self.goalState), self.currentState.calcHammingSteps(self.goalState))
+        file.write(extraString)
         
         # Writing the goal state
-        goalString = "Goal State (Step " + str(len(self.statesOnTheWay)) + ")\n"
-        file.write(goalString)
+        extraString = "Goal State (Step " + str(len(self.statesOnTheWay)) + ")\n"
+        file.write(extraString)
+        extraString = "Manhatten Steps: " + str(manhattenSteps) + "\n"
+        file.write(extraString)
+        extraString = "Hamming Steps: " + str(hammingSteps) + "\n"
+        file.write(extraString)
         self.goalState.writeState(file)
         file.write("\n")
         
         # Closing the file
         file.close()
     
-    # Displays all of the game states in previousStates in order
-    def writeMiddleSteps(self, file):
-        # Keeping track of what step they're on
-        count = 0
-        
-        # Looping forwards through the previous states
-        for x in range(0, len(self.statesOnTheWay) - 1):
-            tempState = GameState(self.statesOnTheWay[x])
-            count = count + 1
-            description = "Step " + str(count) + "\n"
-            file.write(description)
-            tempState.writeState(file)
-            file.write("\n")
-    
     # Displays every single step taken, including the initial and goal states
     def viewAllSteps(self):
         # Displaying the current state
         print("Initial State (Step 0)")
+        print("Manhatten Steps:", self.currentState.calcManhattenSteps(self.goalState))
+        print("Hamming Steps:", self.currentState.calcHammingSteps(self.goalState))
         self.currentState.displayState()
         print("")
         
         # Displaying every step
-        self.viewMiddleSteps()
+        middleString, manhattenSteps, hammingSteps = self.createMiddleStepsString(self.currentState.calcManhattenSteps(self.goalState), self.currentState.calcHammingSteps(self.goalState))
+        print(middleString, end="")
         
         # Displaying the goal state
         print("Goal State (Step ", len(self.statesOnTheWay), ")", sep = "")
+        print("Manhatten Steps:", manhattenSteps)
+        print("Hamming Steps:", hammingSteps)
         self.goalState.displayState()
         print("")
     
-    # Displays all of the game states in previousStates in order
-    def viewMiddleSteps(self):
+    # Returns a string with all of the middle states in a nice string as well
+    # as the Manhatten and Hamming steps
+    def createMiddleStepsString(self, manhattenSteps = 0, hammingSteps = 0):
         # Keeping track of what step they're on
         count = 0
+        string = ""
         
         # Looping forwards through the previous states
         for x in range(0, len(self.statesOnTheWay) - 1):
             tempState = GameState(self.statesOnTheWay[x])
+            manhattenSteps = manhattenSteps + tempState.calcManhattenSteps(self.goalState)
+            hammingSteps = hammingSteps + tempState.calcHammingSteps(self.goalState)
             count = count + 1
-            print("Step", count)
-            tempState.displayState()
-            print("")
+            string = string + "Step " + str(count) + "\n"
+            string = string + "Manhatten Steps: " + str(manhattenSteps) + "\n"
+            string = string + "Hamming Steps: " + str(hammingSteps) + "\n"
+            string = string + tempState.getStringState() + "\n"
+        
+        # Returning the total number of Manhatten and Hamming steps
+        return string, manhattenSteps, hammingSteps
         
     # The set up for the game
     def setUp(self):
