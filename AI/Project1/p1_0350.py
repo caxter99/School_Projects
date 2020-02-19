@@ -21,9 +21,12 @@ ALWAYS_BE_SMART = True # If true, it won't run the random selection method
 RANDOM_SELECT_INT = 0 # The integer to signify that it should do random selection
 SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
 # do smart selection
+SHOULD_SHUFFLE = False # If the game should shuffle the states before the game
+# starts
 SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to
 # create the starting state (if applicable)
-MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times recursion can occur
+MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times
+# recursion can occur
 RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
 # that the program will stop the program from trying to spawn a new state from
 # the current one
@@ -85,7 +88,7 @@ class HelpfulFunctions:
         return False
     
     # Creates a random, valid list and returns it
-    def createRandomList(self, trueRandom = True):
+    def createRandomList(self, trueRandom = False):
         # Creating the new, random list
         newList= []
         
@@ -217,11 +220,9 @@ class GameState:
     # Just some helper functions and variables
     helper = HelpfulFunctions()
     state = []
-    totalManhattanSteps = 0
-    totalHammingSteps = 0
     
     # Constructor, can take nothing or a pre-generated list
-    def __init__(self, initialList = [], trueRandom = True):
+    def __init__(self, initialList = [], trueRandom = False):
         # If the list was not pregenerated or pregenerated incorrectly,
         # make a new list
         if (not self.helper.isValidList(initialList)):
@@ -418,11 +419,9 @@ class GameState:
                                  # y distance
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
         
-        # Getting the previous amount of Manhattan steps
-        self.totalManhattanSteps = self.totalManhattanSteps + newDistance
-        
         # Return the total new distance
-        return self.totalManhattanSteps
+        #return self.totalManhattanSteps
+        return newDistance
     
     # Takes in a lists of lists with the previous game states stored inside of them.
     # Returns true if the current state matches none of the state found inside
@@ -532,11 +531,6 @@ class MoveCalc:
         if (isNull4 or duplicateOfPreviousState4 or step4 == MAX_STEPS):
             pos4 = False
         
-        #print("state 1 steps:", step1)
-        #print("state 2 steps:", step2)
-        #print("state 3 steps:", step3)
-        #print("state 4 steps:", step4)
-        
         # The selection type is random
         if (selectionType == RANDOM_SELECT_INT):
             if (pos1):
@@ -590,6 +584,7 @@ class MoveCalc:
             
             # Looping while there are still options to try
             while(optionsLeftToTry):
+                    
                 if (pos1 and self.helper.compareFourLoose(step1, step2, step3, step4)):
                     # Adding state1 to the list of states on the way
                     statesOnTheWay.append(state1.getState())
@@ -673,6 +668,7 @@ class MoveCalc:
         # Making sure the program isn't near the limit for recursion
         if (depth * 2 >= MAX_RECURSION - RECURSION_SAFETY_NET):
             # If it is, can't go on any longer or risk crashing
+            print("gone too far, could max recursion")
             return False
         
         # All of new vriables to hold the new game states
@@ -729,7 +725,7 @@ class Game:
         self.viewPreviousSteps()
         
         # Displaying the goal state
-        print("Goal State (Step ", len(self.statesOnTheWay) - 1, ")", sep = "")
+        print("Goal State (Step ", len(self.statesOnTheWay), ")", sep = "")
         self.goalState.displayState()
         print("")
     
@@ -737,8 +733,7 @@ class Game:
     def viewPreviousSteps(self):
         count = 0
         # Looping backwards through the previous states
-        #for x in range(len(self.statesOnTheWay) - 1, -1, -1):
-        for x in range(1, len(self.statesOnTheWay) - 1):
+        for x in range(0, len(self.statesOnTheWay) - 1):
             tempState = GameState(self.statesOnTheWay[x])
             count = count + 1
             print("Step Number", count)
@@ -806,8 +801,8 @@ class Game:
         # Creating the end (goal) state
         self.goalState = GameState(goalStateList, TRUE_RANDOM)
         
-        # If it's not true random, shuffel both states
-        if (not TRUE_RANDOM):
+        # If it's not true random, shuffle both states
+        if (SHOULD_SHUFFLE):
             self.currentState.shuffle(SHUFFLE_TIMES - 1)
             self.goalState.shuffle(SHUFFLE_TIMES - 1)
         
@@ -837,6 +832,7 @@ class Game:
         
         # Trying to solve the puzzle
         while (not solved):
+            self.currentState.displayState()
             if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT, 0, depthCap)):
                 print("Puzzle solved!")
                 print("")
@@ -846,6 +842,8 @@ class Game:
                 #print("Unsolvable puzzle.")
                 # Increase the depth cap
                 depthCap = depthCap + 1
+                self.previousStates = []
+                self.statesOnTheWay = []
         
         # Part 2: Random Selection
         # Making sure we actually want to try and take on this adventure
@@ -870,6 +868,8 @@ class Game:
                     #print("Unsolvable puzzle.")
                     # Increase the depth cap
                     depthCap = depthCap + 1
+                    self.previousStates = []
+                    self.statesOnTheWay = []
             
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
