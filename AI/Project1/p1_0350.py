@@ -12,6 +12,7 @@ Main class:
 NUM_OF_X_GRID = 3 # The width of the grid
 NUM_OF_Y_GRID = 3 # The height of the grid
 NULL = "null" # The null value
+FILENAME = "8puzzlelog.txt" # The name of the file the game is written to
 MAX_STEPS = float('inf') # This is used for states that have no way of finishing
 # (or other error methods for checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by
@@ -232,6 +233,19 @@ class GameState:
         else:
             # The list has laready been made
             self.state = initialList
+    
+    # Writes the state to the given file as though it were being printed out
+    def writeState(self, file):
+        # This is to keep track of what element the list is on
+        count = 0
+        
+        # Looping through and grabbing all of the values in the list
+        for x in self.state:
+            file.write(str(x) + " ")
+            # Prints a newline every 3 outputs, to keep in touch with the game
+            if ((count + 1) % NUM_OF_Y_GRID == 0):
+                file.write("\n")
+            count = count + 1
     
     # Displays the state
     def displayState(self):
@@ -714,6 +728,61 @@ class Game:
         # Set up the puzzle game
         self.setUp()
         
+    # Views and writes the steps of the puzzle
+    def viewAndWriteSteps(self, selectionType, writeType = "w"):
+        # Writing all of the steps to the file
+        self.writeGameToFile(selectionType, writeType)
+        
+        # Viewing all of the steps
+        self.viewAllSteps()
+    
+    # Writes the entire content to the file
+    def writeGameToFile(self, selectionType, writeType = "w"):
+        # Creating the file
+        file = open(FILENAME, writeType)
+        
+        # Writing what type of selection was used (and keeping the formatting
+        # nice)
+        file.write("Puzzle solved using ")
+        if (selectionType == SMART_SELECT_INT):
+            file.write("Progressive Deepening Search:")
+        elif (selectionType == RANDOM_SELECT_INT):
+            file.write("Random Selection:")
+        else:
+            file.write("an unknown method for selection:")
+        file.write("\n\n")
+            
+        # Writing the initial state
+        file.write("Initial State (Step 0)\n")
+        self.currentState.writeState(file)
+        file.write("\n")
+        
+        # Writing all of the middle states
+        self.writeMiddleSteps(file)
+        
+        # Writing the goal state
+        goalString = "Goal State (Step " + str(len(self.statesOnTheWay)) + ")\n"
+        file.write(goalString)
+        self.goalState.writeState(file)
+        file.write("\n")
+        
+        # Closing the file
+        file.close()
+    
+    # Displays all of the game states in previousStates in order
+    def writeMiddleSteps(self, file):
+        # Keeping track of what step they're on
+        count = 0
+        
+        # Looping forwards through the previous states
+        for x in range(0, len(self.statesOnTheWay) - 1):
+            tempState = GameState(self.statesOnTheWay[x])
+            count = count + 1
+            description = "Step " + str(count) + "\n"
+            file.write(description)
+            tempState.writeState(file)
+            file.write("\n")
+    
     # Displays every single step taken, including the initial and goal states
     def viewAllSteps(self):
         # Displaying the current state
@@ -722,21 +791,23 @@ class Game:
         print("")
         
         # Displaying every step
-        self.viewPreviousSteps()
+        self.viewMiddleSteps()
         
         # Displaying the goal state
         print("Goal State (Step ", len(self.statesOnTheWay), ")", sep = "")
         self.goalState.displayState()
         print("")
     
-    # Displays all of the game states in previousStates in reverse order
-    def viewPreviousSteps(self):
+    # Displays all of the game states in previousStates in order
+    def viewMiddleSteps(self):
+        # Keeping track of what step they're on
         count = 0
-        # Looping backwards through the previous states
+        
+        # Looping forwards through the previous states
         for x in range(0, len(self.statesOnTheWay) - 1):
             tempState = GameState(self.statesOnTheWay[x])
             count = count + 1
-            print("Step Number", count)
+            print("Step", count)
             tempState.displayState()
             print("")
         
@@ -832,16 +903,18 @@ class Game:
         
         # Trying to solve the puzzle
         while (not solved):
-            self.currentState.displayState()
             if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT, 0, depthCap)):
                 print("Puzzle solved!")
                 print("")
                 solved = True
-                self.viewAllSteps()
+                self.viewAndWriteSteps(SMART_SELECT_INT)
+                self.previousStates = []
+                self.statesOnTheWay = []
             else:
-                #print("Unsolvable puzzle.")
                 # Increase the depth cap
                 depthCap = depthCap + 1
+                
+                # Reset the previous states and the states on the way
                 self.previousStates = []
                 self.statesOnTheWay = []
         
@@ -849,7 +922,7 @@ class Game:
         # Making sure we actually want to try and take on this adventure
         if (not ALWAYS_BE_SMART):
             # Letting the user know the AI is currently trying to solve the puzzle
-            print("Currently trying to solve the puzzle by using random selection...")
+            print("Currently trying to solve the puzzle by using Random Selection...")
         
             # Keeping track of whether or not it was solved
             solved = False
@@ -863,14 +936,14 @@ class Game:
                     print("Puzzle solved!")
                     print("")
                     solved = True
-                    self.viewAllSteps()
+                    self.viewAndWriteSteps(RANDOM_SELECT_INT)
                 else:
-                    #print("Unsolvable puzzle.")
                     # Increase the depth cap
                     depthCap = depthCap + 1
+                
+                    # Reset the previous states and the states on the way
                     self.previousStates = []
                     self.statesOnTheWay = []
-            
 
 #def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
 def s():
