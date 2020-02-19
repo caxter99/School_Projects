@@ -31,11 +31,11 @@ MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of time
 RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
 # that the program will stop the program from trying to spawn a new state from
 # the current one
-ORGINAL_DEPTH_CAP = 0 # This is the depth cap (note: this will be changed throughout
-# the program)
+ORGINAL_DEPTH_CAP = 0 # This is the depth cap
                 
-from random import randint # just for this class
+from random import randint
 import sys
+import time
 
 # Just a bunch of helpful functions
 class HelpfulFunctions:
@@ -211,8 +211,6 @@ class HelpfulFunctions:
 # Game State class
 import math
 class GameState:
-    
-    from random import randint # just for this class
     
     # Just some helper functions and variables
     helper = HelpfulFunctions()
@@ -446,7 +444,7 @@ class GameState:
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
         
         # Return the total new distance
-        return newDistance
+        return int(newDistance)
     
     # Returns the number of steps to the goal puzzle, the Hamming way.
     # This assumes that the object executing this function is the current
@@ -472,7 +470,7 @@ class GameState:
                         newDistance = newDistance + 1
         
         # Return the total new distance
-        return newDistance
+        return int(newDistance)
     
     # Takes in a lists of lists with the previous game states stored inside of them.
     # Returns true if the current state matches none of the state found inside
@@ -942,13 +940,33 @@ class Game:
         # Setting the depth cap to the original
         depthCap = ORGINAL_DEPTH_CAP
         
+        # Getting the original time the program started
+        startTime = time.time()
+        
         # Trying to solve the puzzle
         while (not solved):
             if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT, 0, depthCap)):
+                # Stopping the time
+                endTime = time.time()
+                
+                # Let the user know the puzzle is solved
                 print("Puzzle solved!")
                 print("")
+                
+                # Set solved to true
                 solved = True
+                
+                # Display and write the steps to a file, then write the time to
+                # the same file
+                timeString = "Time it took to solve the puzzle: " + str(endTime - startTime) + " seconds\n"
                 self.viewAndWriteSteps(SMART_SELECT_INT)
+                print(timeString)
+                file = open(FILENAME, "a")
+                file.write(timeString)
+                file.close()
+                
+                # Reset the previous states and states on the way in case the
+                # random select method is going next
                 self.previousStates = []
                 self.statesOnTheWay = []
             else:
@@ -974,10 +992,20 @@ class Game:
             # Trying to solve the puzzle
             while (not solved):
                 if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, RANDOM_SELECT_INT, 0, depthCap)):
+                    # Let the user know the puzzle is solved
                     print("Puzzle solved!")
                     print("")
+                
+                    # Set solved to true
                     solved = True
-                    self.viewAndWriteSteps(RANDOM_SELECT_INT)
+                
+                    # Display and write the steps to a file
+                    self.viewAndWriteSteps(SMART_SELECT_INT)
+                
+                    # Reset the previous states and states on the way in case the
+                    # random select method is going next
+                    self.previousStates = []
+                    self.statesOnTheWay = []
                 else:
                     # Increase the depth cap
                     depthCap = depthCap + 1
@@ -986,8 +1014,8 @@ class Game:
                     self.previousStates = []
                     self.statesOnTheWay = []
 
-#def n_puzzle(): # Will use eventually, got tired of typing "n_puzzle()" every time to test
-def s():
+# This function starts the entire thing
+def n_puzzle():
     # Creating and playing the game
     game = Game()
     game.playGame()
