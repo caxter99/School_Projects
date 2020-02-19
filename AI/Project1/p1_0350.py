@@ -24,7 +24,7 @@ SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
 # do smart selection
 SHOULD_SHUFFLE = False # If the game should shuffle the states before the game
 # starts
-SHUFFLE_TIMES = 500 # The number of times the goal state will be shuffled to
+SHUFFLE_TIMES = 40 # The number of times the goal state will be shuffled to
 # create the starting state (if applicable)
 MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times
 # recursion can occur
@@ -33,9 +33,11 @@ RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
 # the current one
 ORGINAL_DEPTH_CAP = 0 # This is the depth cap
                 
+# All imports
 from random import randint
 import sys
 import time
+import math
 
 # Just a bunch of helpful functions
 class HelpfulFunctions:
@@ -47,7 +49,8 @@ class HelpfulFunctions:
     # Compares four values and returns the largest value of the four (does not
     # count values equal to MAX_STEPS)
     def getLargest(self, first, second, third, fourth):
-        # Making sure none of the values are infinite, otherwise that'll screw up the calculations
+        # Making sure none of the values are infinite, otherwise that'll screw
+        # up the calculations
         if (first == MAX_STEPS):
             first = 0
         if (second == MAX_STEPS):
@@ -75,7 +78,8 @@ class HelpfulFunctions:
         # It's not the smallest value
         return False
     
-    # Compares four values and returns true if the first value is the smallest or tied smallest
+    # Compares four values and returns true if the first value is the smallest
+    # or tied smallest
     def compareFourLoose(self, first, second, third, fourth):
         # Comparing all of the values against the first value
         if (first <= second and first <= third and first <= fourth):
@@ -99,9 +103,9 @@ class HelpfulFunctions:
         
             # Looping through all of the number
             for x in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
-                # They must be entered as strings, because if the user entered the
-                # other grid, the other grid will be all strings. The rest of the
-                # program assumes these values will be strings
+                # They must be entered as strings, because if the user entered
+                # the other grid, the other grid will be all strings. The rest
+                # of the program assumes these values will be strings
                 newList.append(str((startingVal + (incrementVal * x)) % (NUM_OF_X_GRID * NUM_OF_Y_GRID)))
        # Not truly random
         else:
@@ -209,7 +213,6 @@ class HelpfulFunctions:
 
 
 # Game State class
-import math
 class GameState:
     
     # Just some helper functions and variables
@@ -255,6 +258,7 @@ class GameState:
                 string = string + "\n"
             count = count + 1
         
+        # Return the string
         return string
     
     # Displays the state
@@ -283,25 +287,32 @@ class GameState:
     # Shuffles the state based on the number sent in
     def shuffle(self, numOfShuffles):
         for x in range(numOfShuffles):
+            # Picks a random way to shuffle
             randomInt = randint(1, 4) # From 1 to 4 inclusive
+            
+            # Left (if possible)
             if (randomInt == 1):
                 posList = self.moveLeft()
                 if (not (posList == NULL)):
                     self.setList(self.moveLeft())
+            # Right (if possible)
             elif (randomInt == 2):
                 posList = self.moveRight()
                 if (not (posList == NULL)):
                     self.setList(self.moveRight())
+            # Up (if possible)
             elif (randomInt == 3):
                 posList = self.moveUp()
                 if (not (posList == NULL)):
                     self.setList(self.moveUp())
+            # Down (if possible)
             else:
                 posList = self.moveDown()
                 if (not (posList == NULL)):
                     self.setList(self.moveDown())
     
-    # Creates a list for a state that would look like as though a move to the left was made
+    # Creates a list for a state that would look like as though a move to the
+    # left was made
     def moveLeft(self):
         # Creating the left state
         leftStateList = NULL
@@ -319,13 +330,15 @@ class GameState:
                         # Copying the old list to the new one
                         leftStateList = self.helper.createDuplicateList(self.state)
                         
-                        # Switching the positions of the 0 and the spot to the left
+                        # Switching the positions of the 0 and the spot to the
+                        # left
                         leftStateList[position - 1], leftStateList[position] = leftStateList[position], leftStateList[position - 1]
                         
         # Returning the left state (as null or a new state)
         return leftStateList
     
-    # Creates a list for a state that would look like as though a move to the right was made
+    # Creates a list for a state that would look like as though a move to the
+    #right was made
     def moveRight(self):
         # Creating the right state
         rightStateList = NULL
@@ -343,13 +356,15 @@ class GameState:
                         # Copying the old list to the new one
                         rightStateList = self.helper.createDuplicateList(self.state)
                         
-                        # Switching the positions of the 0 and the spot to the right
+                        # Switching the positions of the 0 and the spot to the
+                        # right
                         rightStateList[position], rightStateList[position + 1] = rightStateList[position + 1], rightStateList[position]
                         
         # Returning the left state (as null or a new state)
         return rightStateList
     
-    # Creates a list for a state that would look like as though a move up was made
+    # Creates a list for a state that would look like as though a move up was
+    # made
     def moveUp(self):
         # Creating the up state
         upStateList = NULL
@@ -373,7 +388,8 @@ class GameState:
         # Returning the left state (as null or a new state)
         return upStateList
     
-    # Creates a list for a state that would look like as though a move down was made
+    # Creates a list for a state that would look like as though a move down was
+    # made
     def moveDown(self):
         # Creating the down state
         downStateList = NULL
@@ -391,7 +407,8 @@ class GameState:
                         # Copying the old list to the new one
                         downStateList = self.helper.createDuplicateList(self.state)
                         
-                        # Switching the positions of the 0 and the spot down one
+                        # Switching the positions of the 0 and the spot down
+                        # one
                         downStateList[position], downStateList[position + NUM_OF_X_GRID] = downStateList[position + NUM_OF_X_GRID], downStateList[position]
                         
         # Returning the left state (as null or a new state)
@@ -432,10 +449,12 @@ class GameState:
                      # same number is in the goal state
                      for x2 in range(NUM_OF_X_GRID):
                          for y2 in range(NUM_OF_Y_GRID):
-                             # Getting the number at the point in the goalt state's list
+                             # Getting the number at the point in the goalt
+                             # state's list
                              numAtGoalPoint = goalState.getState()[x2 + NUM_OF_Y_GRID * y2]
                              
-                             # If they're the same (and not 0), calculate and add the distance
+                             # If they're the same (and not 0), calculate and
+                             # add the distance
                              if (numAtCurrentPoint == numAtGoalPoint):
                                  # x distance
                                  newDistance = newDistance + math.sqrt(math.pow(x1 - x2, 2))
@@ -443,7 +462,7 @@ class GameState:
                                  # y distance
                                  newDistance = newDistance + math.sqrt(math.pow(y1 - y2, 2))
         
-        # Return the total new distance
+        # Return the total new distance as an integer
         return int(newDistance)
     
     # Returns the number of steps to the goal puzzle, the Hamming way.
@@ -469,12 +488,12 @@ class GameState:
                         # Adding one to the distance
                         newDistance = newDistance + 1
         
-        # Return the total new distance
+        # Return the total new distance as an integer
         return int(newDistance)
     
-    # Takes in a lists of lists with the previous game states stored inside of them.
-    # Returns true if the current state matches none of the state found inside
-    # the list of lists
+    # Takes in a lists of lists with the previous game states stored inside of
+    # them. Returns true if the current state matches none of the state found
+    # inside the list of lists
     def comparePrevious(self, previousLists):
         # Making sure it's not empty
         if (len(previousLists) == 0):
@@ -507,7 +526,8 @@ class MoveCalc:
     # Variables
     helper = HelpfulFunctions()
     
-    # Receives the previous state, 4 possible new states, and the goal state and returns the best
+    # Receives the previous state, 4 possible new states, and the goal state
+    # and returns the best
     def goDeeper(self, previousStates, statesOnTheWay, state1, state2, state3, state4, goalState, selectionType, depth, depthCap):
         # Making sure the depth cap hasn't been reached before it dives deeper
         if (depth >= depthCap):
@@ -537,35 +557,52 @@ class MoveCalc:
         isNull4 = False
         duplicateOfPreviousState4 = False
         
+        # Checking to see if state1 is null
         if (state1 == NULL):
             isNull1 = True
         else:
+            # Making sure state1 isn't a dusplicate of the previous state
             if (state1.comparePrevious(previousStates)):
                 duplicateOfPreviousState1 = True
             else:
+                # If it checks out, get the Manhatten steps
                 step1 = state1.calcManhattenSteps(goalState)
+        
+        # Checking to see if state2 is null
         if (state2 == NULL):
             isNull2 = True
         else:
+            # Making sure state2 isn't a dusplicate of the previous state
             if (state2.comparePrevious(previousStates)):
                 duplicateOfPreviousState2 = True
             else:
+                # If it checks out, get the Manhatten steps
                 step2 = state2.calcManhattenSteps(goalState)
+        
+        # Checking to see if state3 is null
         if (state3 == NULL):
             isNull3 = True
         else:
+            # Making sure state3 isn't a dusplicate of the previous state
             if (state3.comparePrevious(previousStates)):
                 duplicateOfPreviousState3 = True
             else:
+                # If it checks out, get the Manhatten steps
                 step3 = state3.calcManhattenSteps(goalState)
+        
+        # Checking to see if state4 is null
         if (state4 == NULL):
             isNull4 = True
         else:
+            # Making sure state4 isn't a dusplicate of the previous state
             if (state4.comparePrevious(previousStates)):
                 duplicateOfPreviousState4 = True
             else:
+                # If it checks out, get the Manhatten steps
                 step4 = state4.calcManhattenSteps(goalState)
         
+        # Checking the viability of each state to the be the next state. If
+        # anything doesn't check out, it's ruled out as a possiblity
         if (isNull1 or duplicateOfPreviousState1 or step1 == MAX_STEPS):
             pos1 = False
         if (isNull2 or duplicateOfPreviousState2 or step2 == MAX_STEPS):
@@ -641,8 +678,9 @@ class MoveCalc:
                         # Removing state1 because it wasn't on the way
                         statesOnTheWay.remove(state1.getState())
                         
-                        # Making sure the number of steps doesn't mess up any future
-                        # calculations and that state1 is no longer an option to pick
+                        # Making sure the number of steps doesn't mess up any
+                        # future calculations and that state1 is no longer an
+                        # option to pick
                         step1 = MAX_STEPS
                         pos1 = False
                 if (pos2 and self.helper.compareFourLoose(step2, step1, step3, step4)):
@@ -657,8 +695,9 @@ class MoveCalc:
                         # Removing state2 because it wasn't on the way
                         statesOnTheWay.remove(state2.getState())
                         
-                        # Making sure the number of steps doesn't mess up any future
-                        # calculations and that state2 is no longer an option to pick
+                        # Making sure the number of steps doesn't mess up any
+                        # future calculations and that state2 is no longer an
+                        # option to pick
                         step2 = MAX_STEPS
                         pos2 = False
                 if (pos3 and self.helper.compareFourLoose(step3, step2, step1, step4)):
@@ -673,8 +712,9 @@ class MoveCalc:
                         # Removing state3 because it wasn't on the way
                         statesOnTheWay.remove(state3.getState())
                         
-                        # Making sure the number of steps doesn't mess up any future
-                        # calculations and that state3 is no longer an option to pick
+                        # Making sure the number of steps doesn't mess up any
+                        # future calculations and that state3 is no longer an
+                        # option to pick
                         step3 = MAX_STEPS
                         pos3 = False
                 if (pos4 and self.helper.compareFourLoose(step4, step2, step3, step1)):
@@ -689,8 +729,9 @@ class MoveCalc:
                         # Removing state4 because it wasn't on the way
                         statesOnTheWay.remove(state4.getState())
                         
-                        # Making sure the number of steps doesn't mess up any future
-                        # calculations and that state4 is no longer an option to pick
+                        # Making sure the number of steps doesn't mess up any
+                        # future calculations and that state4 is no longer an
+                        # option to pick
                         step4 = MAX_STEPS
                         pos4 = False
                         
@@ -721,7 +762,8 @@ class MoveCalc:
         upState = GameState()
         downState = GameState()
         
-        # Figuring out
+        # Figuring out what moves are possible and which aren't (and are
+        # therefore null)
         if (not currentState.moveLeft() == NULL):
             leftState.setList(currentState.moveLeft())
         else:
@@ -838,10 +880,18 @@ class Game:
         
         # Looping forwards through the previous states
         for x in range(0, len(self.statesOnTheWay) - 1):
+            # Creating a temporary state with the list
             tempState = GameState(self.statesOnTheWay[x])
+            
+            # Getting the total Manhatten and Hamming steps
             manhattenSteps = manhattenSteps + tempState.calcManhattenSteps(self.goalState)
             hammingSteps = hammingSteps + tempState.calcHammingSteps(self.goalState)
+            
+            # Incrementing count
             count = count + 1
+            
+            # Creating the string for this state and adding it to the current
+            # string
             string = string + "Step " + str(count) + "\n"
             string = string + "Manhatten Steps: " + str(manhattenSteps) + "\n"
             string = string + "Hamming Steps: " + str(hammingSteps) + "\n"
@@ -868,7 +918,8 @@ class Game:
             # Displaying what number they're on
             inputStr = "Number " + str(x + 1) + ": "
             val = input(inputStr)
-            # They entered something other than a "-1", append it and keep going
+            # They entered something other than a "-1", append it and keep
+            # going
             if (val != "-1"):
                 startStateList.append(val)
             # They entered a "-1", so quit
@@ -898,7 +949,8 @@ class Game:
             # Displaying what number they're on
             inputStr = "Number " + str(x + 1) + ": "
             val = input(inputStr)
-            # They entered something other than a "-1", append it and keep going
+            # They entered something other than a "-1", append it and keep
+            # going
             if (val != "-1"):
                 goalStateList.append(val)
             # They entered a "-1", so quit
@@ -946,7 +998,7 @@ class Game:
         # Trying to solve the puzzle
         while (not solved):
             if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, SMART_SELECT_INT, 0, depthCap)):
-                # Stopping the time
+                # Getting the end time
                 endTime = time.time()
                 
                 # Let the user know the puzzle is solved
@@ -980,7 +1032,8 @@ class Game:
         # Part 2: Random Selection
         # Making sure we actually want to try and take on this adventure
         if (not ALWAYS_BE_SMART):
-            # Letting the user know the AI is currently trying to solve the puzzle
+            # Letting the user know the AI is currently trying to solve the
+            # puzzle
             print("Currently trying to solve the puzzle by using Random Selection...")
         
             # Keeping track of whether or not it was solved
@@ -989,9 +1042,15 @@ class Game:
             # Setting the depth cap to the original
             depthCap = ORGINAL_DEPTH_CAP
         
+            # Getting the original time the program started
+            startTime = time.time()
+        
             # Trying to solve the puzzle
             while (not solved):
                 if (self.mover.solve(self.previousStates, self.statesOnTheWay, self.currentState, self.goalState, RANDOM_SELECT_INT, 0, depthCap)):
+                    # Getting the end time
+                    endTime = time.time()
+                
                     # Let the user know the puzzle is solved
                     print("Puzzle solved!")
                     print("")
@@ -999,11 +1058,18 @@ class Game:
                     # Set solved to true
                     solved = True
                 
-                    # Display and write the steps to a file
+                    # Display and write the steps to a file, then write the
+                    # time to
+                    # the same file
+                    timeString = "Time it took to solve the puzzle: " + str(endTime - startTime) + " seconds\n"
                     self.viewAndWriteSteps(SMART_SELECT_INT)
+                    print(timeString)
+                    file = open(FILENAME, "a")
+                    file.write(timeString)
+                    file.close()
                 
-                    # Reset the previous states and states on the way in case the
-                    # random select method is going next
+                    # Reset the previous states and states on the way in case
+                    # the random select method is going next
                     self.previousStates = []
                     self.statesOnTheWay = []
                 else:

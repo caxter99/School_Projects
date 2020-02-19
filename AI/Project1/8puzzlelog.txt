@@ -1,38 +1,17 @@
 Puzzle solved using Progressive Deepening Search:
 
 Initial State (Step 0)
-Manhatten Steps: 4
-Hamming Steps: 4
-0 1 3 
-4 2 5 
-7 8 6 
-
-Step 1
-Manhatten Steps: 7
-Hamming Steps: 7
-1 0 3 
-4 2 5 
-7 8 6 
-
-Step 2
-Manhatten Steps: 9
-Hamming Steps: 9
-1 2 3 
-4 0 5 
-7 8 6 
-
-Step 3
-Manhatten Steps: 10
-Hamming Steps: 10
-1 2 3 
-4 5 0 
-7 8 6 
-
-Goal State (Step 4)
-Manhatten Steps: 10
-Hamming Steps: 10
+Manhatten Steps: 0
+Hamming Steps: 0
 1 2 3 
 4 5 6 
 7 8 0 
 
-Time it took to solve the puzzle: 0.012764930725097656 seconds
+Goal State (Step 1)
+Manhatten Steps: 0
+Hamming Steps: 0
+1 2 3 
+4 5 6 
+7 8 0 
+
+Time it took to solve the puzzle: 1.0013580322265625e-05 seconds
