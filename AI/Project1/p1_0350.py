@@ -231,6 +231,24 @@ class GameState:
             # The list has laready been made
             self.state = initialList
     
+    # Gets the number of inversions between the state and the goal state
+    def getInversions(self, goalState):
+        inversionCount = 0
+        
+        # Looping through the entire puzzle
+        for i in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            # Looping through the entire puzzle that hasn't been looped
+            # through from the first loop
+            for j in range (x + 1, NUM_OF_X_GRID * NUM_OF_Y_GRID):
+                # Making sure neither number is 0
+                if ((not (self.state[i] == "0")) and (not (goalState.getState()[j] == "0"))):
+                    # Checking to see if it's an inversion
+                    if (True):
+                        inversionCount = inversionCount + 1
+        
+        # Returning the number of inversions
+        return inversionCount
+    
     # Writes the state to the given file as though it were being printed out
     def writeState(self, file):
         # This is to keep track of what element the list is on
@@ -290,22 +308,22 @@ class GameState:
             # Picks a random way to shuffle
             randomInt = randint(1, 4) # From 1 to 4 inclusive
             
-            # Left (if possible)
+            # Move left (if possible)
             if (randomInt == 1):
                 posList = self.moveLeft()
                 if (not (posList == NULL)):
                     self.setList(self.moveLeft())
-            # Right (if possible)
+            # Move right (if possible)
             elif (randomInt == 2):
                 posList = self.moveRight()
                 if (not (posList == NULL)):
                     self.setList(self.moveRight())
-            # Up (if possible)
+            # Move up (if possible)
             elif (randomInt == 3):
                 posList = self.moveUp()
                 if (not (posList == NULL)):
                     self.setList(self.moveUp())
-            # Down (if possible)
+            # Move down (if possible)
             else:
                 posList = self.moveDown()
                 if (not (posList == NULL)):
@@ -783,6 +801,16 @@ class MoveCalc:
         
         # Returning the best state to step to
         return self.goDeeper(previousStates, statesOnTheWay, leftState, rightState, upState, downState, goalState, selectionType, depth + 1, depthCap)
+    
+    # Takes the initial state and the goal state and determines if the puzzle
+    # is solvable or not
+    def isSolvable(self, initialState, goalState):
+        # If the number of inversions is even, it's solvable
+        if (initialState.getInversions(goalState) % 2 == 0):
+            return True
+        
+        # Otherwise, it's not solvable
+        return False
 
 # Game class
 class Game:
@@ -982,11 +1010,35 @@ class Game:
         print("")
         
     def playGame(self):
+        # Part 1: Making sure the goal state is reachable
+        # Checking to see if the initial state is solvable
+        if (not self.mover.isSolvable(self.currentState, self.goalState)):
+            # Creating the string that displays all of the information that
+            # the puzzle is not solvable
+            #
+            # The current state
+            extraString = self.currentState.getStringState()
+            # The goal state
+            extraString = extraString + self.goalState.getStringState()
+            # The message saying it's unsolvable
+            extraString = extraString + "This puzzle is unsolvable."
+            
+            # Displaying the string
+            print(extraString)
+            
+            # Writing the string to the file
+            file = open(FILENAME, "a")
+            file.write(extraString)
+            file.close()
+            
+            # Stopping playing the game cause it can't be done
+            return
+        
         # Creating variables to store each of the game's total time
         smartSelectTime = 0
         uninformedSelectTime = 0
         
-        # Part 1: Smart Selection
+        # Part 2: Smart Selection
         # Letting the user know the AI is currently trying to solve the puzzle
         print("Currently trying to solve the puzzle by using the Progressive Deepening Method...")
         
@@ -1045,7 +1097,7 @@ class Game:
             if (answer == "y" or answer == "Y"):
                 overrideAlwaysBeSmart = True
         
-        # Part 2: Random Selection
+        # Part 3: Random Selection
         # Making sure we actually want to try and take on this adventure
         if (overrideAlwaysBeSmart or (not ALWAYS_BE_SMART)):
             # Letting the user know the AI is currently trying to solve the
@@ -1098,7 +1150,7 @@ class Game:
                     self.previousStates = []
                     self.statesOnTheWay = []
         
-        # Part 3: Comparing the times
+        # Part 4: Comparing the times
         # Making sure that both tests were actually performed
         if (overrideAlwaysBeSmart or (not ALWAYS_BE_SMART)):
             # Getting the difference in the time
