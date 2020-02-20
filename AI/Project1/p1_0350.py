@@ -212,8 +212,42 @@ class HelpfulFunctions:
         return newList
     
     # Returns true if the given data represents an inversion
-    def isAnInversion(self, anchorInt, posOfAnchorInt, testedInt, listForTestedInt):
-        return True
+    def isAnInversion(self, anchorInt, posOfAnchorInt, goalStateList, testedInt):
+        # Going through the list up to the current point
+        for x in range(posOfAnchorInt):
+            # If the tested int matches any of the ints, then it must be an
+            # inversion
+            if (testedInt == int(goalStateList[x])):
+                return True
+        
+        # If it doesn't match, return false
+        return False
+    
+    # Converts the two states into a standard goal state (meaning the list
+    # looks like [1, 2, 3, 4, 5, 6, 7, 8, 0] and the respective current state
+    # (meaning each of the values are kept the same)
+    def convertToNormal(self, currentStateList, goalStateList):
+        # Looping through the goal state
+        for g in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            # Getting the number at the current location
+            goalNum = goalStateList[g]
+            
+            # Looping through the current state to find the same number
+            for c in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+                # If there's a mtach, convert them to the x number
+                if (goalNum == currentStateList[c]):
+                    # First, see if it's the last number
+                    if (g == NUM_OF_X_GRID * NUM_OF_Y_GRID - 1):
+                        # Setting them equal to 0
+                        goalStateList[g] = "0"
+                        currentStateList[c] = "0"
+                    else:
+                        # Setting them equal to something non-zero
+                        goalStateList[g] = str(g + 1)
+                        currentStateList[c] = str(g + 1)
+        
+        # Returing both lists
+        return currentStateList
 
 # Game State class
 class GameState:
@@ -236,19 +270,26 @@ class GameState:
     
     # Gets the number of inversions between the state and the goal state
     def getInversions(self, goalState):
+        # Initializing variables for the tests and counting
         inversionCount = 0
+        currentStateCopyList = self.helper.createDuplicateList(self.state)
+        goalStateCopyList = self.helper.createDuplicateList(goalState.getState())
         
-        # Looping through the entire puzzle
-        for i in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
+        # Converting the two states to be functional for inversion counting
+        currentStateCopyList = self.helper.convertToNormal(currentStateCopyList, goalStateCopyList)
+        
+        #  Removing the 0 from the list
+        currentStateCopyList.remove("0")
+        currentStateNo0List = currentStateCopyList
+        
+        # Looping through the entire puzzle (excluding the 0)
+        for i in range(NUM_OF_X_GRID * NUM_OF_Y_GRID - 2):
             # Looping through the entire puzzle that hasn't been looped
             # through from the first loop
-            for j in range (i + 1, NUM_OF_X_GRID * NUM_OF_Y_GRID):
-                # Making sure neither number is 0
-                #if ((not (self.state[i] == "0")) and (not (goalState.getState()[j] == "0"))):
-                if (True):
-                    # Checking to see if it's an inversion
-                    if (self.helper.isAnInversion(int(self.state[i]), i, int(goalState.getState()[j]), goalState.getState())):
-                        inversionCount = inversionCount + 1
+            for j in range (i + 1, NUM_OF_X_GRID * NUM_OF_Y_GRID - 1):
+                # Checking to see if it's an inversion
+                if (int(currentStateNo0List[i]) > int(currentStateNo0List[j])):
+                    inversionCount = inversionCount + 1
         
         # Returning the number of inversions
         return inversionCount
@@ -1021,11 +1062,13 @@ class Game:
             # the puzzle is not solvable
             #
             # The current state
-            extraString = self.currentState.getStringState()
+            extraString = "Current State:\n"
+            extraString = extraString + self.currentState.getStringState()
             # The goal state
+            extraString = extraString + "\nGoal State:\n"
             extraString = extraString + self.goalState.getStringState()
             # The message saying it's unsolvable
-            extraString = extraString + "This puzzle is unsolvable."
+            extraString = extraString + "\nThis puzzle is unsolvable."
             
             # Displaying the string
             print(extraString)
@@ -1162,7 +1205,7 @@ class Game:
             
             # Creating an string to store what is going to be displayed and
             # written to the file
-            extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to complete than the Progressive Deepening Method."
+            extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to solve than the Progressive Deepening Method."
             
             # Displaying to the user the difference in the times
             print(extraString)
