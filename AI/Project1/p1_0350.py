@@ -210,7 +210,10 @@ class HelpfulFunctions:
         
         # Returning the new list
         return newList
-
+    
+    # Returns true if the given data represents an inversion
+    def isAnInversion(self, anchorInt, posOfAnchorInt, testedInt, listForTestedInt):
+        return True
 
 # Game State class
 class GameState:
@@ -239,11 +242,12 @@ class GameState:
         for i in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             # Looping through the entire puzzle that hasn't been looped
             # through from the first loop
-            for j in range (x + 1, NUM_OF_X_GRID * NUM_OF_Y_GRID):
+            for j in range (i + 1, NUM_OF_X_GRID * NUM_OF_Y_GRID):
                 # Making sure neither number is 0
-                if ((not (self.state[i] == "0")) and (not (goalState.getState()[j] == "0"))):
+                #if ((not (self.state[i] == "0")) and (not (goalState.getState()[j] == "0"))):
+                if (True):
                     # Checking to see if it's an inversion
-                    if (True):
+                    if (self.helper.isAnInversion(int(self.state[i]), i, int(goalState.getState()[j]), goalState.getState())):
                         inversionCount = inversionCount + 1
         
         # Returning the number of inversions
