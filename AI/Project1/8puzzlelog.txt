@@ -1,17 +1,177 @@
 Puzzle solved using Progressive Deepening Search:
 
 Initial State (Step 0)
-Manhatten Steps: 0
-Hamming Steps: 0
-1 2 3 
-4 5 6 
-7 8 0 
+Manhatten Steps: 11
+Hamming Steps: 7
+3 6 4 
+0 1 2 
+8 7 5 
 
-Goal State (Step 1)
-Manhatten Steps: 0
-Hamming Steps: 0
-1 2 3 
-4 5 6 
-7 8 0 
+Step 1
+Manhatten Steps: 21
+Hamming Steps: 14
+3 6 4 
+1 0 2 
+8 7 5 
 
-Time it took to solve the puzzle: 1.0013580322265625e-05 seconds
+Step 2
+Manhatten Steps: 30
+Hamming Steps: 21
+3 0 4 
+1 6 2 
+8 7 5 
+
+Step 3
+Manhatten Steps: 38
+Hamming Steps: 28
+0 3 4 
+1 6 2 
+8 7 5 
+
+Step 4
+Manhatten Steps: 45
+Hamming Steps: 34
+1 3 4 
+0 6 2 
+8 7 5 
+
+Step 5
+Manhatten Steps: 51
+Hamming Steps: 39
+1 3 4 
+8 6 2 
+0 7 5 
+
+Step 6
+Manhatten Steps: 56
+Hamming Steps: 43
+1 3 4 
+8 6 2 
+7 0 5 
+
+Step 7
+Manhatten Steps: 60
+Hamming Steps: 46
+1 3 4 
+8 0 2 
+7 6 5 
+
+Step 8
+Manhatten Steps: 63
+Hamming Steps: 49
+1 3 4 
+8 2 0 
+7 6 5 
+
+Step 9
+Manhatten Steps: 65
+Hamming Steps: 51
+1 3 0 
+8 2 4 
+7 6 5 
+
+Step 10
+Manhatten Steps: 66
+Hamming Steps: 52
+1 0 3 
+8 2 4 
+7 6 5 
+
+Goal State (Step 11)
+Manhatten Steps: 66
+Hamming Steps: 52
+1 2 3 
+8 0 4 
+7 6 5 
+
+Time it took to solve the puzzle: 11.73804521560669 seconds
+
+Puzzle solved using Uninformed Search:
+
+Initial State (Step 0)
+Manhatten Steps: 11
+Hamming Steps: 7
+3 6 4 
+0 1 2 
+8 7 5 
+
+Step 1
+Manhatten Steps: 21
+Hamming Steps: 14
+3 6 4 
+1 0 2 
+8 7 5 
+
+Step 2
+Manhatten Steps: 30
+Hamming Steps: 21
+3 0 4 
+1 6 2 
+8 7 5 
+
+Step 3
+Manhatten Steps: 38
+Hamming Steps: 28
+0 3 4 
+1 6 2 
+8 7 5 
+
+Step 4
+Manhatten Steps: 45
+Hamming Steps: 34
+1 3 4 
+0 6 2 
+8 7 5 
+
+Step 5
+Manhatten Steps: 51
+Hamming Steps: 39
+1 3 4 
+8 6 2 
+0 7 5 
+
+Step 6
+Manhatten Steps: 56
+Hamming Steps: 43
+1 3 4 
+8 6 2 
+7 0 5 
+
+Step 7
+Manhatten Steps: 60
+Hamming Steps: 46
+1 3 4 
+8 0 2 
+7 6 5 
+
+Step 8
+Manhatten Steps: 63
+Hamming Steps: 49
+1 3 4 
+8 2 0 
+7 6 5 
+
+Step 9
+Manhatten Steps: 65
+Hamming Steps: 51
+1 3 0 
+8 2 4 
+7 6 5 
+
+Step 10
+Manhatten Steps: 66
+Hamming Steps: 52
+1 0 3 
+8 2 4 
+7 6 5 
+
+Goal State (Step 11)
+Manhatten Steps: 66
+Hamming Steps: 52
+1 2 3 
+8 0 4 
+7 6 5 
+
+Time it took to solve the puzzle: 13.686465978622437 seconds
+
+It took the Uninformed Search 1.948420763015747 seconds longer to complete than the Progressive Deepening Method.

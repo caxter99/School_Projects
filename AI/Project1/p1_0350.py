@@ -17,14 +17,14 @@ MAX_STEPS = float('inf') # This is used for states that have no way of finishing
 # (or other error methods for checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by
 # the user) will be randomly made or not
-ALWAYS_BE_SMART = True # If true, it won't run the random selection method
-# (because that could take an extremely long time)
+ALWAYS_BE_SMART = False # If true, it will ask the user before running the
+# uninformed search (because that could take an extremely long time)
 RANDOM_SELECT_INT = 0 # The integer to signify that it should do random selection
 SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
 # do smart selection
 SHOULD_SHUFFLE = False # If the game should shuffle the states before the game
 # starts
-SHUFFLE_TIMES = 40 # The number of times the goal state will be shuffled to
+SHUFFLE_TIMES = 30 # The number of times the goal state will be shuffled to
 # create the starting state (if applicable)
 MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times
 # recursion can occur
@@ -819,7 +819,7 @@ class Game:
         if (selectionType == SMART_SELECT_INT):
             file.write("Progressive Deepening Search:")
         elif (selectionType == RANDOM_SELECT_INT):
-            file.write("Random Selection:")
+            file.write("Uninformed Search:")
         else:
             file.write("an unknown method for selection:")
         file.write("\n\n")
@@ -982,6 +982,10 @@ class Game:
         print("")
         
     def playGame(self):
+        # Creating variables to store each of the game's total time
+        smartSelectTime = 0
+        uninformedSelectTime = 0
+        
         # Part 1: Smart Selection
         # Letting the user know the AI is currently trying to solve the puzzle
         print("Currently trying to solve the puzzle by using the Progressive Deepening Method...")
@@ -1008,9 +1012,12 @@ class Game:
                 # Set solved to true
                 solved = True
                 
+                # Saving the time it took
+                smartSelectTime = endTime - startTime
+                
                 # Display and write the steps to a file, then write the time to
                 # the same file
-                timeString = "Time it took to solve the puzzle: " + str(endTime - startTime) + " seconds\n"
+                timeString = "Time it took to solve the puzzle: " + str(smartSelectTime) + " seconds\n\n"
                 self.viewAndWriteSteps(SMART_SELECT_INT)
                 print(timeString)
                 file = open(FILENAME, "a")
@@ -1029,12 +1036,21 @@ class Game:
                 self.previousStates = []
                 self.statesOnTheWay = []
         
+        # Asking the user if they would like to try the uninformed search
+        overrideAlwaysBeSmart = False
+        if (ALWAYS_BE_SMART):
+            answer = input("Would you like to try the Uninformed Search?\nWARNING: It may take a LONG time! (y/n): ")
+            
+            # If the user would like to try the Uninformed Search
+            if (answer == "y" or answer == "Y"):
+                overrideAlwaysBeSmart = True
+        
         # Part 2: Random Selection
         # Making sure we actually want to try and take on this adventure
-        if (not ALWAYS_BE_SMART):
+        if (overrideAlwaysBeSmart or (not ALWAYS_BE_SMART)):
             # Letting the user know the AI is currently trying to solve the
             # puzzle
-            print("Currently trying to solve the puzzle by using Random Selection...")
+            print("Currently trying to solve the puzzle by using Uninformed Search...")
         
             # Keeping track of whether or not it was solved
             solved = False
@@ -1058,11 +1074,13 @@ class Game:
                     # Set solved to true
                     solved = True
                 
+                    # Saving the time it took
+                    uninformedSelectTime = endTime - startTime
+                
                     # Display and write the steps to a file, then write the
-                    # time to
-                    # the same file
-                    timeString = "Time it took to solve the puzzle: " + str(endTime - startTime) + " seconds\n"
-                    self.viewAndWriteSteps(SMART_SELECT_INT)
+                    # time to the same file
+                    timeString = "Time it took to solve the puzzle: " + str(uninformedSelectTime) + " seconds\n\n"
+                    self.viewAndWriteSteps(RANDOM_SELECT_INT, "a")
                     print(timeString)
                     file = open(FILENAME, "a")
                     file.write(timeString)
@@ -1079,6 +1097,24 @@ class Game:
                     # Reset the previous states and the states on the way
                     self.previousStates = []
                     self.statesOnTheWay = []
+        
+        # Part 3: Comparing the times
+        # Making sure that both tests were actually performed
+        if (overrideAlwaysBeSmart or (not ALWAYS_BE_SMART)):
+            # Getting the difference in the time
+            timeDifference = uninformedSelectTime - smartSelectTime
+            
+            # Creating an string to store what is going to be displayed and
+            # written to the file
+            extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to complete than the Progressive Deepening Method."
+            
+            # Displaying to the user the difference in the times
+            print(extraString)
+            
+            # Writing the same thing that was displayed to the file
+            file = open(FILENAME, "a")
+            file.write(extraString)
+            file.close()
 
 # This function starts the entire thing
 def n_puzzle():
