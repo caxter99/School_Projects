@@ -10,7 +10,7 @@ Main class:
 """
 # Global (const) variables
 NUM_OF_X_GRID = 3 # The width of the grid
-NUM_OF_Y_GRID = 3 # The height of the grid
+NUM_OF_Y_GRID = NUM_OF_X_GRID # The height of the grid
 NULL = "null" # The null value
 FILENAME = "8puzzlelog.txt" # The name of the file the game is written to
 MAX_STEPS = float('inf') # This is used for states that have no way of finishing
@@ -24,7 +24,7 @@ SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
 # do smart selection
 SHOULD_SHUFFLE = False # If the game should shuffle the states before the game
 # starts
-SHUFFLE_TIMES = 30 # The number of times the goal state will be shuffled to
+SHUFFLE_TIMES = 20 # The number of times the goal state will be shuffled to
 # create the starting state (if applicable)
 MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times
 # recursion can occur
@@ -211,18 +211,6 @@ class HelpfulFunctions:
         # Returning the new list
         return newList
     
-    # Returns true if the given data represents an inversion
-    def isAnInversion(self, anchorInt, posOfAnchorInt, goalStateList, testedInt):
-        # Going through the list up to the current point
-        for x in range(posOfAnchorInt):
-            # If the tested int matches any of the ints, then it must be an
-            # inversion
-            if (testedInt == int(goalStateList[x])):
-                return True
-        
-        # If it doesn't match, return false
-        return False
-    
     # Converts the two states into a standard goal state (meaning the list
     # looks like [1, 2, 3, 4, 5, 6, 7, 8, 0] and the respective current state
     # (meaning each of the values are kept the same)
@@ -231,11 +219,15 @@ class HelpfulFunctions:
         for g in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
             # Getting the number at the current location
             goalNum = goalStateList[g]
+            hasChangedANum = False
             
             # Looping through the current state to find the same number
             for c in range(NUM_OF_X_GRID * NUM_OF_Y_GRID):
                 # If there's a mtach, convert them to the x number
-                if (goalNum == currentStateList[c]):
+                if ((not hasChangedANum) and goalNum == currentStateList[c]):
+                    # Making sure we don't execute this again
+                    hasChangedANum = True
+                    
                     # First, see if it's the last number
                     if (g == NUM_OF_X_GRID * NUM_OF_Y_GRID - 1):
                         # Setting them equal to 0
@@ -246,7 +238,7 @@ class HelpfulFunctions:
                         goalStateList[g] = str(g + 1)
                         currentStateList[c] = str(g + 1)
         
-        # Returing both lists
+        # Returing the current state list
         return currentStateList
 
 # Game State class
@@ -282,7 +274,7 @@ class GameState:
         currentStateCopyList.remove("0")
         currentStateNo0List = currentStateCopyList
         
-        # Looping through the entire puzzle (excluding the 0)
+        # Looping through the entire puzzle
         for i in range(NUM_OF_X_GRID * NUM_OF_Y_GRID - 2):
             # Looping through the entire puzzle that hasn't been looped
             # through from the first loop
@@ -1055,6 +1047,18 @@ class Game:
         print("")
         
     def playGame(self):
+        # Part 0: Making sure the grif is a valid size
+        if (not NUM_OF_X_GRID == NUM_OF_Y_GRID):
+            extraString = "The grid is not a square!\nWidth: "
+            extraString = extraString + str(NUM_OF_X_GRID) + "\nLength: "
+            extraString = extraString + str(NUM_OF_Y_GRID) + "\n"
+            
+            # Printing and writing the message
+            print(extraString)
+            file = open(FILENAME, "w")
+            file.write(extraString)
+            file.close()
+            
         # Part 1: Making sure the goal state is reachable
         # Checking to see if the initial state is solvable
         if (not self.mover.isSolvable(self.currentState, self.goalState)):
@@ -1074,7 +1078,7 @@ class Game:
             print(extraString)
             
             # Writing the string to the file
-            file = open(FILENAME, "a")
+            file = open(FILENAME, "w")
             file.write(extraString)
             file.close()
             
