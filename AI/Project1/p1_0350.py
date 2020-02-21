@@ -1218,7 +1218,7 @@ class Game:
                 extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to solve than the Progressive Deepening Method."
             else:
                 # Getting the difference in the time
-                timeDifference = uninformedSelectTime - smartSelectTime
+                timeDifference = smartSelectTime - uninformedSelectTime
             
                 # Creating an string to store what is going to be displayed and
                 # written to the file
