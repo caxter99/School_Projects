@@ -1204,12 +1204,24 @@ class Game:
         # Part 4: Comparing the times
         # Making sure that both tests were actually performed
         if (overrideAlwaysBeSmart or (not ALWAYS_BE_SMART)):
-            # Getting the difference in the time
-            timeDifference = uninformedSelectTime - smartSelectTime
+            # Variables
+            extraString = ""
             
-            # Creating an string to store what is going to be displayed and
-            # written to the file
-            extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to solve than the Progressive Deepening Method."
+            # Figuring out which method was faster
+            if (uninformedSelectTime > smartSelectTime):
+                # Getting the difference in the time
+                timeDifference = uninformedSelectTime - smartSelectTime
+            
+                # Creating an string to store what is going to be displayed and
+                # written to the file
+                extraString = "It took the Uninformed Search " + str(timeDifference) + " seconds longer to solve than the Progressive Deepening Method."
+            else:
+                # Getting the difference in the time
+                timeDifference = uninformedSelectTime - smartSelectTime
+            
+                # Creating an string to store what is going to be displayed and
+                # written to the file
+                extraString = "It took the Progressive Deepening Method " + str(timeDifference) + " seconds longer to solve than the Uninformed Search."
             
             # Displaying to the user the difference in the times
             print(extraString)

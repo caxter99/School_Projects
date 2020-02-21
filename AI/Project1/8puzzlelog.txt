@@ -91,7 +91,7 @@ Hamming Steps: 55
 4 5 2 
 6 7 8 
 
-Time it took to solve the puzzle: 1158.168869972229 seconds
+Time it took to solve the puzzle: 1159.47327709198 seconds
 
 Puzzle solved using Uninformed Search:
 
@@ -186,6 +186,6 @@ Hamming Steps: 55
 4 5 2 
 6 7 8 
 
-Time it took to solve the puzzle: 651.3818221092224 seconds
+Time it took to solve the puzzle: 658.8933968544006 seconds
 
-It took the Uninformed Search -506.7870478630066 seconds longer to solve than the Progressive Deepening Method.
+It took the Uninformed Search -500.57988023757935 seconds longer to solve than the Progressive Deepening Method.
