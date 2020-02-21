@@ -4,3 +4,4 @@
 
 # For AI
 .ipynb_checkpoints
+__pycache__
