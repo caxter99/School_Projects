@@ -13,21 +13,22 @@ NUM_OF_X_GRID = 3 # The width of the grid
 NUM_OF_Y_GRID = NUM_OF_X_GRID # The height of the grid
 NULL = "null" # The null value
 FILENAME = "8puzzlelog.txt" # The name of the file the game is written to
-MAX_STEPS = float('inf') # This is used for states that have no way of finishing
-# (or other error methods for checking steps remaining)
+MAX_STEPS = float('inf') # This is used for states that have no way of
+# finishing (or other error methods for checking steps remaining)
 TRUE_RANDOM = False # This is to say if the created states (if not created by
 # the user) will be randomly made or not
 ALWAYS_BE_SMART = False # If true, it will ask the user before running the
 # uninformed search (because that could take an extremely long time)
-RANDOM_SELECT_INT = 0 # The integer to signify that it should do random selection
-SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it should
-# do smart selection
+RANDOM_SELECT_INT = 0 # The integer to signify that it should do random
+# selection
+SMART_SELECT_INT = RANDOM_SELECT_INT + 1 # The integer to signify that it
+# should do smart selection
 SHOULD_SHUFFLE = False # If the game should shuffle the states before the game
 # starts
 SHUFFLE_TIMES = 20 # The number of times the goal state will be shuffled to
 # create the starting state (if applicable)
-MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of times
-# recursion can occur
+MAX_RECURSION = (9 * 8 * 7 * 6 * 5 * 4 * 3 * 2) + 2 # The maximum number of
+# times recursion can occur
 RECURSION_SAFETY_NET = MAX_RECURSION * 0.1 # The number away from MAX_RECURSION
 # that the program will stop the program from trying to spawn a new state from
 # the current one
