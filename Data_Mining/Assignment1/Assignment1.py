@@ -18,9 +18,13 @@ NOTE:
 # All imports for the assignment
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 # Constants
-FILENAME = "train.csv"
+FILENAME = "train.csv" # The filename for the data for part 1
+TEST_TO_TRAIN_RATIO = 0.2 # The amount of data that will become the test
+TARGET_VARIABLES = ['cancelled', 'late', 'ontime', 'verylate'] # A list of the
+# values in the target column
 
 # Does both parts of the assignment
 def doAll():
@@ -35,17 +39,41 @@ def doPart1():
     df = pd.read_csv(FILENAME)
     
     # Since all of the variables are necessary, keep them all
-    
-    # Separate the target variable
-    target = df.clas
-    inputs = df.drop('clas', axis='columns')
+    # do nothing here
     
     # Getting rid of all of the non-number data
     df = replaceAllWithDummies(df)
     
+    # Replacing any missing numbers with 0
+    df = fixMissingNumbers(df)
+    
+    # Making sure all of the column names don't have any spaes in them
+    df = removeWhitespaceFromColumnNames(df)
+    
     # TEST ONLY
     print("\ndataframe:")
     print(df.head())
+    # END TEST
+    
+    # Separate the target variable and the inputs
+    target = df[TARGET_VARIABLES]
+    inputs = df
+    for x in range(len(TARGET_VARIABLES)):
+        inputs = inputs.drop(TARGET_VARIABLES[x], axis='columns')
+    
+    # Splitting the training and the test data
+    x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
+    
+    # TEST ONLY
+    print("\ndataframe:")
+    print(df.head())
+    print("\nlen(x_train):")
+    print(len(x_train))
+    print("\nlen(x_test):")
+    print(len(x_test))
+    print("\nlen(inputs):")
+    print(len(inputs))
+    # END TEST
     
 # Does part 2 of the assignment
 #def doPart2():
@@ -79,6 +107,54 @@ def replaceAllWithDummies(df):
     
     # Returning the data frame
     return df
+
+# Replaces all the missing numeric values with 0
+# NOTE: Assumes an all numeric data frame
+def fixMissingNumbers(df):
+    # If there's no missing numbers
+    if (not areThereMissingNumbers(df)):
+        return df
+    
+    # If the code makes it to here, there are some values that must be changed
+    # CURRENTLY DOES NOT CORRECT ANY VALUES
+    return df
+
+# Returns true if there are any missing values in an all numeric data set
+# NOTE: Assumes an all numeric data set
+def areThereMissingNumbers(df):
+    # Getting a string of all columns that have non-numbers in them
+    strO = str(df.columns[df.isna().any()])
+    
+    # Checking to see if there are any
+    first = strO.find("[")
+    second = strO.find("]")
+    if (first + 1 == second): # If this is true, there are none
+        return False
+    else: # Otherwise, there are some missing numbers
+        return True
+    
+# Removes all of the whitespace from the column names of the given data frame
+def removeWhitespaceFromColumnNames(df):
+    # Variables needed for the funciton
+    columnNames = []
+    
+    # Creating a list of all of the column names
+    for x in range(len(df.columns)):
+        columnNames.append(df.columns[x])
+    
+    # Removing any whitespace they may have
+    for x in range(len(df.columns)):
+        columnNames[x] = removeWhitespace(columnNames[x])
+        
+    # Setting the data frame's columns to be the ones without whitespace
+    df.columns = columnNames
+    
+    # Returns the data frame
+    return df
+
+# Removes all of the whitespace from the given string
+def removeWhitespace(string):
+    return string.replace(" ", "")
             
             
             
