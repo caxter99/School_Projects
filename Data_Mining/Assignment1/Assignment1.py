@@ -19,12 +19,16 @@ NOTE:
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
 
 # Constants
 FILENAME = "train.csv" # The filename for the data for part 1
-TEST_TO_TRAIN_RATIO = 0.2 # The amount of data that will become the test
+TEST_TO_TRAIN_RATIO = 0.5 # The amount of data that will become the test
 TARGET_VARIABLES = ['cancelled', 'late', 'ontime', 'verylate'] # A list of the
 # values in the target column
+TESTS = [["day", "season", "wind", "rain"],["weekday", "summer", "high", "heavy"]]
+#['sunday', 'summer', 'normal', 'slight']
+# These are all of the test that will run
 
 # Does both parts of the assignment
 def doAll():
@@ -41,44 +45,35 @@ def doPart1():
     # Since all of the variables are necessary, keep them all
     # do nothing here
     
-    # Getting rid of all of the non-number data
-    df = replaceAllWithDummies(df)
-    
     # Replacing any missing numbers with 0
     df = fixMissingNumbers(df)
     
     # Making sure all of the column names don't have any spaes in them
     df = removeWhitespaceFromColumnNames(df)
     
-    # TEST ONLY
-    print("\ndataframe:")
-    print(df.head())
-    # END TEST
-    
     # Separate the target variable and the inputs
-    target = df[TARGET_VARIABLES]
-    inputs = df
-    for x in range(len(TARGET_VARIABLES)):
-        inputs = inputs.drop(TARGET_VARIABLES[x], axis='columns')
+    target = df.clas
+    inputs = replaceAllWithDummies(df.drop('clas', axis='columns'))
+    #inputs = df.drop('clas', axis='columns')
     
     # Splitting the training and the test data
     x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
     
-    # TEST ONLY
-    print("\ndataframe:")
-    print(df.head())
-    print("\nlen(x_train):")
-    print(len(x_train))
-    print("\nlen(x_test):")
-    print(len(x_test))
-    print("\nlen(inputs):")
-    print(len(inputs))
-    # END TEST
+    # Creating and fitting the model
+    model = GaussianNB()
+    model.fit(x_train, y_train)
+    
+    # Performing our tests
+    """for x in range(len(TESTS)):
+        print("Test #", x, sep="")
+        print(model.predict(np.array(TESTS[x])))"""
+    print(x_test)
+    print(model.predict(replaceAllWithDummies(TESTS)))
     
 # Does part 2 of the assignment
 #def doPart2():
     # to do
-    
+
 # Takes a data frame and returns it without any string columns
 def replaceAllWithDummies(df):
     # Creating all of the variables that are necessary
