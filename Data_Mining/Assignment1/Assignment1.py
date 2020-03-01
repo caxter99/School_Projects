@@ -23,10 +23,13 @@ from sklearn.naive_bayes import GaussianNB
 
 # Constants
 FILENAME = "train.csv" # The filename for the data for part 1
-TEST_TO_TRAIN_RATIO = 0.5 # The amount of data that will become the test
-TARGET_VARIABLES = ['cancelled', 'late', 'ontime', 'verylate'] # A list of the
-# values in the target column
-TESTS = [["day", "season", "wind", "rain"],["weekday", "summer", "high", "heavy"]]
+TEST_TO_TRAIN_RATIO = 0.01 # The amount of data that will become the test
+COLUMN_NAMES = ["day", "season", "wind", "rain", "clas"]
+TARGET_COLUMN = "clas" # This is the column that will be predicted
+TEST_ONE = ["weekday", "summer", "high", "heavy"] # Test 1
+TEST_TWO = ['sunday', 'summer', 'normal', 'slight'] # Test 2
+
+#["weekday", "summer", "high", "heavy"]
 #['sunday', 'summer', 'normal', 'slight']
 # These are all of the test that will run
 
@@ -51,10 +54,14 @@ def doPart1():
     # Making sure all of the column names don't have any spaes in them
     df = removeWhitespaceFromColumnNames(df)
     
+    # Replacing all of the strings with integers
+    df = replaceAllWithDummies(df)
+    test1 = convertListToDataFrame(replaceAllWithDummies(TEST_ONE.copy()))
+    test2 = convertListToDataFrame(replaceAllWithDummies(TEST_TWO.copy()))
+    
     # Separate the target variable and the inputs
-    target = df.clas
-    inputs = replaceAllWithDummies(df.drop('clas', axis='columns'))
-    #inputs = df.drop('clas', axis='columns')
+    target = getTarget(df)
+    inputs = getInputs(df)
     
     # Splitting the training and the test data
     x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
@@ -64,41 +71,171 @@ def doPart1():
     model.fit(x_train, y_train)
     
     # Performing our tests
-    """for x in range(len(TESTS)):
-        print("Test #", x, sep="")
-        print(model.predict(np.array(TESTS[x])))"""
-    print(x_test)
-    print(model.predict(replaceAllWithDummies(TESTS)))
+    print("Test 1:", end ="")
+    printList(TEST_ONE)
+    print(convertIntToAnswer(model.predict(test1)))
+    print("\nTest 2:", end="")
+    printList(TEST_TWO)
+    print(convertIntToAnswer(model.predict(test2)))
     
 # Does part 2 of the assignment
 #def doPart2():
     # to do
 
-# Takes a data frame and returns it without any string columns
-def replaceAllWithDummies(df):
-    # Creating all of the variables that are necessary
-    x = 0
-    limit = len(df.columns)
-    
-    # Looping through each column to see if it's a string data type
-    while (not x == limit):
-        # Checking to see if it's a string data type
-        if (not type(df.columns[x]) == np.number):
-            # Getting the dummy data (0's and 1's) from the column with strings
-            temp = pd.get_dummies(df.iloc[:, x])
-            
-            # Adding that data onto the end of the data frame
-            df = pd.concat([df, temp],axis='columns')
-            
-            # Removing the old column (the column with strings)
-            df.drop(df.columns[x],axis='columns',inplace=True)
-            
-            # Making sure the limit drops since a column got removed
-            limit = limit - 1
-        # It's a numeric column
+# Displays a list
+def printList(theList):
+    # Printing out the lst, along with the brackets
+    print("[", end="")
+    for x in range(len(theList)):
+        if (not x == len(theList) - 1):
+            print(theList[x],end=", ")
         else:
-            # Increment x
-            x = x + 1
+            print(theList[x],end="")
+    print("]")
+    
+# Converts an integer into the answer
+def convertIntToAnswer(x):
+    if (TARGET_COLUMN == "clas"):
+        if (x == 1):
+            return "on time"
+        elif (x == 2):
+            return "late"
+        elif (x == 3):
+            return "cancelled"
+        else:
+            return "very late"
+    else:
+        return "not done"
+
+# Converts a list to a data frame
+def convertListToDataFrame(testList):
+    # Figuring out what the columns name's are
+    newColumns = []
+    if (TARGET_COLUMN == "clas"):
+        newColumns = ["day_int", "season_int", "wind_int", "rain_int"]
+    elif(TARGET_COLUMN == "day"):
+        newColumns = ["season_int", "wind_int", "rain_int", "clas_int"]
+    elif(TARGET_COLUMN == "season"):
+        newColumns = ["day_int", "wind_int", "rain_int", "clas_int"]
+    elif(TARGET_COLUMN == "wind"):
+        newColumns = ["day_int", "season_int", "rain_int", "clas_int"]
+    else:
+        newColumns = ["day_int", "season_int", "wind_int", "clas_int"]
+    
+    # Putting it into a data frame
+    tempDF = pd.DataFrame(np.array(testList).reshape(1, len(testList)), columns=list("abcd"))
+    
+    # Converting the column names to their proper names
+    tempDF.columns = newColumns
+    
+    # REturning the data frame
+    return tempDF
+
+# Returns the target column given the dataframe
+def getTarget(df):
+    if (TARGET_COLUMN == "clas"):
+        return df.clas_int
+    elif(TARGET_COLUMN == "day"):
+        return df.day_int
+    elif(TARGET_COLUMN == "season"):
+        return df.season_int
+    elif(TARGET_COLUMN == "wind"):
+        return df.wind_int
+    else:
+        return df.rain_int
+    
+# Returns the inputs given the dataframe
+def getInputs(df):
+    if (TARGET_COLUMN == "clas"):
+        return df.drop('clas_int', axis='columns')
+    elif(TARGET_COLUMN == "day"):
+        return df.drop('day_int', axis='columns')
+    elif(TARGET_COLUMN == "season"):
+        return df.drop('season_int', axis='columns')
+    elif(TARGET_COLUMN == "wind"):
+        return df.drop('wind_int', axis='columns')
+    else:
+        return df.drop('rain_int', axis='columns')
+
+# Changes all values to integers
+def changeValuesToIntegers(x):
+    # Remove the whitespace, just in case
+    x = removeWhitespace(x)
+    
+    # "day" column
+    if (x == "weekday"):
+        return 1
+    elif(x == "saturday"):
+        return 2
+    elif (x == "holiday"):
+        return 3
+    elif (x == "sunday"):
+        return 4
+    
+    # "season" column
+    if (x == "spring"):
+        return 1
+    elif(x == "winter"):
+        return 2
+    elif (x == "summer"):
+        return 3
+    elif (x == "autumn"):
+        return 4
+    
+    # "wind" column
+    if (x == "none"):
+        return 1
+    elif(x == "high"):
+        return 2
+    elif (x == "normal"):
+        return 3
+    
+    # "rain" column
+    if (x == "none"):
+        return 1
+    elif(x == "slight"):
+        return 2
+    elif (x == "heavy"):
+        return 3
+    
+    # "clas" column
+    if (x == "ontime"):
+        return 1
+    elif(x == "late"):
+        return 2
+    elif (x == "cancelled"):
+        return 3
+    elif (x == "verylate"):
+        return 4
+    
+    # Unknown value
+    return 0
+
+# Takes a data frame (or a specific test case) and returns it with all integers
+def replaceAllWithDummies(df):
+    # Replacing all of the values of the given dataset with integers
+    limit = 0
+    try:
+        # Getting the number of columns
+        limit = len(df.columns)
+        
+        # Looping through and converting them to numeric values
+        for x in range(limit):
+            newString = "" + df.columns[x] + "_int"
+            #temp = pd.get_dummies(df.iloc[:, x])
+            df[newString] = df[COLUMN_NAMES[x]].apply(changeValuesToIntegers)
+            
+        # Looping through and getting rid of the old values
+        for x in range(limit):
+            df = df.drop(COLUMN_NAMES[x], axis='columns')
+    except:
+        # Getting the number of test input variables
+        limit = len(df)
+        
+        # Looping through each test case and converting it to integers
+        for x in range(limit):
+            df[x] = changeValuesToIntegers(df[x])
+            
     
     # Returning the data frame
     return df
