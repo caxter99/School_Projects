@@ -35,18 +35,21 @@ TEST_TWO = ['sunday', 'summer', 'normal', 'slight'] # Test 2
 
 # Does both parts of the assignment
 def doAll():
-    # Do both parts of the assignment
+    # Doing part 1
+    print("Part 1:")
     doPart1()
+    
+    # Doing part 2
+    print("\n\nPart 2:")
     #doPart2()
-    # Eventually, this program will do both parts of the assignment
     
 # Does part 1 of the assignment
 def doPart1():
     # Get the data from the file
     df = pd.read_csv(FILENAME)
     
-    # Since all of the variables are necessary, keep them all
-    # do nothing here
+    # Get rid of unnecessary values
+    # do nothing here because all of them are necessary
     
     # Replacing any missing numbers with 0
     df = fixMissingNumbers(df)
@@ -70,7 +73,7 @@ def doPart1():
     model = GaussianNB()
     model.fit(x_train, y_train)
     
-    # Performing our tests
+    # Performing the tests
     print("Test 1:", end ="")
     printList(TEST_ONE)
     print(convertIntToAnswer(model.predict(test1)))
