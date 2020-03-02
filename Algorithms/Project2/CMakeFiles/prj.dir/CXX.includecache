@@ -6,35 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.hpp
-iostream
--
+/Users/devin/Desktop/School_Projects/Algorithms/Project2/Project2.cpp
 string
 -
-vector
--
-fstream
--
-Point.hpp
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.hpp
-
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/HullAlgorithms.cpp
-HullAlgorithms.hpp
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/HullAlgorithms.hpp
 iostream
 -
-
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/HullAlgorithms.hpp
-iostream
+stdlib.h
 -
 stack
 -
-Point.hpp
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.hpp
-ConvexHull.hpp
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.hpp
-
-/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.hpp
-iostream
+fstream
+-
+vector
 -
 

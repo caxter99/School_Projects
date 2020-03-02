@@ -4,9 +4,6 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.cpp" "/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/prj.dir/ConvexHull.cpp.o"
-  "/Users/devin/Desktop/School_Projects/Algorithms/Project2/HullAlgorithms.cpp" "/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/prj.dir/HullAlgorithms.cpp.o"
-  "/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.cpp" "/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/prj.dir/Point.cpp.o"
   "/Users/devin/Desktop/School_Projects/Algorithms/Project2/Project2.cpp" "/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/prj.dir/Project2.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")

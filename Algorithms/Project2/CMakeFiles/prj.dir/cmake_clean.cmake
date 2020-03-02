@@ -1,7 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/prj.dir/ConvexHull.cpp.o"
-  "CMakeFiles/prj.dir/HullAlgorithms.cpp.o"
-  "CMakeFiles/prj.dir/Point.cpp.o"
   "CMakeFiles/prj.dir/Project2.cpp.o"
   "prj"
   "prj.pdb"

@@ -123,87 +123,6 @@ prj/fast:
 	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/build
 .PHONY : prj/fast
 
-ConvexHull.o: ConvexHull.cpp.o
-
-.PHONY : ConvexHull.o
-
-# target to build an object file
-ConvexHull.cpp.o:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.o
-.PHONY : ConvexHull.cpp.o
-
-ConvexHull.i: ConvexHull.cpp.i
-
-.PHONY : ConvexHull.i
-
-# target to preprocess a source file
-ConvexHull.cpp.i:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.i
-.PHONY : ConvexHull.cpp.i
-
-ConvexHull.s: ConvexHull.cpp.s
-
-.PHONY : ConvexHull.s
-
-# target to generate assembly for a file
-ConvexHull.cpp.s:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.s
-.PHONY : ConvexHull.cpp.s
-
-HullAlgorithms.o: HullAlgorithms.cpp.o
-
-.PHONY : HullAlgorithms.o
-
-# target to build an object file
-HullAlgorithms.cpp.o:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.o
-.PHONY : HullAlgorithms.cpp.o
-
-HullAlgorithms.i: HullAlgorithms.cpp.i
-
-.PHONY : HullAlgorithms.i
-
-# target to preprocess a source file
-HullAlgorithms.cpp.i:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.i
-.PHONY : HullAlgorithms.cpp.i
-
-HullAlgorithms.s: HullAlgorithms.cpp.s
-
-.PHONY : HullAlgorithms.s
-
-# target to generate assembly for a file
-HullAlgorithms.cpp.s:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.s
-.PHONY : HullAlgorithms.cpp.s
-
-Point.o: Point.cpp.o
-
-.PHONY : Point.o
-
-# target to build an object file
-Point.cpp.o:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Point.cpp.o
-.PHONY : Point.cpp.o
-
-Point.i: Point.cpp.i
-
-.PHONY : Point.i
-
-# target to preprocess a source file
-Point.cpp.i:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Point.cpp.i
-.PHONY : Point.cpp.i
-
-Point.s: Point.cpp.s
-
-.PHONY : Point.s
-
-# target to generate assembly for a file
-Point.cpp.s:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Point.cpp.s
-.PHONY : Point.cpp.s
-
 Project2.o: Project2.cpp.o
 
 .PHONY : Project2.o
@@ -240,15 +159,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... prj"
-	@echo "... ConvexHull.o"
-	@echo "... ConvexHull.i"
-	@echo "... ConvexHull.s"
-	@echo "... HullAlgorithms.o"
-	@echo "... HullAlgorithms.i"
-	@echo "... HullAlgorithms.s"
-	@echo "... Point.o"
-	@echo "... Point.i"
-	@echo "... Point.s"
 	@echo "... Project2.o"
 	@echo "... Project2.i"
 	@echo "... Project2.s"
