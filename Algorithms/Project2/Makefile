@@ -150,6 +150,33 @@ ConvexHull.cpp.s:
 	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.s
 .PHONY : ConvexHull.cpp.s
 
+HullAlgorithms.o: HullAlgorithms.cpp.o
+
+.PHONY : HullAlgorithms.o
+
+# target to build an object file
+HullAlgorithms.cpp.o:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.o
+.PHONY : HullAlgorithms.cpp.o
+
+HullAlgorithms.i: HullAlgorithms.cpp.i
+
+.PHONY : HullAlgorithms.i
+
+# target to preprocess a source file
+HullAlgorithms.cpp.i:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.i
+.PHONY : HullAlgorithms.cpp.i
+
+HullAlgorithms.s: HullAlgorithms.cpp.s
+
+.PHONY : HullAlgorithms.s
+
+# target to generate assembly for a file
+HullAlgorithms.cpp.s:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/HullAlgorithms.cpp.s
+.PHONY : HullAlgorithms.cpp.s
+
 Point.o: Point.cpp.o
 
 .PHONY : Point.o
@@ -216,6 +243,9 @@ help:
 	@echo "... ConvexHull.o"
 	@echo "... ConvexHull.i"
 	@echo "... ConvexHull.s"
+	@echo "... HullAlgorithms.o"
+	@echo "... HullAlgorithms.i"
+	@echo "... HullAlgorithms.s"
 	@echo "... Point.o"
 	@echo "... Point.i"
 	@echo "... Point.s"

@@ -5,10 +5,16 @@ CMakeFiles/prj.dir/ConvexHull.cpp.o: ConvexHull.cpp
 CMakeFiles/prj.dir/ConvexHull.cpp.o: ConvexHull.hpp
 CMakeFiles/prj.dir/ConvexHull.cpp.o: Point.hpp
 
+CMakeFiles/prj.dir/HullAlgorithms.cpp.o: ConvexHull.hpp
+CMakeFiles/prj.dir/HullAlgorithms.cpp.o: HullAlgorithms.cpp
+CMakeFiles/prj.dir/HullAlgorithms.cpp.o: HullAlgorithms.hpp
+CMakeFiles/prj.dir/HullAlgorithms.cpp.o: Point.hpp
+
 CMakeFiles/prj.dir/Point.cpp.o: Point.cpp
 CMakeFiles/prj.dir/Point.cpp.o: Point.hpp
 
 CMakeFiles/prj.dir/Project2.cpp.o: ConvexHull.hpp
+CMakeFiles/prj.dir/Project2.cpp.o: HullAlgorithms.hpp
 CMakeFiles/prj.dir/Project2.cpp.o: Point.hpp
 CMakeFiles/prj.dir/Project2.cpp.o: Project2.cpp
 

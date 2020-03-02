@@ -17,7 +17,7 @@ void ConvexHull::readFile(std::string filename)
 		// Lopping through the entire file to get all of the data
 		while(!inputFile.eof())
 		{
-			// Getting the points from the line
+			// Getting the x and y points from the line
 			getline(inputFile, tempString);
 			num1 = stoi(tempString.substr(0, tempString.find("\t")));
 			num2 = stoi(tempString.substr(tempString.find("\t") + 1));
@@ -30,13 +30,17 @@ void ConvexHull::readFile(std::string filename)
 	}
 	else
 	{
-		std::cout << "failure" << std::endl;
+		// LEtting the user know the filename they entered couldn't be opened
+		std::cout << "The file " << filename << " could not be opened." << std::endl;
 	}
+
+	// Closing the file
 	inputFile.close();
 }
 
 void ConvexHull::printPointVector()
 {
+	// Iterating through each point in the vector and displaying it
 	for (std::vector<Point>::iterator iter = _pointVector.begin(); iter != _pointVector.end(); iter++)
 	{
 		iter->displayPoint();

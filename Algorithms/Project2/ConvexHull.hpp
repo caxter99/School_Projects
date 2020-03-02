@@ -12,7 +12,7 @@
 // My files
 #include "Point.hpp"
 
-// This is my Point Class for Project 2
+// This is my ConvexHull Class for Project 2
 class ConvexHull
 {
 	public:
