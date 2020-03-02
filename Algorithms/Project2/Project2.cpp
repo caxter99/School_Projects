@@ -76,7 +76,7 @@ int compare(const void *vp1, const void *vp2)
 }
 
 // Prints convex hull of a set of n points.
-std::vector<Point> convexHull(Point points[], int n)
+std::vector<Point> doGrahamScan(Point points[], int n)
 {
    // Creating the vector to return
    std::vector<Point> hullPoints;
@@ -157,6 +157,68 @@ std::vector<Point> convexHull(Point points[], int n)
 }
 
 /*
+This next chunk of code is adaptd from the website: https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
+*/
+// Prints convex hull of a set of n points.
+std::vector<Point> doJarvisMarch(Point points[], int n)
+{
+   // Creating the vector to return
+   std::vector<Point> hullPoints;
+
+   // There must be at least 3 points
+   if (n < 3) return hullPoints;
+
+   // Initialize Result
+   std::vector<Point> hull;
+
+   // Find the leftmost point
+   int l = 0;
+   for (int i = 1; i < n; i++)
+      if (points[i].x < points[l].x)
+         l = i;
+
+   // Start from leftmost point, keep moving counterclockwise
+   // until reach the start point again.  This loop runs O(h)
+   // times where h is number of points in result or output.
+   int p = l, q;
+   do
+   {
+      // Add current point to result
+      hull.push_back(points[p]);
+
+      // Search for a point 'q' such that orientation(p, x,
+      // q) is counterclockwise for all points 'x'. The idea
+      // is to keep track of last visited most counterclock-
+      // wise point in q. If any point 'i' is more counterclock-
+      // wise than q, then update q.
+      q = (p+1)%n;
+      for (int i = 0; i < n; i++)
+      {
+         // If i is more counterclockwise than current q, then
+         // update q
+         if (orientation(points[p], points[i], points[q]) == 2)
+            q = i;
+      }
+  
+      // Now q is the most counterclockwise with respect to p
+      // Set p as q for next iteration, so that q is added to
+      // result 'hull'
+      p = q;
+  
+   } while (p != l);  // While we don't come to first point
+  
+   // Print Result 
+   for (int i = 0; i < hull.size(); i++)
+   {
+      hullPoints.push_back(hull[i]);
+      std::cout << "(" << hull[i].x << ", " << hull[i].y << ")\n";
+   }
+
+   // Return the result
+   return hullPoints;
+} 
+
+/*
 This next block of code is entirely my own.
 */
 void getPointsFromFile(std::string filename, std::vector<Point>* points)
@@ -195,6 +257,38 @@ void getPointsFromFile(std::string filename, std::vector<Point>* points)
    inputFile.close();
 }
 
+void writePointsToFile(std::string filename, std::vector<Point>* points)
+{
+   // Making sure there are enough points to write it to the file
+   if (points->size() >= 3)
+   {
+      // Making the writing file object
+      std::ofstream outputFile;
+      outputFile.open(filename);
+      if (outputFile)
+      {
+         // Just so the variable doesn't have to be recreated all the time
+         std::string stringToWrite = "";
+
+         // Looping through the entire point vector to make sure every point is written
+         for(std::vector<Point>::iterator iter = (*points).begin(); iter != (*points).end(); iter++)
+         {
+            // Creating the string to write to the file
+            stringToWrite = "" + std::to_string((*iter).x) + "\t" + std::to_string((*iter).y) + "\n";
+
+            // Writing the string to the file
+            //outputFile.write(stringToWrite);
+            outputFile << stringToWrite;
+         }
+      }
+      else
+      {
+         // Letting the user know the filename they entered couldn't be opened
+         std::cout << "The file " << filename << " could not be opened." << std::endl;
+      }
+   }
+}
+
 /*
 This next block of code was given for the assignment. I have adapted it.
 */
@@ -210,44 +304,47 @@ int main(int argc, char *argv[])
       std::string algType = argv[1];
       std::string dataFilename = argv[2];
       
-      // Making sure there are at least 3 points in the convex hull
-      if (true)
+      // Getting ready for the output filename and the algorithm
+      std::string outputFile = "";
+      std::vector<Point> hullPoints;
+
+      // Getting the points into an array
+      std::vector<Point> points;
+      getPointsFromFile(dataFilename, &points);
+      Point* pointsArr = &points[0];
+
+      // Figuring out the proper algorithm and perform it
+      if (algType[0]=='G')
       {
-         // Getting ready for the output filename and the algorithm
-         std::string outputFile = "";
-         std::vector<Point> hullPoints;
-
-         // Getting the points into an array
-         std::vector<Point> points;
-         getPointsFromFile(dataFilename, &points);
-         Point* pointsArr = &points[0];
-
-         // Figuring out the proper algorithm and perform it
-         if (algType[0]=='G')
-         {
-            hullPoints = convexHull(pointsArr, points.size());
-            outputFile = "hull_G.txt";
-         } 
-         else if (algType[0]=='J')
-         {
-            //
-            outputFile = "hull_J.txt";
-         }
-         else
-         { //default 
-            //
-            outputFile = "hull_Q.txt";
-         }
-      
-         //write your convex hull to the outputFile (see class example for the format)
-         //you should be able to visulize your convex hull using the "ConvexHull_GUI" program.
+         hullPoints = doGrahamScan(pointsArr, points.size());
+         outputFile = "hull_G.txt";
+      } 
+      else if (algType[0]=='J')
+      {
+         hullPoints = doJarvisMarch(pointsArr, points.size());
+         outputFile = "hull_J.txt";
       }
-      // There were 0, 1, or 2 points in the convex hull
+      else
+      { //default 
+         //hullPoints = doQuickHull(pointsArr, points.size());
+         outputFile = "hull_Q.txt";
+      }
+      
+      // Write the data to the file if applicable
+      if (hullPoints.size() >= 3)
+      {
+         writePointsToFile(outputFile, &hullPoints);
+      }
+      // Something is wrong with the data
       else
       {
-         std::cout << "There were not enough points in the convex hull.\n";
-         std::cout << "There must be at least 3 points." << std::endl;
+         // Letting the user know there was something wrong
+         std::cout << "There were less than 3 points in the convex hull.\n";
+         std::cout << "This either means the file couldn't be read or it was\n";
+         std::cout << "not a valid convex hull. No data was written to any file." << std::endl;
       }
+      //write your convex hull to the outputFile (see class example for the format)
+      //you should be able to visulize your convex hull using the "ConvexHull_GUI" program.
 	}
 	return 0;
 }
