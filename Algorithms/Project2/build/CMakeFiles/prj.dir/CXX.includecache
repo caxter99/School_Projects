@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.cpp
+Point.hpp
+/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.hpp
+
+/Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.hpp
+iostream
+-
+
