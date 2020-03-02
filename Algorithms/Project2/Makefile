@@ -51,7 +51,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2/build
+CMAKE_BINARY_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles /Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -122,6 +122,33 @@ prj: cmake_check_build_system
 prj/fast:
 	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/build
 .PHONY : prj/fast
+
+ConvexHull.o: ConvexHull.cpp.o
+
+.PHONY : ConvexHull.o
+
+# target to build an object file
+ConvexHull.cpp.o:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.o
+.PHONY : ConvexHull.cpp.o
+
+ConvexHull.i: ConvexHull.cpp.i
+
+.PHONY : ConvexHull.i
+
+# target to preprocess a source file
+ConvexHull.cpp.i:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.i
+.PHONY : ConvexHull.cpp.i
+
+ConvexHull.s: ConvexHull.cpp.s
+
+.PHONY : ConvexHull.s
+
+# target to generate assembly for a file
+ConvexHull.cpp.s:
+	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/ConvexHull.cpp.s
+.PHONY : ConvexHull.cpp.s
 
 Point.o: Point.cpp.o
 
@@ -186,6 +213,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... prj"
+	@echo "... ConvexHull.o"
+	@echo "... ConvexHull.i"
+	@echo "... ConvexHull.s"
 	@echo "... Point.o"
 	@echo "... Point.i"
 	@echo "... Point.s"

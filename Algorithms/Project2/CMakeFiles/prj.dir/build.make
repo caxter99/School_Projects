@@ -46,7 +46,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2/build
+CMAKE_BINARY_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2
 
 # Include any dependencies generated for this target.
 include CMakeFiles/prj.dir/depend.make
@@ -58,8 +58,8 @@ include CMakeFiles/prj.dir/progress.make
 include CMakeFiles/prj.dir/flags.make
 
 CMakeFiles/prj.dir/Project2.cpp.o: CMakeFiles/prj.dir/flags.make
-CMakeFiles/prj.dir/Project2.cpp.o: ../Project2.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/prj.dir/Project2.cpp.o"
+CMakeFiles/prj.dir/Project2.cpp.o: Project2.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/prj.dir/Project2.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/prj.dir/Project2.cpp.o -c /Users/devin/Desktop/School_Projects/Algorithms/Project2/Project2.cpp
 
 CMakeFiles/prj.dir/Project2.cpp.i: cmake_force
@@ -71,8 +71,8 @@ CMakeFiles/prj.dir/Project2.cpp.s: cmake_force
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/devin/Desktop/School_Projects/Algorithms/Project2/Project2.cpp -o CMakeFiles/prj.dir/Project2.cpp.s
 
 CMakeFiles/prj.dir/Point.cpp.o: CMakeFiles/prj.dir/flags.make
-CMakeFiles/prj.dir/Point.cpp.o: ../Point.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/prj.dir/Point.cpp.o"
+CMakeFiles/prj.dir/Point.cpp.o: Point.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/prj.dir/Point.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/prj.dir/Point.cpp.o -c /Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.cpp
 
 CMakeFiles/prj.dir/Point.cpp.i: cmake_force
@@ -83,19 +83,34 @@ CMakeFiles/prj.dir/Point.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/prj.dir/Point.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/devin/Desktop/School_Projects/Algorithms/Project2/Point.cpp -o CMakeFiles/prj.dir/Point.cpp.s
 
+CMakeFiles/prj.dir/ConvexHull.cpp.o: CMakeFiles/prj.dir/flags.make
+CMakeFiles/prj.dir/ConvexHull.cpp.o: ConvexHull.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/prj.dir/ConvexHull.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/prj.dir/ConvexHull.cpp.o -c /Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.cpp
+
+CMakeFiles/prj.dir/ConvexHull.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/prj.dir/ConvexHull.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.cpp > CMakeFiles/prj.dir/ConvexHull.cpp.i
+
+CMakeFiles/prj.dir/ConvexHull.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/prj.dir/ConvexHull.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/devin/Desktop/School_Projects/Algorithms/Project2/ConvexHull.cpp -o CMakeFiles/prj.dir/ConvexHull.cpp.s
+
 # Object files for target prj
 prj_OBJECTS = \
 "CMakeFiles/prj.dir/Project2.cpp.o" \
-"CMakeFiles/prj.dir/Point.cpp.o"
+"CMakeFiles/prj.dir/Point.cpp.o" \
+"CMakeFiles/prj.dir/ConvexHull.cpp.o"
 
 # External object files for target prj
 prj_EXTERNAL_OBJECTS =
 
 prj: CMakeFiles/prj.dir/Project2.cpp.o
 prj: CMakeFiles/prj.dir/Point.cpp.o
+prj: CMakeFiles/prj.dir/ConvexHull.cpp.o
 prj: CMakeFiles/prj.dir/build.make
 prj: CMakeFiles/prj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable prj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable prj"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/prj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +123,6 @@ CMakeFiles/prj.dir/clean:
 .PHONY : CMakeFiles/prj.dir/clean
 
 CMakeFiles/prj.dir/depend:
-	cd /Users/devin/Desktop/School_Projects/Algorithms/Project2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2/build /Users/devin/Desktop/School_Projects/Algorithms/Project2/build /Users/devin/Desktop/School_Projects/Algorithms/Project2/build/CMakeFiles/prj.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/devin/Desktop/School_Projects/Algorithms/Project2 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2 /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles/prj.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/prj.dir/depend
 

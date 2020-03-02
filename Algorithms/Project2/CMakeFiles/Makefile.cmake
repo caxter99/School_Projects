@@ -95,10 +95,10 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CMake.app/Contents/share/cmake-3.15/Modules/Platform/Darwin-Initialize.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.15/Modules/Platform/Darwin.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.15/Modules/Platform/UnixPaths.cmake"
-  "../CMakeLists.txt"
   "CMakeFiles/3.15.0-rc4/CMakeCCompiler.cmake"
   "CMakeFiles/3.15.0-rc4/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.15.0-rc4/CMakeSystem.cmake"
+  "CMakeLists.txt"
   )
 
 # The corresponding makefile is:

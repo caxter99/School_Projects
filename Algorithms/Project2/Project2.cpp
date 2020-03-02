@@ -8,18 +8,27 @@
 
 // My files
 #include "Point.hpp"
+#include "ConvexHull.hpp"
 
 int main(int argc, char *argv[])
 {   
-   if (argc < 3) 
+   if (argc < 3)
+   {
       std::cout << "wrong format! should be \"a.exe algType dataFile\"";
-   else {
+   }
+   else
+   {
+      // Separating the algorithm type and the data filename
       std::string algType = argv[1];
       std::string dataFilename = argv[2];
 
-      std::string outputFile = "";
-      //read your data points from dataFile (see class example for the format)
+      // Reading in the data points and storing them
+      ConvexHull convex;
+      convex.readFile(dataFilename);
+      convex.printPointVector();
       
+      // Getting the output filename
+      std::string outputFile = "";
       if (algType[0]=='G')
       {
          //call your Graham Scan algorithm to solve the problem

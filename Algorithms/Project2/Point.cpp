@@ -5,11 +5,11 @@
 
 void Point::setPoint(int newX, int newY)
 {
-	x = newX;
-	y = newY;
+	_x = newX;
+	_y = newY;
 }
 
 void Point::displayPoint()
 {
-	std::cout << "(" << x << ", " << y << ")" << std::endl;
+	std::cout << "(" << _x << ", " << _y << ")" << std::endl;
 }
