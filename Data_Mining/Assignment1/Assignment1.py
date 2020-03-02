@@ -18,6 +18,7 @@ NOTE:
 # All imports for the assignment
 import pandas as pd
 import numpy as np
+from math import sqrt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
@@ -25,8 +26,10 @@ from sklearn.naive_bayes import GaussianNB
 # Part 1 Constants
 TRAIN_FILENAME = "train.csv" # The filename for the data for part 1
 TEST_TO_TRAIN_RATIO = 0.01 # The amount of data that will become the test
-COLUMN_NAMES = ["day", "season", "wind", "rain", "clas"]
-COLUMN_NAMES2 = ["attribute1", "attribute2", "clas2"]
+COLUMN_NAMES = ["day", "season", "wind", "rain", "clas"] # The original column
+# names for the first data set
+COLUMN_NAMES2 = ["attribute1", "attribute2", "clas2"] # The original column
+# names for the second data set
 TARGET_COLUMN = "clas" # This is the column that will be predicted
 TEST_ONE = ["weekday", "summer", "high", "heavy"] # Test 1 for part 1
 TEST_TWO = ['sunday', 'summer', 'normal', 'slight'] # Test 2 for part 1
@@ -39,7 +42,7 @@ NUMBER_OF_NEAREST_NEIGHBORS = 5 # The number of nearest neighbors to find in
 def doAll():
     # Doing part 1
     print("Part 1:")
-    #doPart1()
+    doPart1()
     
     # Doing part 2
     print("\n\nPart 2:")
@@ -85,7 +88,7 @@ def doPart1():
     print("Prediction 1:", end ="")
     printList(TEST_ONE)
     print(convertIntToAnswer(model.predict(test1)))
-    print("\Prediction 2:", end="")
+    print("Prediction 2:", end="")
     printList(TEST_TWO)
     print(convertIntToAnswer(model.predict(test2)))
 
@@ -323,15 +326,60 @@ def doPart2():
     inputs = df.drop('clas2_int', axis='columns')
     target = df.clas2_int
     
+    # Getting the k closest points
+    closestPoints = getNearestNeighbors(df)
+    
     # Split into training and test set 
     x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
     
     # Fit the model
     knn = KNeighborsClassifier(n_neighbors=NUMBER_OF_NEAREST_NEIGHBORS)
-    print(knn)
     knn.fit(x_train, y_train)
     
+    # The results
+    print("The point (", TEST_THREE[0], ", ", TEST_THREE[1], ") is most likely a:", sep="", end=" ")
     print(convertIntToAnswer2(knn.predict(test3)))
+    print("The", NUMBER_OF_NEAREST_NEIGHBORS, "closest neighbors:")
+    for x in range(len(closestPoints)):
+        print("Point #", (x + 1), ": (", closestPoints[x][0], ", ", closestPoints[x][1], ")", sep="")
+
+# Returns the K closest neighbors in a 2D array
+def getNearestNeighbors(df):
+    # The 2D array to store the nearest points
+    closestPoints = []
+    closestDistance = []
+    for x in range(NUMBER_OF_NEAREST_NEIGHBORS):
+        closestPoints.append([0, 0])
+        closestDistance.append(-1)
+    
+    # Getting the test points
+    test_x = TEST_THREE[0]
+    test_y = TEST_THREE[1]
+    
+    # Lopping through each point in df
+    for p in range(len(df)):
+        # Getting the x and the y values
+        x = df.attribute1[p]
+        y = df.attribute2[p]
+        
+        # Calculating the distance
+        dist = sqrt((test_x - x)**2 + (test_y - y)**2)
+        
+        # Seeing if the distance is small enough to fit into the closest
+        isSmallEnough = False
+        q = 0
+        while (q < len(closestPoints) and (not isSmallEnough)):
+            # Checking the distance to see if it's close enough
+            if (dist < closestDistance[q] or closestDistance[q] == -1):
+                isSmallEnough = True
+                closestDistance[q] = dist
+                closestPoints[q] = [x, y]
+            # It's not close enough
+            else:
+                q = q + 1
+    
+    # Returning the closest points
+    return closestPoints
 
 # Takes a data frame (or a specific test case) and returns it with all integers
 def replaceAllWithDummies2(df):
