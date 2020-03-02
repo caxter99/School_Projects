@@ -18,35 +18,43 @@ NOTE:
 # All imports for the assignment
 import pandas as pd
 import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 
-# Constants
-FILENAME = "train.csv" # The filename for the data for part 1
+# Part 1 Constants
+TRAIN_FILENAME = "train.csv" # The filename for the data for part 1
 TEST_TO_TRAIN_RATIO = 0.01 # The amount of data that will become the test
 COLUMN_NAMES = ["day", "season", "wind", "rain", "clas"]
+COLUMN_NAMES2 = ["attribute1", "attribute2", "clas2"]
 TARGET_COLUMN = "clas" # This is the column that will be predicted
-TEST_ONE = ["weekday", "summer", "high", "heavy"] # Test 1
-TEST_TWO = ['sunday', 'summer', 'normal', 'slight'] # Test 2
-
-#["weekday", "summer", "high", "heavy"]
-#['sunday', 'summer', 'normal', 'slight']
-# These are all of the test that will run
+TEST_ONE = ["weekday", "summer", "high", "heavy"] # Test 1 for part 1
+TEST_TWO = ['sunday', 'summer', 'normal', 'slight'] # Test 2 for part 1
+TEST_THREE = [9.1, 11.0] # Test 3 for part 2
+FIGURE_FILENAME = "figure3_5.csv" # The filename for the data for part 2
+NUMBER_OF_NEAREST_NEIGHBORS = 5 # The number of nearest neighbors to find in
+# part 2
 
 # Does both parts of the assignment
 def doAll():
     # Doing part 1
     print("Part 1:")
-    doPart1()
+    #doPart1()
     
     # Doing part 2
     print("\n\nPart 2:")
-    #doPart2()
-    
+    doPart2()
+
+
+
+
+
+# PART ONE
+#
 # Does part 1 of the assignment
 def doPart1():
     # Get the data from the file
-    df = pd.read_csv(FILENAME)
+    df = pd.read_csv(TRAIN_FILENAME)
     
     # Get rid of unnecessary values
     # do nothing here because all of them are necessary
@@ -74,16 +82,12 @@ def doPart1():
     model.fit(x_train, y_train)
     
     # Performing the tests
-    print("Test 1:", end ="")
+    print("Prediction 1:", end ="")
     printList(TEST_ONE)
     print(convertIntToAnswer(model.predict(test1)))
-    print("\nTest 2:", end="")
+    print("\Prediction 2:", end="")
     printList(TEST_TWO)
     print(convertIntToAnswer(model.predict(test2)))
-    
-# Does part 2 of the assignment
-#def doPart2():
-    # to do
 
 # Displays a list
 def printList(theList):
@@ -131,7 +135,7 @@ def convertListToDataFrame(testList):
     # Converting the column names to their proper names
     tempDF.columns = newColumns
     
-    # REturning the data frame
+    # Returning the data frame
     return tempDF
 
 # Returns the target column given the dataframe
@@ -210,6 +214,12 @@ def changeValuesToIntegers(x):
         return 3
     elif (x == "verylate"):
         return 4
+    
+    # "clas2" column
+    if (x == "M"):
+        return 1
+    elif(x == "P"):
+        return 2
     
     # Unknown value
     return 0
@@ -290,6 +300,93 @@ def removeWhitespaceFromColumnNames(df):
 # Removes all of the whitespace from the given string
 def removeWhitespace(string):
     return string.replace(" ", "")
+
+
+
+
+
+# PART TWO
+#
+# Does part 2 of the assignment
+def doPart2():
+    # Get the data from the file
+    df = pd.read_csv(FIGURE_FILENAME)
+    
+    # Removing the whitespace form the column names
+    df = removeWhitespaceFromColumnNames(df)
+    
+    # Replacing the string values with integers
+    df = replaceAllWithDummies2(df)
+    test3 = convertListToDataFrame2(replaceAllWithDummies2(TEST_THREE.copy()))
+    
+    # Getting the target and inputs
+    inputs = df.drop('clas2_int', axis='columns')
+    target = df.clas2_int
+    
+    # Split into training and test set 
+    x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
+    
+    # Fit the model
+    knn = KNeighborsClassifier(n_neighbors=NUMBER_OF_NEAREST_NEIGHBORS)
+    print(knn)
+    knn.fit(x_train, y_train)
+    
+    print(convertIntToAnswer2(knn.predict(test3)))
+
+# Takes a data frame (or a specific test case) and returns it with all integers
+def replaceAllWithDummies2(df):
+    # Replacing all of the values of the given dataset with integers
+    limit = 0
+    try:
+        # Getting the number of columns
+        limit = len(df.columns)
+        
+        # Looping through and converting them to numeric values
+        for x in range(limit):
+            newString = "" + df.columns[x] + "_int"
+            #temp = pd.get_dummies(df.iloc[:, x])
+            if (x == limit - 1):
+                df[newString] = df[COLUMN_NAMES2[x]].apply(changeValuesToIntegers)
+            
+        # Looping through and getting rid of the old values
+        for x in range(limit):
+            if (x == limit - 1):
+                df = df.drop(COLUMN_NAMES2[x], axis='columns')
+    except:
+        # Do nothing here
+        """# Getting the number of test input variables
+        limit = len(df)
+        
+        # Looping through each test case and converting it to integers
+        for x in range(limit):
+            if (x == limit - 1):
+                df[x] = changeValuesToIntegers(df[x])"""
+            
+    
+    # Returning the data frame
+    return df
+
+# Converts an integer into the answer
+def convertIntToAnswer2(x):
+    if (x == 1):
+        return "M (-)"
+    elif (x == 2):
+        return "P (+)"
+    return "unknown prediction"
+
+# Converts a list to a data frame
+def convertListToDataFrame2(testList):
+    # Figuring out what the columns name's are
+    newColumns = ["attribute1", "attribute2"]
+    
+    # Putting it into a data frame
+    tempDF = pd.DataFrame(np.array(testList).reshape(1, len(testList)), columns=list("ab"))
+    
+    # Converting the column names to their proper names
+    tempDF.columns = newColumns
+    
+    # Returning the data frame
+    return tempDF
             
             
             
