@@ -5,7 +5,8 @@ Devin Hopkins
 
 Note: Run the code to see where the following results came from.
 
-1. The prediction for weekday, summer, high, and heavy was very late.
+1.
+The prediction for weekday, summer, high, and heavy was very late.
 The prediction for sunday, summer, normal, and slight was on time.
 
 2.
