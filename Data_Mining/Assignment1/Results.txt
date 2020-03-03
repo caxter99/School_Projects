@@ -5,15 +5,27 @@ Devin Hopkins
 
 Note: Run the code to see where the following results came from.
 
-1.
-The prediction for weekday, summer, high, and heavy was very late.
-The prediction for sunday, summer, normal, and slight was on time.
+Part 1:
+Prediction 1:[weekday, summer, high, heavy]
+very late
+Prediction 2:[sunday, summer, normal, slight]
+on time
 
-2.
-Point Tested: (9.1, 11.0)
-This is most likely a '+' point. The 5 nearest neighbors are:
-(9.2, 11.6)
-(10.8, 9.6)
-(11.8, 9.9)
-(12.4, 6.5)
-(15.8, 12.2)
+
+Part 2:
+The point (9.1, 11.0) is most likely a: P (+)
+The 5 closest neighbors (in order):
+Point #1: (9.2, 11.6)
+Distance: 0.6082762530298216
+
+Point #2: (8.8, 9.8)
+Distance: 1.2369316876852974
+
+Point #3: (10.8, 9.6)
+Distance: 2.202271554554525
+
+Point #4: (6.8, 12.6)
+Distance: 2.8017851452243794
+
+Point #5: (11.8, 9.9)
+Distance: 2.9154759474226513

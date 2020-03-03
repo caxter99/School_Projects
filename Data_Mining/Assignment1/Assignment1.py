@@ -88,6 +88,7 @@ def doPart1():
     print("Prediction 1:", end ="")
     printList(TEST_ONE)
     print(convertIntToAnswer(model.predict(test1)))
+    print("^should be \"on time\"")
     print("Prediction 2:", end="")
     printList(TEST_TWO)
     print(convertIntToAnswer(model.predict(test2)))
