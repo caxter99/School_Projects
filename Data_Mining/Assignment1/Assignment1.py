@@ -60,7 +60,7 @@ def doPart1():
     df = pd.read_csv(TRAIN_FILENAME)
     
     # Get rid of unnecessary values
-    # do nothing here because all of them are necessary
+    # do nothing here because all of the columns are necessary
     
     # Replacing any missing numbers with 0
     df = fixMissingNumbers(df)
@@ -327,7 +327,7 @@ def doPart2():
     target = df.clas2_int
     
     # Getting the k closest points
-    closestPoints = getNearestNeighbors(df)
+    closestPoints, closestDistance = getNearestNeighbors(df)
     
     # Split into training and test set 
     x_train, x_test, y_train, y_test = train_test_split(inputs, target, test_size=TEST_TO_TRAIN_RATIO)
@@ -339,9 +339,11 @@ def doPart2():
     # The results
     print("The point (", TEST_THREE[0], ", ", TEST_THREE[1], ") is most likely a:", sep="", end=" ")
     print(convertIntToAnswer2(knn.predict(test3)))
-    print("The", NUMBER_OF_NEAREST_NEIGHBORS, "closest neighbors:")
+    print("The", NUMBER_OF_NEAREST_NEIGHBORS, "closest neighbors (in order):")
     for x in range(len(closestPoints)):
         print("Point #", (x + 1), ": (", closestPoints[x][0], ", ", closestPoints[x][1], ")", sep="")
+        print("Distance: ", closestDistance[x], sep="")
+        print()
 
 # Returns the K closest neighbors in a 2D array
 def getNearestNeighbors(df):
@@ -351,6 +353,13 @@ def getNearestNeighbors(df):
     for x in range(NUMBER_OF_NEAREST_NEIGHBORS):
         closestPoints.append([0, 0])
         closestDistance.append(-1)
+    
+    # The 2D array for storing all of the points
+    allPoints = []
+    allDistance = []
+    for x in range(len(df)):
+        allPoints.append([0, 0])
+        allDistance.append(-1)
     
     # Getting the test points
     test_x = TEST_THREE[0]
@@ -365,21 +374,20 @@ def getNearestNeighbors(df):
         # Calculating the distance
         dist = sqrt((test_x - x)**2 + (test_y - y)**2)
         
-        # Seeing if the distance is small enough to fit into the closest
-        isSmallEnough = False
-        q = 0
-        while (q < len(closestPoints) and (not isSmallEnough)):
-            # Checking the distance to see if it's close enough
-            if (dist < closestDistance[q] or closestDistance[q] == -1):
-                isSmallEnough = True
-                closestDistance[q] = dist
-                closestPoints[q] = [x, y]
-            # It's not close enough
-            else:
-                q = q + 1
+        # Adding the point and the distance to the array
+        allPoints[p] = [x, y]
+        allDistance[p] = dist
     
-    # Returning the closest points
-    return closestPoints
+    # Sorting the distance
+    quickSort(allPoints, allDistance, 0, len(allPoints) - 1)
+    
+    # Getting the closest times
+    for q in range(NUMBER_OF_NEAREST_NEIGHBORS):
+        closestPoints[q] = allPoints[q]
+        closestDistance[q] = allDistance[q]
+    
+    # Returning the closest points and distance
+    return closestPoints, closestDistance
 
 # Takes a data frame (or a specific test case) and returns it with all integers
 def replaceAllWithDummies2(df):
@@ -435,6 +443,27 @@ def convertListToDataFrame2(testList):
     
     # Returning the data frame
     return tempDF
+
+def partition(arr2, arr, low, high):
+    i = (low - 1)
+    pivot = arr[high]
+
+    for j in range(low, high):
+        if (arr[j] <= pivot):
+            i = i + 1
+            arr[i], arr[j] = arr[j], arr[i]
+            arr2[i], arr2[j] = arr2[j], arr2[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    arr2[i + 1], arr2[high] = arr2[high], arr2[i + 1]
+    return (i + 1)
+
+def quickSort(arr2, arr, low, high):
+    if (low < high):
+        pi = partition(arr2, arr, low, high)
+
+        quickSort(arr2, arr, low, pi - 1)
+        quickSort(arr2, arr, pi + 1, high)
             
             
             
