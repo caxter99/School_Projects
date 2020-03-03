@@ -88,10 +88,13 @@ def doPart1():
     print("Prediction 1:", end ="")
     printList(TEST_ONE)
     print(convertIntToAnswer(model.predict(test1)))
-    print("^should be \"on time\"")
     print("Prediction 2:", end="")
     printList(TEST_TWO)
     print(convertIntToAnswer(model.predict(test2)))
+    print("NOTE: The book's answer to prediction 1 is \"on time\". I believe")
+    print("this is because the book does nothing special for the 0's, which my")
+    print("program does. However, this program does (rarely) predict \"on time\"")
+    print("on occasion.")
 
 # Displays a list
 def printList(theList):
@@ -340,7 +343,7 @@ def doPart2():
     # The results
     print("The point (", TEST_THREE[0], ", ", TEST_THREE[1], ") is most likely a:", sep="", end=" ")
     print(convertIntToAnswer2(knn.predict(test3)))
-    print("The", NUMBER_OF_NEAREST_NEIGHBORS, "closest neighbors (in order):")
+    print("The", NUMBER_OF_NEAREST_NEIGHBORS, "closest neighbors (in order of distance):")
     for x in range(len(closestPoints)):
         print("Point #", (x + 1), ": (", closestPoints[x][0], ", ", closestPoints[x][1], ")", sep="")
         print("Distance: ", closestDistance[x], sep="")

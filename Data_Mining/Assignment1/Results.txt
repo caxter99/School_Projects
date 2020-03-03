@@ -10,11 +10,15 @@ Prediction 1:[weekday, summer, high, heavy]
 very late
 Prediction 2:[sunday, summer, normal, slight]
 on time
+NOTE: The book's answer to prediction 1 is "on time". I believe
+this is because the book does nothing special for the 0's, which my
+program does. However, this program does (rarely) predict "on time"
+on occasion.
 
 
 Part 2:
 The point (9.1, 11.0) is most likely a: P (+)
-The 5 closest neighbors (in order):
+The 5 closest neighbors (in order of distance):
 Point #1: (9.2, 11.6)
 Distance: 0.6082762530298216
 
