@@ -1,0 +1,18 @@
+Devin Hopkins
+4190350
+
+3.6 Self-Assessment Exercises Results
+
+Note: Run the code to see where the following results came from.
+
+1. The prediction for weekday, summer, high, and heavy was very late.
+The prediction for sunday, summer, normal, and slight was on time.
+
+2.
+Point Tested: (9.1, 11.0)
+This is most likely a '+' point. The 5 nearest neighbors are:
+(9.2, 11.6)
+(10.8, 9.6)
+(11.8, 9.9)
+(12.4, 6.5)
+(15.8, 12.2)
