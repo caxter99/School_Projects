@@ -8,10 +8,21 @@
 #include <stack>
 #include <fstream>
 #include <vector>
-#include <set> 
+#include <set>
+#include <time.h>
+#include <chrono>
+
+// Constants
+const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever file the user enters to test for convex halls.
+         // Otherwise, uses the vector of all of the available test files
+const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
+std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test files. These are used if USE_USER_INPUT is false (must be
+         // loaded first, however)
+const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/"; // This is the prefix for all of the test case files
+const std::string DEFAULT_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined
 
 /*
-This chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
+This next chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
 */
 struct Point
 {
@@ -102,7 +113,7 @@ std::vector<Point> doGrahamScan(Point points[], int n)
    // has larger polar angle (in counterclockwise
    // direction) than p1
    p0 = points[0];
-   qsort(&points[1], n-1, sizeof(Point), compare);
+   qsort(&points[1], n - 1, sizeof(Point), compare);
 
    // If two or more points make same angle with p0,
    // Remove all but the one that is farthest from p0
@@ -110,11 +121,11 @@ std::vector<Point> doGrahamScan(Point points[], int n)
    // to keep the farthest point at the end when more than
    // one points have same angle.
    int m = 1; // Initialize size of modified array
-   for (int i=1; i<n; i++)
+   for (int i = 1; i<n; i++)
    {
        // Keep removing i while angle of i and i+1 is same
        // with respect to p0
-       while (i < n-1 && orientation(p0, points[i], points[i+1]) == 0) 
+       while (i < n - 1 && orientation(p0, points[i], points[i + 1]) == 0) 
           i++;
   
        points[m] = points[i];
@@ -192,7 +203,7 @@ std::vector<Point> doJarvisMarch(Point points[], int n)
       // is to keep track of last visited most counterclock-
       // wise point in q. If any point 'i' is more counterclock-
       // wise than q, then update q.
-      q = (p+1)%n;
+      q = (p + 1) % n;
       for (int i = 0; i < n; i++)
       {
          // If i is more counterclockwise than current q, then
@@ -258,7 +269,7 @@ void quickHull(iPair a[], int n, iPair p1, iPair p2, int side)
   
    // finding the point with maximum distance
    // from L and also on the specified side of L.
-   for (int i=0; i<n; i++)
+   for (int i = 0; i < n; i++)
    {
       int temp = lineDist(p1, p2, a[i]);
       if (findSide(p1, p2, a[i]) == side && temp > max_dist)
@@ -452,6 +463,74 @@ void writePointsToFile(std::string filename, std::vector<Point>* points)
 /*
 This next block of code was given for the assignment. I have adapted it.
 */
+
+void loadTestCaseArray()
+{
+   // Loading all of the test cases
+   //
+   // onTriangle
+   ALL_TEST_FILES.push_back("onTriangle_10.txt");
+   ALL_TEST_FILES.push_back("onTriangle_100.txt");
+   ALL_TEST_FILES.push_back("onTriangle_1000.txt");
+   ALL_TEST_FILES.push_back("onTriangle_10000.txt");
+   ALL_TEST_FILES.push_back("onTriangle_100000.txt");
+   ALL_TEST_FILES.push_back("onTriangle_1000000.txt");
+   // onRectangle
+   ALL_TEST_FILES.push_back("onRectangle_10.txt");
+   ALL_TEST_FILES.push_back("onRectangle_100.txt");
+   ALL_TEST_FILES.push_back("onRectangle_1000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_10000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_100000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_1000000.txt");
+   // rectangle
+   ALL_TEST_FILES.push_back("rectangle_10.txt");
+   ALL_TEST_FILES.push_back("rectangle_100.txt");
+   ALL_TEST_FILES.push_back("rectangle_1000.txt");
+   ALL_TEST_FILES.push_back("rectangle_10000.txt");
+   ALL_TEST_FILES.push_back("rectangle_100000.txt");
+   ALL_TEST_FILES.push_back("rectangle_1000000.txt");
+   // onCircle
+   ALL_TEST_FILES.push_back("onCircle_10.txt");
+   ALL_TEST_FILES.push_back("onCircle_100.txt");
+   ALL_TEST_FILES.push_back("onCircle_1000.txt");
+   ALL_TEST_FILES.push_back("onCircle_10000.txt");
+   ALL_TEST_FILES.push_back("onCircle_100000.txt");
+   ALL_TEST_FILES.push_back("onCircle_1000000.txt");
+   // circle
+   ALL_TEST_FILES.push_back("circle_10.txt");
+   ALL_TEST_FILES.push_back("circle_100.txt");
+   ALL_TEST_FILES.push_back("circle_1000.txt");
+   ALL_TEST_FILES.push_back("circle_10000.txt");
+   ALL_TEST_FILES.push_back("circle_100000.txt");
+   ALL_TEST_FILES.push_back("circle_1000000.txt");
+   // triangle
+   ALL_TEST_FILES.push_back("triangle_10.txt");
+   ALL_TEST_FILES.push_back("triangle_100.txt");
+   ALL_TEST_FILES.push_back("triangle_1000.txt");
+   ALL_TEST_FILES.push_back("triangle_10000.txt");
+   ALL_TEST_FILES.push_back("triangle_100000.txt");
+   ALL_TEST_FILES.push_back("triangle_1000000.txt");
+}
+
+std::string getOutputFilename(std::string inputFilename)
+{
+   // Creating the string in its default form
+   std::string outputFilename = DEFAULT_OUTPUT_FILENAME;
+
+   // Getting the position of the underscore
+   int underscorePos = inputFilename.find(".");
+
+   // Making sure the underscore is present
+   if (underscorePos != -1)
+   {
+      // Getting the new output filename
+      outputFilename = inputFilename.substr(0, underscorePos) + "_hull.txt";
+   }
+
+   // Returning the filename
+   return outputFilename;
+}
+
 int main(int argc, char *argv[])
 {   
    if (argc < 3)
@@ -463,48 +542,107 @@ int main(int argc, char *argv[])
       // Separating the algorithm type and the data filename
       std::string algType = argv[1];
       std::string dataFilename = argv[2];
-      
-      // Getting ready for the output filename and the algorithm
-      std::string outputFile = "";
-      std::vector<Point> hullPoints;
 
-      // Getting the points into an array
-      std::vector<Point> points;
-      getPointsFromFile(dataFilename, &points);
-      Point* pointsArr = &points[0];
-
-      // Figuring out the proper algorithm and perform it
-      if (algType[0]=='G')
-      {
-         hullPoints = doGrahamScan(pointsArr, points.size());
-         outputFile = "hull_G.txt";
-      } 
-      else if (algType[0]=='J')
-      {
-         hullPoints = doJarvisMarch(pointsArr, points.size());
-         outputFile = "hull_J.txt";
-      }
-      else
-      { //default 
-         hullPoints = doQuickHull(pointsArr, points.size());
-         outputFile = "hull_Q.txt";
-      }
+      // This is the limit about how many times the loop will run
+      int loopLimit = 0;
       
-      // Write the data to the file if applicable
-      if (hullPoints.size() >= 3)
+      // If we're using the user's input
+      if (USE_USER_FILE_INPUT)
       {
-         writePointsToFile(outputFile, &hullPoints);
+         loopLimit = 1;
       }
-      // Something is wrong with the data
+      // We're not using the user's input
       else
       {
-         // Letting the user know there was something wrong
-         std::cout << "There were less than 3 points in the convex hull.\n";
-         std::cout << "This either means the file couldn't be read or it was\n";
-         std::cout << "not a valid convex hull. No data was written to any file." << std::endl;
+         loadTestCaseArray();
+         loopLimit = ALL_TEST_FILES.size();
       }
-      //write your convex hull to the outputFile (see class example for the format)
-      //you should be able to visulize your convex hull using the "ConvexHull_GUI" program.
+
+      // Looping through all of the necessary test cases
+      for (int x = 0; x < loopLimit; ++x)
+      {
+         // If we're not using the user's input
+         if (!USE_USER_FILE_INPUT)
+         {
+            dataFilename = PREFIX_FOR_TEST_CASES + ALL_TEST_FILES.at(x);
+         }
+
+         // Getting ready for the output filename and the algorithm
+         std::string outputFile = "";
+         std::vector<Point> hullPoints;
+
+         // Variable to keep track of the start and end times
+         time_t start, end;
+         float startms, endms;
+
+         // Getting the points into an array
+         std::vector<Point> points;
+         getPointsFromFile(dataFilename, &points);
+         Point* pointsArr = &points[0];
+
+         // Telling the user the computing details
+         std::string computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
+         std::cout << "Current Method: " << algType[0] << std::endl;
+         std::cout << "Current Set of Data Points:" << computation << std::endl;
+
+         // Figuring out the proper algorithm and perform it
+         if (algType[0] == 'G')
+         {
+            start = time(0);
+            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            hullPoints = doGrahamScan(pointsArr, points.size());
+            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            end = time(0);
+            outputFile = "hull_G.txt";
+         } 
+         else if (algType[0] == 'J')
+         {
+            start = time(0);
+            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            hullPoints = doJarvisMarch(pointsArr, points.size());
+            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            end = time(0);
+            outputFile = "hull_J.txt";
+         }
+         else
+         { //default 
+            start = time(0);
+            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            hullPoints = doQuickHull(pointsArr, points.size());
+            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            end = time(0);
+            outputFile = "hull_Q.txt";
+         }
+      
+         // Write the data to the file if applicable
+         if (hullPoints.size() >= 3)
+         {
+            // This is to get the name for the output file, if we're not using user input
+            if (!USE_USER_FILE_INPUT and !ALWAYS_USE_DEFAULT_FILENAME)
+            {
+               // Getting the name of the output file
+               outputFile = getOutputFilename(ALL_TEST_FILES.at(x));
+            }
+
+            // Writing the points to the file
+            writePointsToFile(outputFile, &hullPoints);
+
+            // Displaying the time it took
+            std::cout << "Time to compute: " << (endms - startms) << " milliseconds\n";
+            std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
+         }
+         // Something is wrong with the data
+         else
+         {
+            // Letting the user know there was something wrong
+            std::cout << "There were less than 3 points in the convex hull.\n";
+            std::cout << "This either means the file couldn't be read or it was\n";
+            std::cout << "not a valid convex hull. No data was written to any file.\n";
+            std::cout << "File used: " << dataFilename << "\n\n";
+         }
+      }
 	}
+
+   // Ending without an error
 	return 0;
 }
