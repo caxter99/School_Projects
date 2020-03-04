@@ -18,7 +18,7 @@ const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever
 const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
 std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test files. These are used if USE_USER_INPUT is false (must be
          // loaded first, however)
-const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/"; // This is the prefix for all of the test case files
+const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/Data/"; // This is the prefix for all of the test case files
 const std::string DEFAULT_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined
 
 /*
