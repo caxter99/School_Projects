@@ -262,53 +262,55 @@ public class ConvexHull_GUI extends JPanel
    
    public static void main(String[] args) {
       ConvexHull_GUI CH = new ConvexHull_GUI();
-      boolean generateData = false; // Use this to display "test.txt"
-      //boolean generateData = true; // Use this to generate all of the testing files
+      //boolean generateData = false; // Use this to display "test.txt"
+      boolean generateData = true; // Use this to generate all of the testing files
       if (generateData){
+         // prefix to make sure they go into the corect folder
+         String prefix = "Data/";
          //generate data points
          //
          // onTriangle
-         CH.testFileGen("onTriangle_10.txt", "onTriangle", 10);
-         CH.testFileGen("onTriangle_100.txt", "onTriangle", 100);
-         CH.testFileGen("onTriangle_1000.txt", "onTriangle", 1000);
-         CH.testFileGen("onTriangle_10000.txt", "onTriangle", 10000);
-         CH.testFileGen("onTriangle_100000.txt", "onTriangle", 100000);
-         CH.testFileGen("onTriangle_1000000.txt", "onTriangle", 1000000);
+         CH.testFileGen(prefix + "onTriangle_10.txt", "onTriangle", 10);
+         CH.testFileGen(prefix + "onTriangle_100.txt", "onTriangle", 100);
+         CH.testFileGen(prefix + "onTriangle_1000.txt", "onTriangle", 1000);
+         CH.testFileGen(prefix + "onTriangle_10000.txt", "onTriangle", 10000);
+         CH.testFileGen(prefix + "onTriangle_100000.txt", "onTriangle", 100000);
+         CH.testFileGen(prefix + "onTriangle_1000000.txt", "onTriangle", 1000000);
          // onRectangle
-         CH.testFileGen("onRectangle_10.txt", "onRectangle", 10);
-         CH.testFileGen("onRectangle_100.txt", "onRectangle", 100);
-         CH.testFileGen("onRectangle_1000.txt", "onRectangle", 1000);
-         CH.testFileGen("onRectangle_10000.txt", "onRectangle", 10000);
-         CH.testFileGen("onRectangle_100000.txt", "onRectangle", 100000);
-         CH.testFileGen("onRectangle_1000000.txt", "onRectangle", 1000000);
+         CH.testFileGen(prefix + "onRectangle_10.txt", "onRectangle", 10);
+         CH.testFileGen(prefix + "onRectangle_100.txt", "onRectangle", 100);
+         CH.testFileGen(prefix + "onRectangle_1000.txt", "onRectangle", 1000);
+         CH.testFileGen(prefix + "onRectangle_10000.txt", "onRectangle", 10000);
+         CH.testFileGen(prefix + "onRectangle_100000.txt", "onRectangle", 100000);
+         CH.testFileGen(prefix + "onRectangle_1000000.txt", "onRectangle", 1000000);
          // rectangle
-         CH.testFileGen("rectangle_10.txt", "rectangle", 10);
-         CH.testFileGen("rectangle_100.txt", "rectangle", 100);
-         CH.testFileGen("rectangle_1000.txt", "rectangle", 1000);
-         CH.testFileGen("rectangle_10000.txt", "rectangle", 10000);
-         CH.testFileGen("rectangle_100000.txt", "rectangle", 100000);
-         CH.testFileGen("rectangle_1000000.txt", "rectangle", 1000000);
+         CH.testFileGen(prefix + "rectangle_10.txt", "rectangle", 10);
+         CH.testFileGen(prefix + "rectangle_100.txt", "rectangle", 100);
+         CH.testFileGen(prefix + "rectangle_1000.txt", "rectangle", 1000);
+         CH.testFileGen(prefix + "rectangle_10000.txt", "rectangle", 10000);
+         CH.testFileGen(prefix + "rectangle_100000.txt", "rectangle", 100000);
+         CH.testFileGen(prefix + "rectangle_1000000.txt", "rectangle", 1000000);
          // onCircle
-         CH.testFileGen("onCircle_10.txt", "onCircle", 10);
-         CH.testFileGen("onCircle_100.txt", "onCircle", 100);
-         CH.testFileGen("onCircle_1000.txt", "onCircle", 1000);
-         CH.testFileGen("onCircle_10000.txt", "onCircle", 10000);
-         CH.testFileGen("onCircle_100000.txt", "onCircle", 100000);
-         CH.testFileGen("onCircle_1000000.txt", "onCircle", 1000000);
+         CH.testFileGen(prefix + "onCircle_10.txt", "onCircle", 10);
+         CH.testFileGen(prefix + "onCircle_100.txt", "onCircle", 100);
+         CH.testFileGen(prefix + "onCircle_1000.txt", "onCircle", 1000);
+         CH.testFileGen(prefix + "onCircle_10000.txt", "onCircle", 10000);
+         CH.testFileGen(prefix + "onCircle_100000.txt", "onCircle", 100000);
+         CH.testFileGen(prefix + "onCircle_1000000.txt", "onCircle", 1000000);
          // circle
-         CH.testFileGen("circle_10.txt", "circle", 10);
-         CH.testFileGen("circle_100.txt", "circle", 100);
-         CH.testFileGen("circle_1000.txt", "circle", 1000);
-         CH.testFileGen("circle_10000.txt", "circle", 10000);
-         CH.testFileGen("circle_100000.txt", "circle", 100000);
-         CH.testFileGen("circle_1000000.txt", "circle", 1000000);
+         CH.testFileGen(prefix + "circle_10.txt", "circle", 10);
+         CH.testFileGen(prefix + "circle_100.txt", "circle", 100);
+         CH.testFileGen(prefix + "circle_1000.txt", "circle", 1000);
+         CH.testFileGen(prefix + "circle_10000.txt", "circle", 10000);
+         CH.testFileGen(prefix + "circle_100000.txt", "circle", 100000);
+         CH.testFileGen(prefix + "circle_1000000.txt", "circle", 1000000);
          // triangle
-         CH.testFileGen("triangle_10.txt", "triangle", 10);
-         CH.testFileGen("triangle_100.txt", "triangle", 100);
-         CH.testFileGen("triangle_1000.txt", "triangle", 1000);
-         CH.testFileGen("triangle_10000.txt", "triangle", 10000);
-         CH.testFileGen("triangle_100000.txt", "triangle", 100000);
-         CH.testFileGen("triangle_1000000.txt", "triangle", 1000000);
+         CH.testFileGen(prefix + "triangle_10.txt", "triangle", 10);
+         CH.testFileGen(prefix + "triangle_100.txt", "triangle", 100);
+         CH.testFileGen(prefix + "triangle_1000.txt", "triangle", 1000);
+         CH.testFileGen(prefix + "triangle_10000.txt", "triangle", 10000);
+         CH.testFileGen(prefix + "triangle_100000.txt", "triangle", 100000);
+         CH.testFileGen(prefix + "triangle_1000000.txt", "triangle", 1000000);
          System.out.println("done");
          System.exit(0);
       }
