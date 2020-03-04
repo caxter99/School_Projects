@@ -1,6 +1,7 @@
 # All of the files to ignore
 .DS_Store
 *.o
+prj
 
 # For AI
 .ipynb_checkpoints
