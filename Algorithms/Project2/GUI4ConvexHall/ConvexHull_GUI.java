@@ -262,8 +262,8 @@ public class ConvexHull_GUI extends JPanel
    
    public static void main(String[] args) {
       ConvexHull_GUI CH = new ConvexHull_GUI();
-      //boolean generateData = false; // Use this to display "test.txt"
-      boolean generateData = true; // Use this to generate all of the testing files
+      boolean generateData = false; // Use this to display "test.txt"
+      //boolean generateData = true; // Use this to generate all of the testing files
       if (generateData){
          // prefix to make sure they go into the corect folder
          String prefix = "Data/";
