@@ -20,6 +20,7 @@ std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test f
          // loaded first, however)
 const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/Data/"; // This is the prefix for all of the test case files
 const std::string DEFAULT_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined
+const bool DISPLAY_MILLISECONDS = false; // If true, displays the milliseconds
 
 /*
 This next chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
@@ -233,17 +234,15 @@ std::vector<Point> doJarvisMarch(Point points[], int n)
 /*
 This next chunk of code is adapted from the following website: https://www.geeksforgeeks.org/quickhull-algorithm-convex-hull/
 */
-// iPair is integer pairs 
-#define iPair std::pair<int, int>
 
 // Stores the result (points of convex hull)
-std::set<iPair> hull;
+std::vector<Point> hull;
 
 // Returns the side of point p with respect to line
 // joining points p1 and p2.
-int findSide(iPair p1, iPair p2, iPair p)
+int findSide(Point p1, Point p2, Point p)
 {
-   int val = (p.second - p1.second) * (p2.first - p1.first) - (p2.second - p1.second) * (p.first - p1.first);
+   int val = (p.y - p1.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p.x - p1.x);
   
    if (val > 0)
       return 1;
@@ -255,14 +254,14 @@ int findSide(iPair p1, iPair p2, iPair p)
 // returns a value proportional to the distance
 // between the point p and the line joining the
 // points p1 and p2
-int lineDist(iPair p1, iPair p2, iPair p)
+int lineDist(Point p1, Point p2, Point p)
 {
-   return abs ((p.second - p1.second) * (p2.first - p1.first) - (p2.second - p1.second) * (p.first - p1.first));
+   return abs ((p.y - p1.y) * (p2.x - p1.x) - (p2.y - p1.y) * (p.x - p1.x));
 }
   
 // End points of line L are p1 and p2.  side can have value
 // 1 or -1 specifying each of the parts made by the line L
-void quickHull(iPair a[], int n, iPair p1, iPair p2, int side)
+void quickHull(std::vector<Point>* a, int n, Point p1, Point p2, int side)
 {
    int ind = -1;
    int max_dist = 0;
@@ -271,8 +270,8 @@ void quickHull(iPair a[], int n, iPair p1, iPair p2, int side)
    // from L and also on the specified side of L.
    for (int i = 0; i < n; i++)
    {
-      int temp = lineDist(p1, p2, a[i]);
-      if (findSide(p1, p2, a[i]) == side && temp > max_dist)
+      int temp = lineDist(p1, p2, a->at(i));
+      if (findSide(p1, p2, a->at(i)) == side && temp > max_dist)
       {
          ind = i;
          max_dist = temp;
@@ -283,22 +282,25 @@ void quickHull(iPair a[], int n, iPair p1, iPair p2, int side)
    // of L to the convex hull.
    if (ind == -1)
    {
-      hull.insert(p1);
-      hull.insert(p2);
+      hull.push_back(p1);
+      hull.push_back(p2);
       return;
    }
 
    // Recur for the two parts divided by a[ind]
-   quickHull(a, n, a[ind], p1, -findSide(a[ind], p1, p2));
-   quickHull(a, n, a[ind], p2, -findSide(a[ind], p2, p1));
+   quickHull(a, n, a->at(ind), p1, -findSide(a->at(ind), p1, p2));
+   quickHull(a, n, a->at(ind), p2, -findSide(a->at(ind), p2, p1));
 }
 
-void printHull(iPair a[], int n)
+/*std::vector<Point> doQuickHull(iPair a[], int n)
 {
+   // Creating the return hull points
+   std::vector<Point> hullPoints;
+
    // a[i].second -> y-coordinate of the ith point
    if (n < 3)
    {
-      std::cout << "Convex hull not possible\n";
+      return hullPoints;
    }
   
    // Finding the point with minimum and
@@ -325,69 +327,69 @@ void printHull(iPair a[], int n)
    std::cout << "The points in Convex Hull are:\n";
    while (!hull.empty())
    {
+      // Creating a point and adding it
+      Point p;
+      p.x = (*hull.begin()).first;
+      p.y = (*hull.begin()).second;
+      hullPoints.push_back(p);
+
+      // Displaying the point
       std::cout << "(" <<( *hull.begin()).first << ", " << (*hull.begin()).second << ") ";
       hull.erase(hull.begin());
    }
-}
 
-// Prints convex hull of a set of n points. 
-std::vector<Point> doQuickHull(Point points[], int n) 
+   // Return the hullPoints
+   return hullPoints;
+}*/
+
+std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
 {
    // Creating the return hull points
    std::vector<Point> hullPoints;
 
-   // There must be at least 3 points
-   if (n < 3) return hullPoints;
+   // a[i].second -> y-coordinate of the ith point
+   if (n < 3)
+   {
+      return hullPoints;
+   }
   
-   // Initialize Result
-   std::vector<Point> hull;
-  
-   // Find the leftmost point
-   int l = 0;
+   // Finding the point with minimum and
+   // maximum x-coordinate
+   int min_x = 0, max_x = 0;
    for (int i = 1; i < n; i++)
-      if (points[i].x < points[l].x)
-         l = i;
+   {
+      if (a->at(i).x < a->at(min_x).x)
+         min_x = i;
+      if (a->at(i).x > a->at(max_x).x)
+         max_x = i;
+   }
+  
+   // Recursively find convex hull points on
+   // one side of line joining a[min_x] and
+   // a[max_x]
+   quickHull(a, n, a->at(min_x), a->at(max_x), 1);
+  
+   // Recursively find convex hull points on
+   // other side of line joining a[min_x] and
+   // a[max_x]
+   quickHull(a, n, a->at(min_x), a->at(max_x), -1);
+  
+   std::cout << "The points in Convex Hull are:\n";
+   for (int x = 0; x < hull.size(); x++)
+   {
+      // Creating a point and adding it
+      hullPoints.push_back(hull.at(x));
 
-   // Start from leftmost point, keep moving counterclockwise
-   // until reach the start point again.  This loop runs O(h)
-   // times where h is number of points in result or output.
-   int p = l, q;
-   do
-   {
-      // Add current point to result
-      hull.push_back(points[p]);
-  
-      // Search for a point 'q' such that orientation(p, x,
-      // q) is counterclockwise for all points 'x'. The idea
-      // is to keep track of last visited most counterclock-
-      // wise point in q. If any point 'i' is more counterclock-
-      // wise than q, then update q.
-      q = (p + 1) % n;
-      for (int i = 0; i < n; i++)
-      {
-         // If i is more counterclockwise than current q, then
-         // update q
-         if (orientation(points[p], points[i], points[q]) == 2)
-            q = i;
-      }
-  
-      // Now q is the most counterclockwise with respect to p
-      // Set p as q for next iteration, so that q is added to
-      // result 'hull'
-      p = q;
-  
-   } while (p != l);  // While we don't come to first point
-  
-   // Print Result
-   for (int i = 0; i < hull.size(); i++)
-   {
-      hullPoints.push_back(hull[i]);
-      std::cout << "(" << hull[i].x << ", " << hull[i].y << ")\n";
+      // Displaying the point
+      std::cout << "(" << hull.at(x).x << ", " << hull.at(x).y << ") ";
    }
 
-   // Returning the hull points
+   // Clearing the vector
+   hull.clear();
+
+   // Return the hullPoints
    return hullPoints;
-} 
+}
 
 /*
 This next chunk of code is entirely my own.
@@ -464,12 +466,24 @@ void writePointsToFile(std::string filename, std::vector<Point>* points)
 This next block of code was given for the assignment. I have adapted it.
 */
 
+/*iPair convertPointsToiPair(std::vector<Point>* points)
+{
+   iPair temp[points->size()];
+
+   for (int x = 0; x < points->size(); x++)
+   {
+      temp[x] = {points->at(x).x, points->at(x).y};
+   }
+
+   return temp;
+}*/
+
 void loadTestCaseArray()
 {
    // Loading all of the test cases
    //
    // onTriangle
-   ALL_TEST_FILES.push_back("onTriangle_10.txt");
+   /*ALL_TEST_FILES.push_back("onTriangle_10.txt");
    ALL_TEST_FILES.push_back("onTriangle_100.txt");
    ALL_TEST_FILES.push_back("onTriangle_1000.txt");
    ALL_TEST_FILES.push_back("onTriangle_10000.txt");
@@ -495,7 +509,7 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onCircle_1000.txt");
    ALL_TEST_FILES.push_back("onCircle_10000.txt");
    ALL_TEST_FILES.push_back("onCircle_100000.txt");
-   ALL_TEST_FILES.push_back("onCircle_1000000.txt");
+   ALL_TEST_FILES.push_back("onCircle_1000000.txt");*/
    // circle
    ALL_TEST_FILES.push_back("circle_10.txt");
    ALL_TEST_FILES.push_back("circle_100.txt");
@@ -504,12 +518,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("circle_100000.txt");
    ALL_TEST_FILES.push_back("circle_1000000.txt");
    // triangle
-   ALL_TEST_FILES.push_back("triangle_10.txt");
+   /*ALL_TEST_FILES.push_back("triangle_10.txt");
    ALL_TEST_FILES.push_back("triangle_100.txt");
    ALL_TEST_FILES.push_back("triangle_1000.txt");
    ALL_TEST_FILES.push_back("triangle_10000.txt");
    ALL_TEST_FILES.push_back("triangle_100000.txt");
-   ALL_TEST_FILES.push_back("triangle_1000000.txt");
+   ALL_TEST_FILES.push_back("triangle_1000000.txt");*/
 }
 
 std::string getOutputFilename(std::string inputFilename)
@@ -608,7 +622,8 @@ int main(int argc, char *argv[])
          { //default 
             start = time(0);
             startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
-            hullPoints = doQuickHull(pointsArr, points.size());
+            hullPoints = doQuickHull(&points, points.size());
+            //hullPoints = doQuickHull(convertPointsToiPair(pointsArr), points.size());
             endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
             end = time(0);
             outputFile = "hull_Q.txt";
@@ -628,7 +643,12 @@ int main(int argc, char *argv[])
             writePointsToFile(outputFile, &hullPoints);
 
             // Displaying the time it took
-            std::cout << "Time to compute: " << (endms - startms) << " milliseconds\n";
+            if (DISPLAY_MILLISECONDS)
+            {
+               std::cout << "startms:" << startms << ":\n";
+               std::cout << "endms:" << endms << ":\n";
+               std::cout << "Time to compute: " << (endms - startms) << " milliseconds\n";
+            }
             std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
          }
          // Something is wrong with the data
