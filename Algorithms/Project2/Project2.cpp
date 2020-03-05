@@ -11,6 +11,7 @@
 #include <set>
 #include <time.h>
 #include <chrono>
+#include <cmath>
 
 // Constants
 const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever file the user enters to test for convex halls.
@@ -19,8 +20,12 @@ const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use 
 std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test files. These are used if USE_USER_INPUT is false (must be
          // loaded first, however)
 const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/Data/"; // This is the prefix for all of the test case files
-const std::string DEFAULT_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined
+const std::string NON_ERROR_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined and the default
+         // can't be used
 const bool DISPLAY_MILLISECONDS = false; // If true, displays the milliseconds
+const std::string PREFIX_FOR_JAVA_OUTPUT = "GUI4ConvexHall/"; // The prefix for everything written to be easily used by the Java program
+const std::string TEST_FILE_FOR_JAVA_OUTPUT = "test.txt"; // The test name for the Java program
+const std::string HULL_FILE_FOR_JAVA_OUTPUT = "hull.txt"; // The name of the hull for the Java program
 
 /*
 This next chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
@@ -292,56 +297,6 @@ void quickHull(std::vector<Point>* a, int n, Point p1, Point p2, int side)
    quickHull(a, n, a->at(ind), p2, -findSide(a->at(ind), p2, p1));
 }
 
-/*std::vector<Point> doQuickHull(iPair a[], int n)
-{
-   // Creating the return hull points
-   std::vector<Point> hullPoints;
-
-   // a[i].second -> y-coordinate of the ith point
-   if (n < 3)
-   {
-      return hullPoints;
-   }
-  
-   // Finding the point with minimum and
-   // maximum x-coordinate
-   int min_x = 0, max_x = 0;
-   for (int i=1; i<n; i++)
-   {
-      if (a[i].first < a[min_x].first)
-         min_x = i;
-      if (a[i].first > a[max_x].first)
-         max_x = i;
-   }
-  
-   // Recursively find convex hull points on
-   // one side of line joining a[min_x] and
-   // a[max_x]
-   quickHull(a, n, a[min_x], a[max_x], 1);
-  
-   // Recursively find convex hull points on
-   // other side of line joining a[min_x] and
-   // a[max_x]
-   quickHull(a, n, a[min_x], a[max_x], -1);
-  
-   std::cout << "The points in Convex Hull are:\n";
-   while (!hull.empty())
-   {
-      // Creating a point and adding it
-      Point p;
-      p.x = (*hull.begin()).first;
-      p.y = (*hull.begin()).second;
-      hullPoints.push_back(p);
-
-      // Displaying the point
-      std::cout << "(" <<( *hull.begin()).first << ", " << (*hull.begin()).second << ") ";
-      hull.erase(hull.begin());
-   }
-
-   // Return the hullPoints
-   return hullPoints;
-}*/
-
 std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
 {
    // Creating the return hull points
@@ -389,6 +344,21 @@ std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
 
    // Return the hullPoints
    return hullPoints;
+}
+
+/*
+This next chunk of code was adapted from the website: https://stackoverflow.com/questions/53072989/sort-2d-points-counter-clockwise
+*/
+double getClockwiseAngle(Point p)
+{
+   double angle = 0.0;
+   angle = atan2(p.x, -p.y);
+   return angle;
+}
+
+bool comparePoints(Point p1, Point p2)
+{
+   return getClockwiseAngle(p1) < getClockwiseAngle(p2);
 }
 
 /*
@@ -462,21 +432,14 @@ void writePointsToFile(std::string filename, std::vector<Point>* points)
    }
 }
 
-/*
-This next block of code was given for the assignment. I have adapted it.
-*/
-
-/*iPair convertPointsToiPair(std::vector<Point>* points)
+void writePointsForJavaProgram(std::string testFilename, std::string hullFilename, std::vector<Point>* testPoints, std::vector<Point>* hullPoints)
 {
-   iPair temp[points->size()];
+   // Writing the test points to the Java program
+   writePointsToFile(PREFIX_FOR_JAVA_OUTPUT + testFilename, testPoints);
 
-   for (int x = 0; x < points->size(); x++)
-   {
-      temp[x] = {points->at(x).x, points->at(x).y};
-   }
-
-   return temp;
-}*/
+   // Writing the hull points to the Java program
+   writePointsToFile(PREFIX_FOR_JAVA_OUTPUT + hullFilename, hullPoints);
+}
 
 void loadTestCaseArray()
 {
@@ -511,25 +474,25 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onCircle_100000.txt");
    ALL_TEST_FILES.push_back("onCircle_1000000.txt");*/
    // circle
-   ALL_TEST_FILES.push_back("circle_10.txt");
+   /*ALL_TEST_FILES.push_back("circle_10.txt");
    ALL_TEST_FILES.push_back("circle_100.txt");
    ALL_TEST_FILES.push_back("circle_1000.txt");
    ALL_TEST_FILES.push_back("circle_10000.txt");
    ALL_TEST_FILES.push_back("circle_100000.txt");
-   ALL_TEST_FILES.push_back("circle_1000000.txt");
+   ALL_TEST_FILES.push_back("circle_1000000.txt");*/
    // triangle
-   /*ALL_TEST_FILES.push_back("triangle_10.txt");
+   ALL_TEST_FILES.push_back("triangle_10.txt");
    ALL_TEST_FILES.push_back("triangle_100.txt");
    ALL_TEST_FILES.push_back("triangle_1000.txt");
    ALL_TEST_FILES.push_back("triangle_10000.txt");
    ALL_TEST_FILES.push_back("triangle_100000.txt");
-   ALL_TEST_FILES.push_back("triangle_1000000.txt");*/
+   ALL_TEST_FILES.push_back("triangle_1000000.txt");
 }
 
 std::string getOutputFilename(std::string inputFilename)
 {
    // Creating the string in its default form
-   std::string outputFilename = DEFAULT_OUTPUT_FILENAME;
+   std::string outputFilename = NON_ERROR_OUTPUT_FILENAME;
 
    // Getting the position of the underscore
    int underscorePos = inputFilename.find(".");
@@ -627,6 +590,9 @@ int main(int argc, char *argv[])
             endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
             end = time(0);
             outputFile = "hull_Q.txt";
+
+            // The hullPoints must be sorted as they aren't in clockwise or counterclockwise order
+            sort(hullPoints.begin(), hullPoints.end(), comparePoints);
          }
       
          // Write the data to the file if applicable
@@ -641,6 +607,10 @@ int main(int argc, char *argv[])
 
             // Writing the points to the file
             writePointsToFile(outputFile, &hullPoints);
+
+            // Write files to be tested by the Java program
+            //writePointsForJavaProgram(std::string testFilename, std::string hullFilename, std::vector<Point>* testPoints, std::vector<Point>* hullPoints)
+            writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
 
             // Displaying the time it took
             if (DISPLAY_MILLISECONDS)
