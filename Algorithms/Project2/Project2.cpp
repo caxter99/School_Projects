@@ -242,6 +242,8 @@ This next chunk of code is adapted from the following website: https://www.geeks
 
 // Stores the result (points of convex hull)
 std::vector<Point> hull;
+// Stores the center point
+Point centerPoint;
 
 // Returns the side of point p with respect to line
 // joining points p1 and p2.
@@ -330,14 +332,24 @@ std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
    quickHull(a, n, a->at(min_x), a->at(max_x), -1);
   
    std::cout << "The points in Convex Hull are:\n";
+   int totalX = 0;
+   int totalY = 0;
    for (int x = 0; x < hull.size(); x++)
    {
       // Creating a point and adding it
       hullPoints.push_back(hull.at(x));
 
+      // Adding al of the x coordinates
+      totalX += hull.at(x).x;
+      totalY += hull.at(x).y;
+
       // Displaying the point
       std::cout << "(" << hull.at(x).x << ", " << hull.at(x).y << ") ";
    }
+
+   // Getting the center point
+   centerPoint.x = totalX / hull.size();
+   centerPoint.y = totalY / hull.size();
 
    // Clearing the vector
    hull.clear();
@@ -351,9 +363,7 @@ This next chunk of code was adapted from the website: https://stackoverflow.com/
 */
 double getClockwiseAngle(Point p)
 {
-   double angle = 0.0;
-   angle = atan2(p.x, -p.y);
-   return angle;
+   return atan2(centerPoint.y - p.y, centerPoint.x - p.x) * 180 / 3.14159265;
 }
 
 bool comparePoints(Point p1, Point p2)
@@ -420,7 +430,6 @@ void writePointsToFile(std::string filename, std::vector<Point>* points)
             stringToWrite = "" + std::to_string((*iter).x) + "\t" + std::to_string((*iter).y) + "\n";
 
             // Writing the string to the file
-            //outputFile.write(stringToWrite);
             outputFile << stringToWrite;
          }
       }
@@ -446,7 +455,7 @@ void loadTestCaseArray()
    // Loading all of the test cases
    //
    // onTriangle
-   /*ALL_TEST_FILES.push_back("onTriangle_10.txt");
+   ALL_TEST_FILES.push_back("onTriangle_10.txt");
    ALL_TEST_FILES.push_back("onTriangle_100.txt");
    ALL_TEST_FILES.push_back("onTriangle_1000.txt");
    ALL_TEST_FILES.push_back("onTriangle_10000.txt");
@@ -472,14 +481,14 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onCircle_1000.txt");
    ALL_TEST_FILES.push_back("onCircle_10000.txt");
    ALL_TEST_FILES.push_back("onCircle_100000.txt");
-   ALL_TEST_FILES.push_back("onCircle_1000000.txt");*/
+   ALL_TEST_FILES.push_back("onCircle_1000000.txt");
    // circle
-   /*ALL_TEST_FILES.push_back("circle_10.txt");
+   ALL_TEST_FILES.push_back("circle_10.txt");
    ALL_TEST_FILES.push_back("circle_100.txt");
    ALL_TEST_FILES.push_back("circle_1000.txt");
    ALL_TEST_FILES.push_back("circle_10000.txt");
    ALL_TEST_FILES.push_back("circle_100000.txt");
-   ALL_TEST_FILES.push_back("circle_1000000.txt");*/
+   ALL_TEST_FILES.push_back("circle_1000000.txt");
    // triangle
    ALL_TEST_FILES.push_back("triangle_10.txt");
    ALL_TEST_FILES.push_back("triangle_100.txt");
@@ -609,7 +618,6 @@ int main(int argc, char *argv[])
             writePointsToFile(outputFile, &hullPoints);
 
             // Write files to be tested by the Java program
-            //writePointsForJavaProgram(std::string testFilename, std::string hullFilename, std::vector<Point>* testPoints, std::vector<Point>* hullPoints)
             writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
 
             // Displaying the time it took
