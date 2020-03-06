@@ -16,7 +16,7 @@
 // Constants
 const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever file the user enters to test for convex halls.
          // Otherwise, uses the vector of all of the available test files
-const bool DISPLAY_MILLISECONDS = false; // If true, displays the milliseconds
+const bool DISPLAY_MILLISECONDS = true; // If true, displays the milliseconds
 const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
 const bool USE_LARGE_NUMBER_OF_POINTS = true; // If true, the test will include large amounts of data (point number > 1,000,000)
 
@@ -29,6 +29,7 @@ const std::string NON_ERROR_OUTPUT_FILENAME = "hull.txt"; // This is the default
 const std::string PREFIX_FOR_JAVA_OUTPUT = "GUI4ConvexHall/"; // The prefix for everything written to be easily used by the Java program
 const std::string TEST_FILE_FOR_JAVA_OUTPUT = "test.txt"; // The test name for the Java program
 const std::string HULL_FILE_FOR_JAVA_OUTPUT = "hull.txt"; // The name of the hull for the Java program
+//const std::string TIME_FILE_NAME = "time.txt"; // The name of the file that stores all of the time for each run
 
 /*
 This next chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
@@ -466,9 +467,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onTriangle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("onTriangle_10000000.txt");
-      ALL_TEST_FILES.push_back("onTriangle_100000000.txt");
-      ALL_TEST_FILES.push_back("onTriangle_1000000000.txt");
+      ALL_TEST_FILES.push_back("onTriangle_2000000.txt");
+      ALL_TEST_FILES.push_back("onTriangle_4000000.txt");
+      ALL_TEST_FILES.push_back("onTriangle_8000000.txt");
    }
    // onRectangle
    ALL_TEST_FILES.push_back("onRectangle_10.txt");
@@ -479,9 +480,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onRectangle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("onRectangle_10000000.txt");
-      ALL_TEST_FILES.push_back("onRectangle_100000000.txt");
-      ALL_TEST_FILES.push_back("onRectangle_1000000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_2000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_4000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_8000000.txt");
    }
    // rectangle
    ALL_TEST_FILES.push_back("rectangle_10.txt");
@@ -492,9 +493,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("rectangle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("rectangle_10000000.txt");
-      ALL_TEST_FILES.push_back("rectangle_100000000.txt");
-      ALL_TEST_FILES.push_back("rectangle_1000000000.txt");
+      ALL_TEST_FILES.push_back("rectangle_2000000.txt");
+      ALL_TEST_FILES.push_back("rectangle_4000000.txt");
+      ALL_TEST_FILES.push_back("rectangle_8000000.txt");
    }
    // onCircle
    ALL_TEST_FILES.push_back("onCircle_10.txt");
@@ -505,9 +506,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onCircle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("onCircle_10000000.txt");
-      ALL_TEST_FILES.push_back("onCircle_100000000.txt");
-      ALL_TEST_FILES.push_back("onCircle_1000000000.txt");
+      ALL_TEST_FILES.push_back("onCircle_2000000.txt");
+      ALL_TEST_FILES.push_back("onCircle_4000000.txt");
+      ALL_TEST_FILES.push_back("onCircle_8000000.txt");
    }
    // circle
    ALL_TEST_FILES.push_back("circle_10.txt");
@@ -518,9 +519,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("circle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("circle_10000000.txt");
-      ALL_TEST_FILES.push_back("circle_100000000.txt");
-      ALL_TEST_FILES.push_back("circle_1000000000.txt");
+      ALL_TEST_FILES.push_back("circle_2000000.txt");
+      ALL_TEST_FILES.push_back("circle_4000000.txt");
+      ALL_TEST_FILES.push_back("circle_8000000.txt");
    }
    // triangle
    ALL_TEST_FILES.push_back("triangle_10.txt");
@@ -531,9 +532,9 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("triangle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("triangle_10000000.txt");
-      ALL_TEST_FILES.push_back("triangle_100000000.txt");
-      ALL_TEST_FILES.push_back("triangle_1000000000.txt");
+      ALL_TEST_FILES.push_back("triangle_2000000.txt");
+      ALL_TEST_FILES.push_back("triangle_4000000.txt");
+      ALL_TEST_FILES.push_back("triangle_8000000.txt");
    }
 }
 
@@ -607,8 +608,20 @@ int main(int argc, char *argv[])
 
          // Telling the user the computing details
          std::string computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
-         std::cout << "Current Method: " << algType[0] << std::endl;
-         std::cout << "Current Set of Data Points:" << computation << std::endl;
+         std::cout << "Current Method: ";
+         if (algType[0] == 'J')
+         {
+            std::cout << "Jarvis March";
+         }
+         else if (algType[0] == 'G')
+         {
+            std::cout << "Graham Scan";
+         }
+         else
+         {
+            std::cout << "Quick Hull";
+         }
+         std::cout << "\nCurrent Set of Data Points: " << computation << std::endl;
 
          // Figuring out the proper algorithm and perform it
          if (algType[0] == 'G')
@@ -660,6 +673,7 @@ int main(int argc, char *argv[])
             writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
 
             // Displaying the time it took
+            std::cout << "\n";
             if (DISPLAY_MILLISECONDS)
             {
                std::cout << "startms:" << startms << ":\n";
