@@ -7,3 +7,4 @@ prj
 .ipynb_checkpoints
 __pycache__
 8puzzlelog.txt
+*.txt

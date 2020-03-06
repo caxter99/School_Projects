@@ -16,13 +16,16 @@
 // Constants
 const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever file the user enters to test for convex halls.
          // Otherwise, uses the vector of all of the available test files
+const bool DISPLAY_MILLISECONDS = false; // If true, displays the milliseconds
 const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
+const bool USE_LARGE_NUMBER_OF_POINTS = true; // If true, the test will include large amounts of data (point number > 1,000,000)
+
 std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test files. These are used if USE_USER_INPUT is false (must be
          // loaded first, however)
+
 const std::string PREFIX_FOR_TEST_CASES = "GUI4ConvexHall/Data/"; // This is the prefix for all of the test case files
 const std::string NON_ERROR_OUTPUT_FILENAME = "hull.txt"; // This is the default output filename if one can't be determined and the default
          // can't be used
-const bool DISPLAY_MILLISECONDS = false; // If true, displays the milliseconds
 const std::string PREFIX_FOR_JAVA_OUTPUT = "GUI4ConvexHall/"; // The prefix for everything written to be easily used by the Java program
 const std::string TEST_FILE_FOR_JAVA_OUTPUT = "test.txt"; // The test name for the Java program
 const std::string HULL_FILE_FOR_JAVA_OUTPUT = "hull.txt"; // The name of the hull for the Java program
@@ -461,6 +464,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onTriangle_10000.txt");
    ALL_TEST_FILES.push_back("onTriangle_100000.txt");
    ALL_TEST_FILES.push_back("onTriangle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("onTriangle_10000000.txt");
+      ALL_TEST_FILES.push_back("onTriangle_100000000.txt");
+      ALL_TEST_FILES.push_back("onTriangle_1000000000.txt");
+   }
    // onRectangle
    ALL_TEST_FILES.push_back("onRectangle_10.txt");
    ALL_TEST_FILES.push_back("onRectangle_100.txt");
@@ -468,6 +477,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onRectangle_10000.txt");
    ALL_TEST_FILES.push_back("onRectangle_100000.txt");
    ALL_TEST_FILES.push_back("onRectangle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("onRectangle_10000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_100000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_1000000000.txt");
+   }
    // rectangle
    ALL_TEST_FILES.push_back("rectangle_10.txt");
    ALL_TEST_FILES.push_back("rectangle_100.txt");
@@ -475,6 +490,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("rectangle_10000.txt");
    ALL_TEST_FILES.push_back("rectangle_100000.txt");
    ALL_TEST_FILES.push_back("rectangle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("rectangle_10000000.txt");
+      ALL_TEST_FILES.push_back("rectangle_100000000.txt");
+      ALL_TEST_FILES.push_back("rectangle_1000000000.txt");
+   }
    // onCircle
    ALL_TEST_FILES.push_back("onCircle_10.txt");
    ALL_TEST_FILES.push_back("onCircle_100.txt");
@@ -482,6 +503,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("onCircle_10000.txt");
    ALL_TEST_FILES.push_back("onCircle_100000.txt");
    ALL_TEST_FILES.push_back("onCircle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("onCircle_10000000.txt");
+      ALL_TEST_FILES.push_back("onCircle_100000000.txt");
+      ALL_TEST_FILES.push_back("onCircle_1000000000.txt");
+   }
    // circle
    ALL_TEST_FILES.push_back("circle_10.txt");
    ALL_TEST_FILES.push_back("circle_100.txt");
@@ -489,6 +516,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("circle_10000.txt");
    ALL_TEST_FILES.push_back("circle_100000.txt");
    ALL_TEST_FILES.push_back("circle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("circle_10000000.txt");
+      ALL_TEST_FILES.push_back("circle_100000000.txt");
+      ALL_TEST_FILES.push_back("circle_1000000000.txt");
+   }
    // triangle
    ALL_TEST_FILES.push_back("triangle_10.txt");
    ALL_TEST_FILES.push_back("triangle_100.txt");
@@ -496,6 +529,12 @@ void loadTestCaseArray()
    ALL_TEST_FILES.push_back("triangle_10000.txt");
    ALL_TEST_FILES.push_back("triangle_100000.txt");
    ALL_TEST_FILES.push_back("triangle_1000000.txt");
+   if (USE_LARGE_NUMBER_OF_POINTS)
+   {
+      ALL_TEST_FILES.push_back("triangle_10000000.txt");
+      ALL_TEST_FILES.push_back("triangle_100000000.txt");
+      ALL_TEST_FILES.push_back("triangle_1000000000.txt");
+   }
 }
 
 std::string getOutputFilename(std::string inputFilename)

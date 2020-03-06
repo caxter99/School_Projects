@@ -276,6 +276,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "onTriangle_10000.txt", "onTriangle", 10000);
          CH.testFileGen(prefix + "onTriangle_100000.txt", "onTriangle", 100000);
          CH.testFileGen(prefix + "onTriangle_1000000.txt", "onTriangle", 1000000);
+         CH.testFileGen(prefix + "onTriangle_10000000.txt", "onTriangle", 10000000);
+         CH.testFileGen(prefix + "onTriangle_100000000.txt", "onTriangle", 100000000);
+         CH.testFileGen(prefix + "onTriangle_1000000000.txt", "onTriangle", 1000000000);
          // onRectangle
          CH.testFileGen(prefix + "onRectangle_10.txt", "onRectangle", 10);
          CH.testFileGen(prefix + "onRectangle_100.txt", "onRectangle", 100);
@@ -283,6 +286,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "onRectangle_10000.txt", "onRectangle", 10000);
          CH.testFileGen(prefix + "onRectangle_100000.txt", "onRectangle", 100000);
          CH.testFileGen(prefix + "onRectangle_1000000.txt", "onRectangle", 1000000);
+         CH.testFileGen(prefix + "onRectangle_10000000.txt", "onRectangle", 10000000);
+         CH.testFileGen(prefix + "onRectangle_100000000.txt", "onRectangle", 100000000);
+         CH.testFileGen(prefix + "onRectangle_1000000000.txt", "onRectangle", 1000000000);
          // rectangle
          CH.testFileGen(prefix + "rectangle_10.txt", "rectangle", 10);
          CH.testFileGen(prefix + "rectangle_100.txt", "rectangle", 100);
@@ -290,6 +296,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "rectangle_10000.txt", "rectangle", 10000);
          CH.testFileGen(prefix + "rectangle_100000.txt", "rectangle", 100000);
          CH.testFileGen(prefix + "rectangle_1000000.txt", "rectangle", 1000000);
+         CH.testFileGen(prefix + "rectangle_10000000.txt", "rectangle", 10000000);
+         CH.testFileGen(prefix + "rectangle_100000000.txt", "rectangle", 100000000);
+         CH.testFileGen(prefix + "rectangle_1000000000.txt", "rectangle", 1000000000);
          // onCircle
          CH.testFileGen(prefix + "onCircle_10.txt", "onCircle", 10);
          CH.testFileGen(prefix + "onCircle_100.txt", "onCircle", 100);
@@ -297,6 +306,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "onCircle_10000.txt", "onCircle", 10000);
          CH.testFileGen(prefix + "onCircle_100000.txt", "onCircle", 100000);
          CH.testFileGen(prefix + "onCircle_1000000.txt", "onCircle", 1000000);
+         CH.testFileGen(prefix + "onCircle_10000000.txt", "onCircle", 10000000);
+         CH.testFileGen(prefix + "onCircle_100000000.txt", "onCircle", 100000000);
+         CH.testFileGen(prefix + "onCircle_1000000000.txt", "onCircle", 1000000000);
          // circle
          CH.testFileGen(prefix + "circle_10.txt", "circle", 10);
          CH.testFileGen(prefix + "circle_100.txt", "circle", 100);
@@ -304,6 +316,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "circle_10000.txt", "circle", 10000);
          CH.testFileGen(prefix + "circle_100000.txt", "circle", 100000);
          CH.testFileGen(prefix + "circle_1000000.txt", "circle", 1000000);
+         CH.testFileGen(prefix + "circle_10000000.txt", "circle", 10000000);
+         CH.testFileGen(prefix + "circle_100000000.txt", "circle", 100000000);
+         CH.testFileGen(prefix + "circle_1000000000.txt", "circle", 1000000000);
          // triangle
          CH.testFileGen(prefix + "triangle_10.txt", "triangle", 10);
          CH.testFileGen(prefix + "triangle_100.txt", "triangle", 100);
@@ -311,6 +326,9 @@ public class ConvexHull_GUI extends JPanel
          CH.testFileGen(prefix + "triangle_10000.txt", "triangle", 10000);
          CH.testFileGen(prefix + "triangle_100000.txt", "triangle", 100000);
          CH.testFileGen(prefix + "triangle_1000000.txt", "triangle", 1000000);
+         CH.testFileGen(prefix + "triangle_10000000.txt", "triangle", 10000000);
+         CH.testFileGen(prefix + "triangle_100000000.txt", "triangle", 100000000);
+         CH.testFileGen(prefix + "triangle_1000000000.txt", "triangle", 1000000000);
          System.out.println("done");
          System.exit(0);
       }
