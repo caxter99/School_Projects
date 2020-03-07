@@ -73,7 +73,7 @@ def getData():
     # Getting the data from the user
     while(not gotValidData):
         # Prompting the user
-        filename = input("What is the name of the file? Enter the ENTIRE filename or \"Q\" to quit.\n")
+        filename = input("What is the name of the csv file? Enter the ENTIRE filename or \"Q\" to quit.\n")
         
         # Filename not equal to "Q"
         if (not (filename == "Q")):
@@ -91,8 +91,23 @@ def getData():
         else:
             gotValidData = True
     
-    # Returning the data frame
+    # Returning the data frame or null
     return df
+
+# Returns true if the dataframe is valid, false otherwise
+def isValidDataFrame(df):
+    # If there's any errors
+    try:
+        # Seeing if it's a valid data frame
+        if (len(df.columns) > 0):
+            # If it makes it here, it's a valid data frame
+            return True
+    except:
+        # It;s not a data frame
+        return False
+    
+    # It's a data frame, but has 0 attributes, so it isn't valid
+    return False
 
 #
 # The following function is the driver function
@@ -112,7 +127,10 @@ def py_nb():
         if (selection == "1"):
             # Get the data from the user
             df = getData()
-            print(df)
+            
+            # If the user entered valid data
+            if (isValidDataFrame(df)):
+                print(df)
         elif (selection == "2"):
             # to do
             i = 0
