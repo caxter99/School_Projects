@@ -723,12 +723,12 @@ int main(int argc, char *argv[])
             // If this is the first time, write it without appending to start over
             if (x == 0)
             {
-               outputFileTime.open(TIME_FILE_NAME);
+               outputFileTime.open(sortName + " " + TIME_FILE_NAME);
             }
             // If it's not the first time, write it with appending
             else
             {
-               outputFileTime.open(TIME_FILE_NAME, std::ios_base::app);
+               outputFileTime.open(sortName + " " + TIME_FILE_NAME, std::ios_base::app);
             }
             
             // If the file successfully opened
@@ -749,13 +749,13 @@ int main(int argc, char *argv[])
                std::cout << "Time to compute: " << (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count() << " milliseconds\n";
 
                // Writing the milliseconds to the file
-               writeTimeToFile(TIME_FILE_NAME, (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count(), " milliseconds");
+               writeTimeToFile(sortName + " " + TIME_FILE_NAME, (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count(), " milliseconds");
             }
             // Displaying the seconds
             std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
 
             // Writing the seconds to the file
-            writeTimeToFile(TIME_FILE_NAME, difftime(end, start), " seconds");
+            writeTimeToFile(sortName + " " + TIME_FILE_NAME, difftime(end, start), " seconds");
          }
          // Something is wrong with the data
          else
