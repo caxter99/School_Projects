@@ -7,6 +7,21 @@ Created on Fri Mar  6 13:30:12 2020
 4190350
 """
 
+# Imports
+import pandas as pd
+import numpy as np
+from math import sqrt
+#from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+# Constants
+NULL = "null" # Null value
+
+#
+# The following functions are for the general use
+#
+
 # Returns true if the input is a valid selection for the menu
 def isValidMenuInput(selection):
     # Looping through all of the valid inputs
@@ -43,7 +58,46 @@ def displayMenu():
     
     # Returning the selection
     return selection
+
+
+#
+# The following functions are for part 1
+#
+
+# Gets the name of a data file and returns the data after reading it in
+def getData():
+    # Variables
+    df = NULL
+    gotValidData = False
+    
+    # Getting the data from the user
+    while(not gotValidData):
+        # Prompting the user
+        filename = input("What is the name of the file? Enter the ENTIRE filename or \"Q\" to quit.\n")
         
+        # Filename not equal to "Q"
+        if (not (filename == "Q")):
+            # In case the user entered the filename wrong
+            try:
+                # Reading in the file
+                df = pd.read_csv(filename)
+                
+                # If it gets here, they entered in correct data
+                gotValidData = True
+            except:
+                # They entered invalid data
+                print("\nThat was an invalid filename. Try again or type \"Q\" to quit.")
+        # Filename equal to "Q"
+        else:
+            gotValidData = True
+    
+    # Returning the data frame
+    return df
+
+#
+# The following function is the driver function
+#
+    
 # Driver function
 def py_nb():
     # Variables
@@ -51,12 +105,14 @@ def py_nb():
     
     # Keep going until the user wants to quit
     while(not selection == "5"):
+        # Getting what the user wants to do
         selection = displayMenu()
         
         # Perform the action the user wants
         if (selection == "1"):
-            # to do
-            i = 0
+            # Get the data from the user
+            df = getData()
+            print(df)
         elif (selection == "2"):
             # to do
             i = 0
