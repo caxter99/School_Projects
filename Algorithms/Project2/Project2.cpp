@@ -348,7 +348,7 @@ std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
       totalY += hull.at(x).y;
 
       // Displaying the point
-      std::cout << "(" << hull.at(x).x << ", " << hull.at(x).y << ") ";
+      std::cout << "(" << hull.at(x).x << ", " << hull.at(x).y << ")\n";
    }
 
    // Getting the center point
@@ -639,7 +639,8 @@ int main(int argc, char *argv[])
 
          // Variable to keep track of the start and end times
          time_t start, end;
-         float startms, endms;
+         auto startms = std::chrono::high_resolution_clock::now();
+         auto endms = std::chrono::high_resolution_clock::now();;
 
          // Getting the points into an array
          std::vector<Point> points;
@@ -667,28 +668,33 @@ int main(int argc, char *argv[])
          if (algType[0] == 'G')
          {
             start = time(0);
-            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            startms = std::chrono::high_resolution_clock::now();
             hullPoints = doGrahamScan(pointsArr, points.size());
-            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            endms = std::chrono::high_resolution_clock::now();
             end = time(0);
             outputFile = "hull_G.txt";
          } 
          else if (algType[0] == 'J')
          {
             start = time(0);
-            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            startms = std::chrono::high_resolution_clock::now();
             hullPoints = doJarvisMarch(pointsArr, points.size());
-            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            endms = std::chrono::high_resolution_clock::now();
             end = time(0);
             outputFile = "hull_J.txt";
          }
          else
          { //default 
             start = time(0);
-            startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
+            startms = std::chrono::high_resolution_clock::now();
             hullPoints = doQuickHull(&points, points.size());
-            //hullPoints = doQuickHull(convertPointsToiPair(pointsArr), points.size());
-            endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
+            endms = std::chrono::high_resolution_clock::now();
             end = time(0);
             outputFile = "hull_Q.txt";
 
@@ -713,19 +719,26 @@ int main(int argc, char *argv[])
             writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
 
             // Writing to the file the name of the search and the data set
-            std::ofstream outputFile;
+            std::ofstream outputFileTime;
+            // If this is the first time, write it without appending to start over
             if (x == 0)
             {
-               outputFile.open(TIME_FILE_NAME);
+               outputFileTime.open(TIME_FILE_NAME);
             }
+            // If it's not the first time, write it with appending
             else
             {
-               outputFile.open(TIME_FILE_NAME, std::ios_base::app);
+               outputFileTime.open(TIME_FILE_NAME, std::ios_base::app);
             }
             
-            if (outputFile)
+            // If the file successfully opened
+            if (outputFileTime)
             {
-               outputFile << "\n" << sortName << "\n" << computation << "\n";
+               // Writing to the file
+               outputFileTime << "\n" << sortName << "\n" << computation << "\n";
+
+               // Closing the file
+               outputFileTime.close();
             }
 
             // Displaying the time it took
@@ -733,12 +746,10 @@ int main(int argc, char *argv[])
             if (DISPLAY_MILLISECONDS)
             {
                // Displaying the milliseconds
-               std::cout << "startms:" << startms << ":\n";
-               std::cout << "endms:" << endms << ":\n";
-               std::cout << "Time to compute: " << (endms - startms) << " milliseconds\n";
+               std::cout << "Time to compute: " << (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count() << " milliseconds\n";
 
                // Writing the milliseconds to the file
-               writeTimeToFile(TIME_FILE_NAME, (endms - startms), " milliseconds");
+               writeTimeToFile(TIME_FILE_NAME, (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count(), " milliseconds");
             }
             // Displaying the seconds
             std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
