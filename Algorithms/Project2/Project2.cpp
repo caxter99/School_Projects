@@ -19,6 +19,7 @@ const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever
 const bool DISPLAY_MILLISECONDS = true; // If true, displays the milliseconds
 const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
 const bool USE_LARGE_NUMBER_OF_POINTS = true; // If true, the test will include large amounts of data (point number > 1,000,000)
+const bool RECORD_TIME = true; // If true, the program will write the time and dataset to the TIME_FILE_NAME
 
 std::vector<std::string> ALL_TEST_FILES; // This list contains all of the test files. These are used if USE_USER_INPUT is false (must be
          // loaded first, however)
@@ -29,7 +30,7 @@ const std::string NON_ERROR_OUTPUT_FILENAME = "hull.txt"; // This is the default
 const std::string PREFIX_FOR_JAVA_OUTPUT = "GUI4ConvexHall/"; // The prefix for everything written to be easily used by the Java program
 const std::string TEST_FILE_FOR_JAVA_OUTPUT = "test.txt"; // The test name for the Java program
 const std::string HULL_FILE_FOR_JAVA_OUTPUT = "hull.txt"; // The name of the hull for the Java program
-//const std::string TIME_FILE_NAME = "time.txt"; // The name of the file that stores all of the time for each run
+const std::string TIME_FILE_NAME = "time.txt"; // The name of the file that stores all of the time for each run
 
 /*
 This next chunk of code was adapted from the website: https://www.geeksforgeeks.org/convex-hull-set-2-graham-scan/
@@ -243,7 +244,6 @@ std::vector<Point> doJarvisMarch(Point points[], int n)
 /*
 This next chunk of code is adapted from the following website: https://www.geeksforgeeks.org/quickhull-algorithm-convex-hull/
 */
-
 // Stores the result (points of convex hull)
 std::vector<Point> hull;
 // Stores the center point
@@ -412,6 +412,43 @@ void getPointsFromFile(std::string filename, std::vector<Point>* points)
 
    // Closing the file
    inputFile.close();
+}
+
+void writeTimeToFile(std::string filename, float time, std::string extraDescription, bool firstTime = false)
+{
+   // The output file
+   std::ofstream outputFile;
+
+   // If it's the first time
+   if (firstTime)
+   {
+      // Opening the file to rewrite it
+      outputFile.open(filename);
+   }
+   // It's not the first time
+   else
+   {
+      // Opening the file to append it
+      outputFile.open(filename, std::ios_base::app);
+   }
+
+   // Making sure the filename was successfully opened
+   if (outputFile)
+   {
+      std::string stringToWrite = std::to_string(time) + extraDescription + "\n";
+
+      // Writing the string to the file
+      outputFile << stringToWrite;
+
+      // Closing the file
+      outputFile.close();
+   }
+   // The filename could not be opened
+   else
+   {
+      // Letting the user know the filename they entered couldn't be opened
+      std::cout << "The file " << filename << " could not be opened." << std::endl;
+   }
 }
 
 void writePointsToFile(std::string filename, std::vector<Point>* points)
@@ -597,6 +634,9 @@ int main(int argc, char *argv[])
          std::string outputFile = "";
          std::vector<Point> hullPoints;
 
+         // NAme of the operation at hand
+         std::string sortName = "";
+
          // Variable to keep track of the start and end times
          time_t start, end;
          float startms, endms;
@@ -611,17 +651,17 @@ int main(int argc, char *argv[])
          std::cout << "Current Method: ";
          if (algType[0] == 'J')
          {
-            std::cout << "Jarvis March";
+            sortName = "Jarvis March";
          }
          else if (algType[0] == 'G')
          {
-            std::cout << "Graham Scan";
+            sortName = "Graham Scan";
          }
          else
          {
-            std::cout << "Quick Hull";
+            sortName = "Quick Hull";
          }
-         std::cout << "\nCurrent Set of Data Points: " << computation << std::endl;
+         std::cout << sortName << "\nCurrent Set of Data Points: " << computation << std::endl;
 
          // Figuring out the proper algorithm and perform it
          if (algType[0] == 'G')
@@ -672,15 +712,39 @@ int main(int argc, char *argv[])
             // Write files to be tested by the Java program
             writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
 
+            // Writing to the file the name of the search and the data set
+            std::ofstream outputFile;
+            if (x == 0)
+            {
+               outputFile.open(TIME_FILE_NAME);
+            }
+            else
+            {
+               outputFile.open(TIME_FILE_NAME, std::ios_base::app);
+            }
+            
+            if (outputFile)
+            {
+               outputFile << "\n" << sortName << "\n" << computation << "\n";
+            }
+
             // Displaying the time it took
             std::cout << "\n";
             if (DISPLAY_MILLISECONDS)
             {
+               // Displaying the milliseconds
                std::cout << "startms:" << startms << ":\n";
                std::cout << "endms:" << endms << ":\n";
                std::cout << "Time to compute: " << (endms - startms) << " milliseconds\n";
+
+               // Writing the milliseconds to the file
+               writeTimeToFile(TIME_FILE_NAME, (endms - startms), " milliseconds");
             }
+            // Displaying the seconds
             std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
+
+            // Writing the seconds to the file
+            writeTimeToFile(TIME_FILE_NAME, difftime(end, start), " seconds");
          }
          // Something is wrong with the data
          else
