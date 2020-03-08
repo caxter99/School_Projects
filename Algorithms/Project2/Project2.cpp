@@ -14,7 +14,7 @@
 #include <cmath>
 
 // Constants
-const bool USE_USER_FILE_INPUT = false; // If this is true, it will use whatever file the user enters to test for convex halls.
+const bool USE_USER_FILE_INPUT = true; // If this is true, it will use whatever file the user enters to test for convex halls.
          // Otherwise, uses the vector of all of the available test files
 const bool DISPLAY_MILLISECONDS = true; // If true, displays the milliseconds
 const bool ALWAYS_USE_DEFAULT_FILENAME = true; // If true, this will always use the default filename, regardless
@@ -334,8 +334,7 @@ std::vector<Point> doQuickHull(std::vector<Point>* a, int n)
    // other side of line joining a[min_x] and
    // a[max_x]
    quickHull(a, n, a->at(min_x), a->at(max_x), -1);
-  
-   std::cout << "The points in Convex Hull are:\n";
+
    int totalX = 0;
    int totalY = 0;
    for (int x = 0; x < hull.size(); x++)
@@ -509,17 +508,17 @@ void loadTestCaseArray()
       ALL_TEST_FILES.push_back("onTriangle_8000000.txt");
    }
    // onRectangle
-   ALL_TEST_FILES.push_back("onRectangle_10.txt"); // pos 9 (7)
-   ALL_TEST_FILES.push_back("onRectangle_100.txt"); // pos 10 (8)
-   ALL_TEST_FILES.push_back("onRectangle_1000.txt"); // pos 11 (9)
-   ALL_TEST_FILES.push_back("onRectangle_10000.txt"); // pos 12 (10)
-   ALL_TEST_FILES.push_back("onRectangle_100000.txt"); // pos 13 (11)
-   ALL_TEST_FILES.push_back("onRectangle_1000000.txt"); // pos 14 (12)
+   ALL_TEST_FILES.push_back("onRectangle_10.txt");
+   ALL_TEST_FILES.push_back("onRectangle_100.txt");
+   ALL_TEST_FILES.push_back("onRectangle_1000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_10000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_100000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_1000000.txt");
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("onRectangle_2000000.txt"); // pos 15
-      ALL_TEST_FILES.push_back("onRectangle_4000000.txt"); // pos 16
-      ALL_TEST_FILES.push_back("onRectangle_8000000.txt"); // pos 17
+      ALL_TEST_FILES.push_back("onRectangle_2000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_4000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_8000000.txt");
    }
    // rectangle
    ALL_TEST_FILES.push_back("rectangle_10.txt");
@@ -644,21 +643,31 @@ int main(int argc, char *argv[])
             std::string outputFile = "";
             std::vector<Point> hullPoints;
    
-            // NAme of the operation at hand
+            // Name of the operation at hand
             std::string sortName = "";
    
             // Variable to keep track of the start and end times
             time_t start, end;
             auto startms = std::chrono::high_resolution_clock::now();
-            auto endms = std::chrono::high_resolution_clock::now();;
+            auto endms = std::chrono::high_resolution_clock::now();
    
             // Getting the points into an array
             std::vector<Point> points;
             getPointsFromFile(dataFilename, &points);
             Point* pointsArr = &points[0];
    
-            // Telling the user the computing details
-            std::string computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
+            // Getting the name of the data set being performed
+            std::string computation = "";
+            if (!USE_USER_FILE_INPUT)
+            {
+               computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
+            }
+            else
+            {
+               computation = dataFilename.substr(0, dataFilename.find("."));
+            }
+
+            // Telling the user the details of what's going on
             std::cout << "Current Method: ";
             if (algType[0] == 'J')
             {
