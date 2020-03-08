@@ -8,3 +8,4 @@ prj
 __pycache__
 8puzzlelog.txt
 *.txt
+*.bin
