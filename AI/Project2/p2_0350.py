@@ -17,6 +17,8 @@ from sklearn.naive_bayes import GaussianNB
 
 # Constants
 NULL = "null" # Null value
+TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
+    # off
 
 #
 # The following functions are for the general use
@@ -77,14 +79,14 @@ def getData():
     # Getting the data from the user
     while(not gotValidData):
         # Prompting the user
-        filename = input("What is the name of the csv file? Enter the ENTIRE filename or \"Q\" to quit.\n")
+        filename = input("What is the name of the csv file? Enter the ENTIRE filename (excluding the .csv extension) or \"Q\" to quit.\n")
         
         # Filename not equal to "Q"
         if (not (filename == "Q")):
             # In case the user entered the filename wrong
             try:
                 # Reading in the file
-                df = pd.read_csv(filename)
+                df = pd.read_csv(filename + ".csv")
                 
                 # If it gets here, they entered in correct data
                 gotValidData = True
@@ -128,7 +130,6 @@ def getTarget(df):
         print("Column options: (column names DO NOT include the \",\")")
         for col in df.columns:
             print(str(col), end=", ")
-        print()
         
         # Getting which one the user wants
         target = input("Which column would you like to be the target? Enter it EXACTLY as it appears.\n")
@@ -177,6 +178,9 @@ def convertColumnToNumbers(col):
     for x in range(len(col)):
         col[x] = keywordDict[col[x]]
 
+    # Making sure the column is of type 'int'
+    col = col.astype('int')
+    
     # Returning the column
     return col
 
@@ -194,6 +198,15 @@ def convertDataFrameToNumbers(df):
     
     # Returning the dataframe
     return df
+
+# Returns a 1D array that was a single column dataframe
+def convertOneColumnDataFrameToSeries(df):
+    # Making sure it's a valid, single column dataframe
+    if (not (isValidDataFrame(df)) and len(df.columns) > 1 ):
+        return df
+    
+    # Converting the first column to a series and returning it
+    return df[df.columns[0]]
 
 # Generates a naive bayesian classifier
 def generateNaiveBayesianClassifier(df):
@@ -218,7 +231,8 @@ def generateNaiveBayesianClassifier(df):
             if (float(testToTrainRatio) > 0 and float(testToTrainRatio) < 1):
                 gotValidData = True
         except:
-            i = 0
+            # Do nothing
+            uselessVariable = 0
         
         # They entered an out of range number
         if (not gotValidData):
@@ -227,26 +241,31 @@ def generateNaiveBayesianClassifier(df):
     # Making sure testToTrainRatio is a float
     testToTrainRatio = float(testToTrainRatio)
     
-    # Splitting the training and the test data
-    x_train, x_test, y_train, y_test = train_test_split(convertDataFrameToNumbers(copyDataFrame(df)), convertDataFrameToNumbers(copyDataFrame(target)), test_size=testToTrainRatio)
+    # Making it easier to understand
+    inputsForTest = convertDataFrameToNumbers(copyDataFrame(df))
+    targetForTest = convertOneColumnDataFrameToSeries(convertDataFrameToNumbers(copyDataFrame(target)))
     
-    """print(df)
-    print("-----")
-    print(convertDataFrameToNumbers(df))
-    print("\n-----\n")
-    print(target)
-    print("-----")
-    print(convertDataFrameToNumbers(target))"""
+    # Splitting the training and the test data
+    x_train, x_test, y_train, y_test = train_test_split(inputsForTest, targetForTest, test_size=testToTrainRatio)
+    
+    # Creating and fitting the model
+    model = GaussianNB()
+    model.fit(x_train, y_train)
     
     # Return the model
-    return 0
+    return model
 
 #
 # The following function is the driver function
 #
-    
+
 # Driver function
 def py_nb():
+    # If the warnings should be turned off
+    if (TURN_OFF_ALL_WARNINGS):
+        # Turning off the warnings
+        pd.options.mode.chained_assignment = None
+    
     # Variables
     selection = "1" # The user's selection
     currentModel = NULL # The current NB Classification model that's loaded
@@ -265,6 +284,9 @@ def py_nb():
             if (isValidDataFrame(df)):
                 # Generating an NB Classification model
                 currentModel = generateNaiveBayesianClassifier(df)
+                
+                # Telling the user the model was successfully created
+                print("\nThe model was succesfully created!")
         elif (selection == "2"):
             # to do
             i = 0
