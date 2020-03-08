@@ -59,6 +59,10 @@ def displayMenu():
     # Returning the selection
     return selection
 
+# This returns a copy of the dataframe sent in
+def copyDataFrame(df):
+    return df.copy()
+
 
 #
 # The following functions are for part 1
@@ -91,6 +95,9 @@ def getData():
         else:
             gotValidData = True
     
+    # Keeping the formatting nice
+    print()
+    
     # Returning the data frame or null
     return df
 
@@ -109,6 +116,124 @@ def isValidDataFrame(df):
     # It's a data frame, but has 0 attributes, so it isn't valid
     return False
 
+# Returns the name of the target column and the new data frame without the
+# target column
+def getTarget(df):
+    # Variables
+    target = NULL
+    gotValidData = False
+    
+    while (not gotValidData):
+        # Displaying the options
+        print("Column options: (column names DO NOT include the \",\")")
+        for col in df.columns:
+            print(str(col), end=", ")
+        print()
+        
+        # Getting which one the user wants
+        target = input("Which column would you like to be the target? Enter it EXACTLY as it appears.\n")
+        
+        # Checking to see if the user input is valid
+        for col in df.columns:
+            # The user's input matches one of the column names
+            if (str(col) == target):
+                gotValidData = True
+        
+        # The user's input did not match any of the column names
+        if (not gotValidData):
+            print("\nYou did not enter a valid column name. Please enter it EXACTLY as it appears.")
+    
+    # Getting the correct target column
+    for col in df.columns:
+        if (str(col) == target):
+            target = col
+            break
+    
+    # Dropping the target column from the dataframe
+    df = df.drop(target, axis='columns')
+    
+    # Returning the target
+    return target, df
+
+# Converts a column of non-integer values into a column of integer values
+def convertColumnToNumbers(col):
+    # Variables
+    keywordDict = {}
+    uniqueEntries = col.unique()
+    numberOfUniqueEntries = len(uniqueEntries)
+    
+    # Creating integers based on how many entries there are, each integer
+    # corresponding to one integer
+    for x in range(numberOfUniqueEntries):
+        keywordDict[uniqueEntries[x]] = x
+    
+    # Converting the column from the original values into integers
+    for x in range(len(col)):
+        col[x] = keywordDict[col[x]]
+
+    # Returning the column
+    return col
+
+# Converts the dataframe to integers
+def convertDataFrameToNumbers(df):
+    # Creating a copy so the original isn't changed
+    dfCopy = copyDataFrame(df)
+    
+    # Getting all of the column names into a list
+    columnNames = []
+    for col in df.columns:
+        columnNames.append(str(col))
+    
+    # Looping through each column to convert it to a number
+    limit = len(dfCopy.columns)
+    for x in range(limit):
+        dfCopy[columnNames[x]] = convertColumnToNumbers(dfCopy[columnNames[x]])
+    
+    # Returning the dataframe
+    return dfCopy
+
+# Generates a naive bayesian classifier
+def generateNaiveBayesianClassifier(df):
+    # Getting the target column and the modified dataframe
+    target, df = getTarget(df)
+    
+    # Getting the user's input for the test to train ration
+    gotValidData = False
+    testToTrainRatio = 0
+    while (not gotValidData):
+        # Getting the user's input
+        inputStr = "What would you like the test to train ratio to be? "
+        inputStr = inputStr + "This number is representative of what percent "
+        inputStr = inputStr + "of data will be taken out of the training data "
+        inputStr = inputStr + "and put into the testing data. It must be a number "
+        inputStr = inputStr + "between 0 and 1, non-inclusive.\n"
+        testToTrainRatio = input(inputStr)
+        
+        # Making sure the user entered properly
+        try:
+            # If this is true, they entered an in range number
+            if (float(testToTrainRatio) > 0 and float(testToTrainRatio) < 1):
+                gotValidData = True
+        except:
+            i = 0
+        
+        # They entered an out of range number
+        if (not gotValidData):
+            print("That was an invalid answer. Please enter a number between 0 and 1.")
+    
+    # Making sure testToTrainRatio is a float
+    testToTrainRatio = float(testToTrainRatio)
+    
+    # Splitting the training and the test data
+    #x_train, x_test, y_train, y_test = train_test_split(convertDataFrameToNumbers(df), target, test_size=testToTrainRatio)
+    
+    print(df)
+    print("-----")
+    print(convertDataFrameToNumbers(df))
+    
+    # Return the model
+    return 0
+
 #
 # The following function is the driver function
 #
@@ -116,7 +241,8 @@ def isValidDataFrame(df):
 # Driver function
 def py_nb():
     # Variables
-    selection = "1"
+    selection = "1" # The user's selection
+    currentModel = NULL # The current NB Classification model that's loaded
     
     # Keep going until the user wants to quit
     while(not selection == "5"):
@@ -130,7 +256,8 @@ def py_nb():
             
             # If the user entered valid data
             if (isValidDataFrame(df)):
-                print(df)
+                # Generating an NB Classification model
+                currentModel = generateNaiveBayesianClassifier(df)
         elif (selection == "2"):
             # to do
             i = 0
