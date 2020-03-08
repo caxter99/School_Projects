@@ -142,12 +142,18 @@ def getTarget(df):
         # The user's input did not match any of the column names
         if (not gotValidData):
             print("\nYou did not enter a valid column name. Please enter it EXACTLY as it appears.")
+            
+    # Creating a copy of the dataframe
+    dfCopy = copyDataFrame(df)
     
-    # Getting the correct target column
-    for col in df.columns:
-        if (str(col) == target):
-            target = col
-            break
+    # Dropping every column but the target column
+    x = 0
+    while(x < len(dfCopy.columns)):
+        if (not (dfCopy.columns[x] == target)):
+            dfCopy = dfCopy.drop(dfCopy.columns[x], axis='columns')
+        else:
+            x = x + 1
+    target = dfCopy
     
     # Dropping the target column from the dataframe
     df = df.drop(target, axis='columns')
@@ -175,22 +181,19 @@ def convertColumnToNumbers(col):
     return col
 
 # Converts the dataframe to integers
-def convertDataFrameToNumbers(df):
-    # Creating a copy so the original isn't changed
-    dfCopy = copyDataFrame(df)
-    
+def convertDataFrameToNumbers(df):    
     # Getting all of the column names into a list
     columnNames = []
     for col in df.columns:
         columnNames.append(str(col))
     
     # Looping through each column to convert it to a number
-    limit = len(dfCopy.columns)
+    limit = len(df.columns)
     for x in range(limit):
-        dfCopy[columnNames[x]] = convertColumnToNumbers(dfCopy[columnNames[x]])
+        df[columnNames[x]] = convertColumnToNumbers(df[columnNames[x]])
     
     # Returning the dataframe
-    return dfCopy
+    return df
 
 # Generates a naive bayesian classifier
 def generateNaiveBayesianClassifier(df):
@@ -225,11 +228,15 @@ def generateNaiveBayesianClassifier(df):
     testToTrainRatio = float(testToTrainRatio)
     
     # Splitting the training and the test data
-    #x_train, x_test, y_train, y_test = train_test_split(convertDataFrameToNumbers(df), target, test_size=testToTrainRatio)
+    x_train, x_test, y_train, y_test = train_test_split(convertDataFrameToNumbers(copyDataFrame(df)), convertDataFrameToNumbers(copyDataFrame(target)), test_size=testToTrainRatio)
     
-    print(df)
+    """print(df)
     print("-----")
     print(convertDataFrameToNumbers(df))
+    print("\n-----\n")
+    print(target)
+    print("-----")
+    print(convertDataFrameToNumbers(target))"""
     
     # Return the model
     return 0
