@@ -22,10 +22,15 @@ TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
     # off
 MODEL_FILENAME_PREFIX = "Models/" # The prefix for where all models are saved
 MODEL_FILENAME_POSTFIX = ".bin" # The postfix for where all models are saved
+EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info/" # The prefix for all of
+    # the extra information that must be stored with the models
+EXTRA_DATA_MODEL_FILENAME_POSTFIX = ".txt" # The postfix for all of the extra
+    # information that must be stored with the models
 
 # Global, non-constant variables
 currentModel = NULL
 currentModelFilename = NULL
+currentTargetVariable = NULL
 
 #
 # The following functions are for the general use
@@ -135,6 +140,7 @@ def getTarget(df):
     # Variables
     target = NULL
     gotValidData = False
+    global currentTargetVariable
     
     while (not gotValidData):
         # Displaying the options
@@ -157,6 +163,9 @@ def getTarget(df):
             
     # Creating a copy of the dataframe
     dfCopy = copyDataFrame(df)
+    
+    # Setting the target to the globa target variable
+    currentTargetVariable = target
     
     # Dropping every column but the target column
     x = 0
@@ -284,8 +293,17 @@ def saveModel(model):
     # If it's a valid model, save it
     pickle.dump(model, open(MODEL_FILENAME_PREFIX + currentModelFilename + MODEL_FILENAME_POSTFIX, 'wb'))
     
+    # Also, save all of the additional information necessary
+    file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "w")
+    file.write(currentTargetVariable)
+    file.close()
+    
     # Let the user know it was saved
     print("\nThe model was successfully saved!")
+
+# Tests and displays the model's accuracy
+def testModelAccuracy(model):
+    i = 0
 
 #
 # The following functions are for part 3
@@ -295,6 +313,7 @@ def saveModel(model):
 def loadModel():
     # Variables
     global currentModelFilename
+    global currentTargetVariable
     
     # Getting what model the user wants to load
     modelName = input("What model would you like to load? Enter its name.\n")
@@ -306,6 +325,11 @@ def loadModel():
         
         # Updating the filename
         currentModelFilename = modelName
+        
+        # Loading the target variable
+        file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "r")
+        currentTargetVariable = file.read()
+        file.close()
         
         # Letting the user know the model was successfully loaded
         print("\nThe model was successfully loaded!")
@@ -327,14 +351,12 @@ def loadModel():
 def py_nb():
     # Variables
     global currentModel
+    selection = "1" # The user's selection
     
     # If the warnings should be turned off
     if (TURN_OFF_ALL_WARNINGS):
         # Turning off the warnings
         pd.options.mode.chained_assignment = None
-    
-    # Variables
-    selection = "1" # The user's selection
     
     # Keep going until the user wants to quit
     while(not selection == "5"):
@@ -359,6 +381,10 @@ def py_nb():
         elif (selection == "3"):
             # Load a model
             currentModel = loadModel()
+            
+            # If there's a model loaded, test its accuracy
+            if (not (currentModel == NULL)):
+                testModelAccuracy(currentModel)
         elif (selection == "4"):
             # to do
             i = 0
