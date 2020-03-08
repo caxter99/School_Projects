@@ -509,17 +509,17 @@ void loadTestCaseArray()
       ALL_TEST_FILES.push_back("onTriangle_8000000.txt");
    }
    // onRectangle
-   ALL_TEST_FILES.push_back("onRectangle_10.txt");
-   ALL_TEST_FILES.push_back("onRectangle_100.txt");
-   ALL_TEST_FILES.push_back("onRectangle_1000.txt");
-   ALL_TEST_FILES.push_back("onRectangle_10000.txt");
-   ALL_TEST_FILES.push_back("onRectangle_100000.txt");
-   ALL_TEST_FILES.push_back("onRectangle_1000000.txt");
+   ALL_TEST_FILES.push_back("onRectangle_10.txt"); // pos 9 (7)
+   ALL_TEST_FILES.push_back("onRectangle_100.txt"); // pos 10 (8)
+   ALL_TEST_FILES.push_back("onRectangle_1000.txt"); // pos 11 (9)
+   ALL_TEST_FILES.push_back("onRectangle_10000.txt"); // pos 12 (10)
+   ALL_TEST_FILES.push_back("onRectangle_100000.txt"); // pos 13 (11)
+   ALL_TEST_FILES.push_back("onRectangle_1000000.txt"); // pos 14 (12)
    if (USE_LARGE_NUMBER_OF_POINTS)
    {
-      ALL_TEST_FILES.push_back("onRectangle_2000000.txt");
-      ALL_TEST_FILES.push_back("onRectangle_4000000.txt");
-      ALL_TEST_FILES.push_back("onRectangle_8000000.txt");
+      ALL_TEST_FILES.push_back("onRectangle_2000000.txt"); // pos 15
+      ALL_TEST_FILES.push_back("onRectangle_4000000.txt"); // pos 16
+      ALL_TEST_FILES.push_back("onRectangle_8000000.txt"); // pos 17
    }
    // rectangle
    ALL_TEST_FILES.push_back("rectangle_10.txt");
@@ -625,137 +625,148 @@ int main(int argc, char *argv[])
       for (int x = 0; x < loopLimit; ++x)
       {
          // If we're not using the user's input
+         bool goOn = true;
          if (!USE_USER_FILE_INPUT)
          {
             dataFilename = PREFIX_FOR_TEST_CASES + ALL_TEST_FILES.at(x);
-         }
 
-         // Getting ready for the output filename and the algorithm
-         std::string outputFile = "";
-         std::vector<Point> hullPoints;
-
-         // NAme of the operation at hand
-         std::string sortName = "";
-
-         // Variable to keep track of the start and end times
-         time_t start, end;
-         auto startms = std::chrono::high_resolution_clock::now();
-         auto endms = std::chrono::high_resolution_clock::now();;
-
-         // Getting the points into an array
-         std::vector<Point> points;
-         getPointsFromFile(dataFilename, &points);
-         Point* pointsArr = &points[0];
-
-         // Telling the user the computing details
-         std::string computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
-         std::cout << "Current Method: ";
-         if (algType[0] == 'J')
-         {
-            sortName = "Jarvis March";
-         }
-         else if (algType[0] == 'G')
-         {
-            sortName = "Graham Scan";
-         }
-         else
-         {
-            sortName = "Quick Hull";
-         }
-         std::cout << sortName << "\nCurrent Set of Data Points: " << computation << std::endl;
-
-         // Figuring out the proper algorithm and perform it
-         if (algType[0] == 'G')
-         {
-            start = time(0);
-            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
-            startms = std::chrono::high_resolution_clock::now();
-            hullPoints = doGrahamScan(pointsArr, points.size());
-            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
-            endms = std::chrono::high_resolution_clock::now();
-            end = time(0);
-            outputFile = "hull_G.txt";
-         } 
-         else if (algType[0] == 'J')
-         {
-            start = time(0);
-            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
-            startms = std::chrono::high_resolution_clock::now();
-            hullPoints = doJarvisMarch(pointsArr, points.size());
-            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
-            endms = std::chrono::high_resolution_clock::now();
-            end = time(0);
-            outputFile = "hull_J.txt";
-         }
-         else
-         { //default 
-            start = time(0);
-            //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
-            startms = std::chrono::high_resolution_clock::now();
-            hullPoints = doQuickHull(&points, points.size());
-            //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
-            endms = std::chrono::high_resolution_clock::now();
-            end = time(0);
-            outputFile = "hull_Q.txt";
-
-            // The hullPoints must be sorted as they aren't in clockwise or counterclockwise order
-            sort(hullPoints.begin(), hullPoints.end(), comparePoints);
-         }
-      
-         // Write the data to the file if applicable
-         if (hullPoints.size() >= 3)
-         {
-            // This is to get the name for the output file, if we're not using user input
-            if (!USE_USER_FILE_INPUT and !ALWAYS_USE_DEFAULT_FILENAME)
+            // Making sure it isn't doing one that will take forever
+            if (algType[0] == 'J' && ((x >= 9 && x <= 17 && USE_LARGE_NUMBER_OF_POINTS) || (x >= 7 && x <= 12 && !USE_LARGE_NUMBER_OF_POINTS)))
             {
-               // Getting the name of the output file
-               outputFile = getOutputFilename(ALL_TEST_FILES.at(x));
+               goOn = false;
             }
+         }
 
-            // Writing the points to the file
-            writePointsToFile(outputFile, &hullPoints);
-
-            // Write files to be tested by the Java program
-            writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
-
-            // Writing to the file the name of the search and the data set
-            std::ofstream outputFileTime;
-            // If this is the first time, write it without appending to start over
-            if (x == 0)
+         // Making sure it's still safe to go on
+         if (goOn)
+         {
+            // Getting ready for the output filename and the algorithm
+            std::string outputFile = "";
+            std::vector<Point> hullPoints;
+   
+            // NAme of the operation at hand
+            std::string sortName = "";
+   
+            // Variable to keep track of the start and end times
+            time_t start, end;
+            auto startms = std::chrono::high_resolution_clock::now();
+            auto endms = std::chrono::high_resolution_clock::now();;
+   
+            // Getting the points into an array
+            std::vector<Point> points;
+            getPointsFromFile(dataFilename, &points);
+            Point* pointsArr = &points[0];
+   
+            // Telling the user the computing details
+            std::string computation = ALL_TEST_FILES.at(x).substr(0, ALL_TEST_FILES.at(x).find("."));
+            std::cout << "Current Method: ";
+            if (algType[0] == 'J')
             {
-               outputFileTime.open(sortName + " " + TIME_FILE_NAME);
+               sortName = "Jarvis March";
             }
-            // If it's not the first time, write it with appending
+            else if (algType[0] == 'G')
+            {
+               sortName = "Graham Scan";
+            }
             else
             {
-               outputFileTime.open(sortName + " " + TIME_FILE_NAME, std::ios_base::app);
+               sortName = "Quick Hull";
             }
-            
-            // If the file successfully opened
-            if (outputFileTime)
+            std::cout << sortName << "\nCurrent Set of Data Points: " << computation << std::endl;
+   
+            // Figuring out the proper algorithm and perform it
+            if (algType[0] == 'G')
             {
-               // Writing to the file
-               outputFileTime << "\n" << sortName << "\n" << computation << "\n";
-
-               // Closing the file
-               outputFileTime.close();
-            }
-
-            // Displaying the time it took
-            std::cout << "\n";
-            if (DISPLAY_MILLISECONDS)
+               start = time(0);
+               //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+               startms = std::chrono::high_resolution_clock::now();
+               hullPoints = doGrahamScan(pointsArr, points.size());
+               //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+               endms = std::chrono::high_resolution_clock::now();
+               end = time(0);
+               outputFile = "hull_G.txt";
+            } 
+            else if (algType[0] == 'J')
             {
-               // Displaying the milliseconds
-               std::cout << "Time to compute: " << (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count() << " milliseconds\n";
-
-               // Writing the milliseconds to the file
-               writeTimeToFile(sortName + " " + TIME_FILE_NAME, (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count(), " milliseconds");
+               start = time(0);
+               //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+               startms = std::chrono::high_resolution_clock::now();
+               hullPoints = doJarvisMarch(pointsArr, points.size());
+               //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+               endms = std::chrono::high_resolution_clock::now();
+               end = time(0);
+               outputFile = "hull_J.txt";
             }
-            // Displaying the seconds
-            std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
-
-            // Writing the seconds to the file
-            writeTimeToFile(sortName + " " + TIME_FILE_NAME, difftime(end, start), " seconds");
+            else
+            { //default 
+               start = time(0);
+               //startms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
+               startms = std::chrono::high_resolution_clock::now();
+               hullPoints = doQuickHull(&points, points.size());
+               //endms = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())).count();
+               endms = std::chrono::high_resolution_clock::now();
+               end = time(0);
+               outputFile = "hull_Q.txt";
+   
+               // The hullPoints must be sorted as they aren't in clockwise or counterclockwise order
+               sort(hullPoints.begin(), hullPoints.end(), comparePoints);
+            }
+         
+            // Write the data to the file if applicable
+            if (hullPoints.size() >= 3)
+            {
+               // This is to get the name for the output file, if we're not using user input
+               if (!USE_USER_FILE_INPUT and !ALWAYS_USE_DEFAULT_FILENAME)
+               {
+                  // Getting the name of the output file
+                  outputFile = getOutputFilename(ALL_TEST_FILES.at(x));
+               }
+   
+               // Writing the points to the file
+               writePointsToFile(outputFile, &hullPoints);
+   
+               // Write files to be tested by the Java program
+               writePointsForJavaProgram(TEST_FILE_FOR_JAVA_OUTPUT, HULL_FILE_FOR_JAVA_OUTPUT, &points, &hullPoints);
+   
+               // Writing to the file the name of the search and the data set
+               std::ofstream outputFileTime;
+               // If this is the first time, write it without appending to start over
+               if (x == 0)
+               {
+                  outputFileTime.open(sortName + " " + TIME_FILE_NAME);
+               }
+               // If it's not the first time, write it with appending
+               else
+               {
+                  outputFileTime.open(sortName + " " + TIME_FILE_NAME, std::ios_base::app);
+               }
+               
+               // If the file successfully opened
+               if (outputFileTime)
+               {
+                  // Writing to the file
+                  outputFileTime << "\n" << sortName << "\n" << computation << "\n";
+   
+                  // Closing the file
+                  outputFileTime.close();
+               }
+   
+               // Displaying the time it took
+               std::cout << "\n";
+               if (DISPLAY_MILLISECONDS)
+               {
+                  // Displaying the milliseconds
+                  std::cout << "Time to compute: " << (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count() << " milliseconds\n";
+   
+                  // Writing the milliseconds to the file
+                  writeTimeToFile(sortName + " " + TIME_FILE_NAME, (std::chrono::duration_cast<std::chrono::milliseconds>(endms - startms)).count(), " milliseconds");
+               }
+               // Displaying the seconds
+               std::cout << "Time to compute: " << difftime(end, start) << " seconds\n\n";
+   
+               // Writing the seconds to the file
+               writeTimeToFile(sortName + " " + TIME_FILE_NAME, difftime(end, start), " seconds");
+            }
          }
          // Something is wrong with the data
          else
