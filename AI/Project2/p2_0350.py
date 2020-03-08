@@ -14,11 +14,18 @@ from math import sqrt
 #from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
+import pickle
 
 # Constants
 NULL = "null" # Null value
 TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
     # off
+MODEL_FILENAME_PREFIX = "Models/" # The prefix for where all models are saved
+MODEL_FILENAME_POSTFIX = ".bin" # The postfix for where all models are saved
+
+# Global, non-constant variables
+currentModel = NULL
+currentModelFilename = NULL
 
 #
 # The following functions are for the general use
@@ -73,6 +80,7 @@ def copyDataFrame(df):
 # Gets the name of a data file and returns the data after reading it in
 def getData():
     # Variables
+    global currentModelFilename
     df = NULL
     gotValidData = False
     
@@ -90,6 +98,9 @@ def getData():
                 
                 # If it gets here, they entered in correct data
                 gotValidData = True
+                
+                # Keeping track of the filename
+                currentModelFilename = filename
             except:
                 # They entered invalid data
                 print("\nThat was an invalid filename. Try again or type \"Q\" to quit.")
@@ -256,11 +267,67 @@ def generateNaiveBayesianClassifier(df):
     return model
 
 #
+# The following functions are for part 2
+#
+
+# Saves a model
+def saveModel(model):
+    # Variables
+    global currentModelFilename
+    
+    # Checking to see if the model is null
+    if (model == NULL):
+        # If it is, let the user know and return
+        print("\nThere is no model currently loaded, and therefore nothing can be saved.")
+        return
+    
+    # If it's a valid model, save it
+    pickle.dump(model, open(MODEL_FILENAME_PREFIX + currentModelFilename + MODEL_FILENAME_POSTFIX, 'wb'))
+    
+    # Let the user know it was saved
+    print("\nThe model was successfully saved!")
+
+#
+# The following functions are for part 3
+#
+
+# Loads a model
+def loadModel():
+    # Variables
+    global currentModelFilename
+    
+    # Getting what model the user wants to load
+    modelName = input("What model would you like to load? Enter its name.\n")
+    
+    # Attempting to open the model
+    try:
+        # Loading the model
+        loadedModel = pickle.load(open(MODEL_FILENAME_PREFIX + modelName + MODEL_FILENAME_POSTFIX, 'rb'))
+        
+        # Updating the filename
+        currentModelFilename = modelName
+        
+        # Letting the user know the model was successfully loaded
+        print("\nThe model was successfully loaded!")
+        
+        # Returning the new model
+        return loadedModel
+    except:
+        # Letting the user know their model wasn't valid
+        print("\nThe filename you entered was not a valid model name.")
+    
+    # If it gets to here, no model was loaded, so return NULL
+    return NULL
+
+#
 # The following function is the driver function
 #
 
 # Driver function
 def py_nb():
+    # Variables
+    global currentModel
+    
     # If the warnings should be turned off
     if (TURN_OFF_ALL_WARNINGS):
         # Turning off the warnings
@@ -268,7 +335,6 @@ def py_nb():
     
     # Variables
     selection = "1" # The user's selection
-    currentModel = NULL # The current NB Classification model that's loaded
     
     # Keep going until the user wants to quit
     while(not selection == "5"):
@@ -288,11 +354,11 @@ def py_nb():
                 # Telling the user the model was successfully created
                 print("\nThe model was succesfully created!")
         elif (selection == "2"):
-            # to do
-            i = 0
+            # Save the model
+            saveModel(currentModel)
         elif (selection == "3"):
-            # to do
-            i = 0
+            # Load a model
+            currentModel = loadModel()
         elif (selection == "4"):
             # to do
             i = 0
