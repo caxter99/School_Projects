@@ -14,6 +14,7 @@ from math import sqrt
 #from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix
 import pickle
 
 # Constants
@@ -38,12 +39,40 @@ currentTargetVariable = NULL
 currentTargetVariableOptions = NULL
 currentInputVariables = NULL
 currentInputVariableOptions = NULL
+currentTargetVariableLocation = NULL
 X_TEST = NULL
 Y_TEST = NULL
 
 #
 # The following functions are for the general use
 #
+
+# Returns true if the two lists are equal, false otherwise
+def equalLists(list1, list2):
+    # Making sure the two lists are of equal length
+    if (not (len(list1) == len(list2))):
+        return False
+    
+    # Looping through each element of the lists
+    for x in range(len(list1)):
+        foundAMatch = False
+        for y in range(len(list2)):
+            # If they match each other
+            if (list1[x] == list2[y]):
+                foundAMatch = True
+        
+        # If a match hasn't been found
+        if (not foundAMatch):
+            return False
+    
+    # If the two lists contain the exact same elements (although maybe not in
+    # the same order), return true
+    return True
+
+# Adds headers to the dataframe using the currentInputVariables,
+# currentTargetVariable, and currentTargetVariableLocation
+def addHeaders(df):
+    i = 0
 
 # Returns true if the input is a valid selection for the menu
 def isValidMenuInput(selection):
@@ -153,6 +182,64 @@ def getOptionsForColumns(df):
     # Return a matrix of all of the option names
     return options
 
+# Gets the name of a data file and returns the data after reading it in
+def getTestingData():
+    # Variables
+    global currentInputVariables
+    global currentTargetVariable
+    global currentTargetVariableLocation
+    df = NULL
+    gotValidData = False
+    
+    # Getting the data from the user
+    while(not gotValidData):
+        # Prompting the user
+        filename = input("What is the name of the csv file? Enter the ENTIRE filename (excluding the .csv extension) or \"Q\" to quit.\n")
+        
+        # Filename not equal to "Q"
+        if (not (filename == "Q")):
+            # In case the user entered the filename wrong
+            try:
+                # Creating the header for the data frame
+                headerList = currentInputVariables
+                x = 0
+                gotTargetInserted = False
+                imit = len(headerList)
+                while (x < limit):
+                    if (x == currentTargetVariableLocation):
+                        gotTargetInserted = True
+                        temp = headerList[x]
+                        temp2 = ""
+                        headerList[x] = currentTargetVariable
+                        x = x + 1
+                        while (x < limit):
+                            temp2 = headerList[x]
+                            headerList[x] = temp
+                            temp = temp2
+                            x = x + 1
+                        headerList.append(temp)
+                    x = x + 1
+                if (not gotTargetInserted):
+                    headerList.append(currentTargetVariable)
+                
+                # Reading in the file
+                df = pd.read_csv(filename + ".csv", header = False, names=headerList)
+                
+                # If it gets here, they entered in correct data
+                gotValidData = True
+            except:
+                # They entered invalid data
+                print("\nThat was an invalid filename. Try again or type \"Q\" to quit.")
+        # Filename equal to "Q"
+        else:
+            gotValidData = True
+    
+    # Keeping the formatting nice
+    print()
+    
+    # Returning the data frame or null
+    return df
+
 #
 # The following functions are for part 1
 #
@@ -204,6 +291,7 @@ def getTarget(df):
     global currentInputVariables
     global currentInputVariableOptions
     global currentTargetVariableOptions
+    global currentTargetVariableLocation
     
     while (not gotValidData):
         # Displaying the options
@@ -227,8 +315,11 @@ def getTarget(df):
     # Creating a copy of the dataframe
     dfCopy = copyDataFrame(df)
     
-    # Setting the target to the globa target variable
+    # Setting the target to the global target variable
     currentTargetVariable = target
+    
+    # Setting the current location of the target column
+    currentTargetVariableLocation = df.columns.get_loc(currentTargetVariable)
     
     # Dropping every column but the target column
     x = 0
@@ -370,6 +461,7 @@ def saveModel(model):
     global currentInputVariables
     global currentInputVariableOptions
     global currentTargetVariableOptions
+    global currentTargetVariableLocation
     global X_TEST
     global Y_TEST
     
@@ -407,6 +499,10 @@ def saveModel(model):
         file.write("-")
     file.write("\n")
     
+    # Saving the target variable location
+    file.write(str(currentTargetVariableLocation))
+    file.write("\n")
+    
     # Closing the file
     file.close()
     
@@ -421,7 +517,21 @@ def saveModel(model):
 
 # Tests and displays the model's accuracy
 def testModelAccuracy(model):
-    i = 0
+    # Variables
+    global currentTargetVariable
+    # AT SOME POINT, USE THIS???
+    #confusion_matrix(labels_train, pred)
+    
+    # Getting the testing data from the user
+    df = getTestingData()
+    
+    # Making sure the data is valid
+    if (isValidDataFrame(df)):
+        # Getting the target variable separated out from the data
+        target, df = getTarget(currentTargetVariable)
+        
+        # Predicting what they are
+        predictions = model.predict(df)
 
 #
 # The following functions are for part 3
@@ -436,6 +546,7 @@ def loadModel():
     global currentTargetVariableOptions
     global currentInputVariables
     global currentInputVariableOptions
+    global currentTargetVariableLocation
     global X_TEST
     global Y_TEST
     loadedModel = NULL
@@ -520,6 +631,10 @@ def loadModel():
                     
                     # Incrementing colNum
                     colNum = colNum + 1
+            elif (lineNum == 4):
+                # Coverting the line to an int since it contains the location
+                # of the target column
+                currentTargetVariableLocation = int(line)
             # Uh oh, it shouldn't be here
             else:
                 # error, this shouldn't ever go here
