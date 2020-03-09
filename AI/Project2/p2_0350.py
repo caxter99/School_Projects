@@ -69,6 +69,37 @@ def equalLists(list1, list2):
     # the same order), return true
     return True
 
+# Displays a confusion matrix
+def displayConfusionMatrix(targetOptions, cm):
+    # Getting the limit for the loops
+    limit = len(cm) + 1
+    
+    # Looping through and displaying the confusion matrix
+    for y in range(limit):
+        for x in range(limit):
+            # y != 0
+            if (not (y == 0)):
+                # x != 0
+                if (not (x == 0)):
+                    print(cm[y - 1][x - 1], end=":")
+                # x == 0
+                else:
+                    print(targetOptions[y - 1], end=":")
+            # y == 0
+            else:
+                # x != 0s
+                if (not (x == 0)):
+                    print(targetOptions[x - 1], end=":")
+                # x == 0
+                else:
+                    print("", end=":")
+                    
+        # At the end of a row
+        print()
+        
+    # Keep the formatting nice
+    print("\n\n", end="")
+
 # Returns true if the input is a valid selection for the menu
 def isValidMenuInput(selection):
     # Looping through all of the valid inputs
@@ -535,6 +566,7 @@ def saveModel(model):
 def testModelAccuracy(model):
     # Variables
     global currentTargetVariable
+    global currentTargetVariableOptions
     
     # Getting the testing data from the user
     df = getTestingData()
@@ -548,6 +580,9 @@ def testModelAccuracy(model):
         target = getTestingTarget(df)
         df = df.drop(target, axis='columns')
         
+        # Creating a copy of the target
+        #targetCopy = convertDataFrameToNumbers(copyDataFrame(target))
+        
         # Converting both of them to numbers
         target = convertDataFrameToNumbers(target)
         df = convertDataFrameToNumbers(df)
@@ -555,15 +590,11 @@ def testModelAccuracy(model):
         # Predicting what they are
         predictions = model.predict(df)
         
-        print("         len of df:", len(df))
-        print("     len of target:", len(target))
-        print("len of predictions:", len(predictions))
-        print()
-        for col in target:
-            print(col)
-        
         # Creating a confusion matrix
-        confusion_matrix(target, predictions)
+        confusionMatrix = confusion_matrix(target, predictions)
+        
+        # Displaying the confusion matrix in a nice, orderly fashion
+        displayConfusionMatrix(currentTargetVariableOptions, confusionMatrix)
 
 #
 # The following functions are for part 3
@@ -667,10 +698,6 @@ def loadModel():
                 # Coverting the line to an int since it contains the location
                 # of the target column
                 currentTargetVariableLocation = int(line)
-            # Uh oh, it shouldn't be here
-            else:
-                # error, this shouldn't ever go here
-                i = 0
             
             # Increment lineNum
             lineNum = lineNum + 1
