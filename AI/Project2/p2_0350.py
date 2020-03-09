@@ -31,6 +31,9 @@ EXTRA_DATA_MODEL_FILENAME_POSTFIX = ".txt" # The postfix for all of the extra
 currentModel = NULL
 currentModelFilename = NULL
 currentTargetVariable = NULL
+currentTargetVariableOptions = NULL
+currentInputVariables = NULL
+currentInputVariableOptions = NULL
 
 #
 # The following functions are for the general use
@@ -77,6 +80,72 @@ def displayMenu():
 def copyDataFrame(df):
     return df.copy()
 
+# Returns true if the dataframe is valid, false otherwise
+def isValidDataFrame(df):
+    # If there's any errors
+    try:
+        # Seeing if it's a valid data frame
+        if (len(df.columns) > 0):
+            # If it makes it here, it's a valid data frame
+            return True
+    except:
+        # It;s not a data frame
+        return False
+    
+    # It's a data frame, but has 0 attributes, so it isn't valid
+    return False
+
+# Returns a list with all of the possible options for the column
+def getColumnsPossibilities(col):
+    # Variables
+    possibilities = []
+    # Checks to make sure there's at least one value in the column
+    if (len(col) == 0):
+        return possibilities
+    
+    # Checks to see if it's numeric
+    if (np.issubdtype(col.dtype, np.number)):
+        return possibilities
+    
+    # Return all of the possibilities
+    return col.unique()
+
+# Returns a list of all columns in the model
+def getColumnsNames(df):
+    # Variables
+    colNames = []
+    
+    # If it's not a valid dataframe, return with an empty list
+    if (not isValidDataFrame(df)):
+        return colNames
+    
+    # Get all of the names from the columns
+    for col in df.columns:
+        colNames.append(str(col))
+    
+    # Return a list of all of the column names
+    return colNames
+
+# Returns a matrix of all possible options
+def getOptionsForColumns(df):
+    # Variables
+    options = [[]]
+    
+    # If it's not a valid dataframe, return with an empty matrix
+    if (not isValidDataFrame(df)):
+        return options
+    
+    # Get all of options for each column
+    x = 0
+    for col in df.columns:
+        if (x == 0):
+            options[0] = getColumnsPossibilities(df[col])
+        else:
+            options.append(getColumnsPossibilities(df[col]))
+        x = x + 1
+    
+    # Return a matrix of all of the option names
+    return options
 
 #
 # The following functions are for part 1
@@ -119,21 +188,6 @@ def getData():
     # Returning the data frame or null
     return df
 
-# Returns true if the dataframe is valid, false otherwise
-def isValidDataFrame(df):
-    # If there's any errors
-    try:
-        # Seeing if it's a valid data frame
-        if (len(df.columns) > 0):
-            # If it makes it here, it's a valid data frame
-            return True
-    except:
-        # It;s not a data frame
-        return False
-    
-    # It's a data frame, but has 0 attributes, so it isn't valid
-    return False
-
 # Returns the name of the target column and the new data frame without the
 # target column
 def getTarget(df):
@@ -141,6 +195,9 @@ def getTarget(df):
     target = NULL
     gotValidData = False
     global currentTargetVariable
+    global currentInputVariables
+    global currentInputVariableOptions
+    global currentTargetVariableOptions
     
     while (not gotValidData):
         # Displaying the options
@@ -178,6 +235,15 @@ def getTarget(df):
     
     # Dropping the target column from the dataframe
     df = df.drop(target, axis='columns')
+    
+    # Getting all of the remaining columns (inputs)
+    currentInputVariables = getColumnsNames(df)
+    
+    # Getting all of the possible options for the columns (inputs)
+    currentInputVariableOptions = getOptionsForColumns(df)
+    
+    # Getting the target's options
+    currentTargetVariableOptions = getOptionsForColumns(target)
     
     # Returning the target
     return target, df
@@ -282,7 +348,12 @@ def generateNaiveBayesianClassifier(df):
 # Saves a model
 def saveModel(model):
     # Variables
+    #global currentModel
     global currentModelFilename
+    global currentTargetVariable
+    global currentInputVariables
+    global currentInputVariableOptions
+    global currentTargetVariableOptions
     
     # Checking to see if the model is null
     if (model == NULL):
@@ -295,7 +366,29 @@ def saveModel(model):
     
     # Also, save all of the additional information necessary
     file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "w")
+    
+    # Writing the current target variables
     file.write(currentTargetVariable)
+    file.write("\n")
+    
+    # Writing the options for the target variable
+    for listt in currentTargetVariableOptions:
+        for string in listt:
+            file.write(string + ",")
+    file.write("\n")
+    
+    # Writing the current column names (inputs)
+    for x in range(len(currentInputVariables)):
+        file.write(currentInputVariables[x] + ",")
+    file.write("\n")
+    
+    # Writing the options for each column (inputs)
+    for listt in currentInputVariableOptions:
+        for string in listt:
+            file.write(string + ",")
+        file.write("-")
+    file.write("\n")
+    
     file.close()
     
     # Let the user know it was saved
