@@ -69,11 +69,6 @@ def equalLists(list1, list2):
     # the same order), return true
     return True
 
-# Adds headers to the dataframe using the currentInputVariables,
-# currentTargetVariable, and currentTargetVariableLocation
-def addHeaders(df):
-    i = 0
-
 # Returns true if the input is a valid selection for the menu
 def isValidMenuInput(selection):
     # Looping through all of the valid inputs
@@ -155,8 +150,8 @@ def getColumnsNames(df):
         return colNames
     
     # Get all of the names from the columns
-    for col in df.columns:
-        colNames.append(str(col))
+    for x in range(len(df.columns)):
+        colNames.append(df.columns[x])
     
     # Return a list of all of the column names
     return colNames
@@ -201,16 +196,16 @@ def getTestingData():
             # In case the user entered the filename wrong
             try:
                 # Creating the header for the data frame
-                headerList = currentInputVariables
+                headerList = getColumnsNames(currentInputVariables)
                 x = 0
                 gotTargetInserted = False
-                imit = len(headerList)
+                limit = len(headerList)
                 while (x < limit):
                     if (x == currentTargetVariableLocation):
                         gotTargetInserted = True
                         temp = headerList[x]
                         temp2 = ""
-                        headerList[x] = currentTargetVariable
+                        headerList[x] = getColumnsNames(currentTargetVariable)[0]
                         x = x + 1
                         while (x < limit):
                             temp2 = headerList[x]
@@ -220,10 +215,10 @@ def getTestingData():
                         headerList.append(temp)
                     x = x + 1
                 if (not gotTargetInserted):
-                    headerList.append(currentTargetVariable)
+                    headerList.append(getColumnsNames(currentTargetVariable)[0])
                 
                 # Reading in the file
-                df = pd.read_csv(filename + ".csv", header = False, names=headerList)
+                df = pd.read_csv(filename + ".csv", names=headerList)
                 
                 # If it gets here, they entered in correct data
                 gotValidData = True
@@ -283,6 +278,27 @@ def getData():
 
 # Returns the name of the target column and the new data frame without the
 # target column
+def getTestingTarget(df):
+    # Variables
+    global currentTargetVariable
+    
+    # Creating a copy of the dataframe sent in
+    dfCopy = copyDataFrame(df)
+    
+    # Dropping every column but the target column
+    x = 0
+    target = getColumnsNames(currentTargetVariable)[0]
+    while(x < len(dfCopy.columns)):
+        if (not (dfCopy.columns[x] == target)):
+            dfCopy = dfCopy.drop(dfCopy.columns[x], axis='columns')
+        else:
+            x = x + 1
+    
+    # Returning the target
+    return dfCopy
+
+# Returns the name of the target column and the new data frame without the
+# target column
 def getTarget(df):
     # Variables
     target = NULL
@@ -333,11 +349,11 @@ def getTarget(df):
     # Dropping the target column from the dataframe
     df = df.drop(target, axis='columns')
     
-    # Getting all of the remaining columns (inputs)
-    currentInputVariables = getColumnsNames(df)
-    
     # Getting all of the possible options for the columns (inputs)
     currentInputVariableOptions = getOptionsForColumns(df)
+    
+    # Getting all of the remaining columns (inputs)
+    currentInputVariables = pd.DataFrame(currentInputVariableOptions, columns = getColumnsNames(df))
     
     # Getting the target's options
     currentTargetVariableOptions = getOptionsForColumns(target)
@@ -488,8 +504,8 @@ def saveModel(model):
     file.write("\n")
     
     # Writing the current column names (inputs)
-    for x in range(len(currentInputVariables)):
-        file.write(currentInputVariables[x] + ",")
+    for col in currentInputVariables:
+        file.write(col + ",")
     file.write("\n")
     
     # Writing the options for each column (inputs)
@@ -519,19 +535,35 @@ def saveModel(model):
 def testModelAccuracy(model):
     # Variables
     global currentTargetVariable
-    # AT SOME POINT, USE THIS???
-    #confusion_matrix(labels_train, pred)
     
     # Getting the testing data from the user
     df = getTestingData()
     
     # Making sure the data is valid
     if (isValidDataFrame(df)):
-        # Getting the target variable separated out from the data
-        target, df = getTarget(currentTargetVariable)
+        # Creating a copy of the original dataframe (as numbers)
+        #dfCopy = convertDataFrameToNumbers(copyDataFrame(df))
+        
+        # Getting the target data and removing it from the data
+        target = getTestingTarget(df)
+        df = df.drop(target, axis='columns')
+        
+        # Converting both of them to numbers
+        target = convertDataFrameToNumbers(target)
+        df = convertDataFrameToNumbers(df)
         
         # Predicting what they are
         predictions = model.predict(df)
+        
+        print("         len of df:", len(df))
+        print("     len of target:", len(target))
+        print("len of predictions:", len(predictions))
+        print()
+        for col in target:
+            print(col)
+        
+        # Creating a confusion matrix
+        confusion_matrix(target, predictions)
 
 #
 # The following functions are for part 3
