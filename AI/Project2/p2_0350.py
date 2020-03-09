@@ -26,6 +26,10 @@ EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info/" # The prefix for all of
     # the extra information that must be stored with the models
 EXTRA_DATA_MODEL_FILENAME_POSTFIX = ".txt" # The postfix for all of the extra
     # information that must be stored with the models
+TEST_DATAFRAME_FILENAME_PREFIX = EXTRA_DATA_MODEL_FILENAME_PREFIX # The
+    # prefix for all of the test cases for a model
+TEST_DATAFRAME_FILENAME_POSTFIX = ".csv" # The postfix for all of the test
+    # cases that must be stored with the models
 
 # Global, non-constant variables
 currentModel = NULL
@@ -34,6 +38,8 @@ currentTargetVariable = NULL
 currentTargetVariableOptions = NULL
 currentInputVariables = NULL
 currentInputVariableOptions = NULL
+X_TEST = NULL
+Y_TEST = NULL
 
 #
 # The following functions are for the general use
@@ -296,6 +302,10 @@ def convertOneColumnDataFrameToSeries(df):
 
 # Generates a naive bayesian classifier
 def generateNaiveBayesianClassifier(df):
+    # Variables
+    global X_TEST
+    global Y_TEST
+    
     # Getting the target column and the modified dataframe
     target, df = getTarget(df)
     
@@ -332,11 +342,18 @@ def generateNaiveBayesianClassifier(df):
     targetForTest = convertOneColumnDataFrameToSeries(convertDataFrameToNumbers(copyDataFrame(target)))
     
     # Splitting the training and the test data
-    x_train, x_test, y_train, y_test = train_test_split(inputsForTest, targetForTest, test_size=testToTrainRatio)
+    x_train2, x_test2, y_train2, y_test2 = train_test_split(inputsForTest, targetForTest, test_size=testToTrainRatio)
     
     # Creating and fitting the model
     model = GaussianNB()
-    model.fit(x_train, y_train)
+    model.fit(x_train2, y_train2)
+    
+    # Setting the global testing variables
+    X_TEST = x_test2
+    Y_TEST = y_test2
+    
+    # Telling the user the model was successfully created
+    print("\nThe model was succesfully created!")
     
     # Return the model
     return model
@@ -348,12 +365,13 @@ def generateNaiveBayesianClassifier(df):
 # Saves a model
 def saveModel(model):
     # Variables
-    #global currentModel
     global currentModelFilename
     global currentTargetVariable
     global currentInputVariables
     global currentInputVariableOptions
     global currentTargetVariableOptions
+    global X_TEST
+    global Y_TEST
     
     # Checking to see if the model is null
     if (model == NULL):
@@ -389,7 +407,14 @@ def saveModel(model):
         file.write("-")
     file.write("\n")
     
+    # Closing the file
     file.close()
+    
+    # Saving the test cases
+    x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+    y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+    X_TEST.to_csv(x_test_string, header = True)
+    Y_TEST.to_csv(y_test_string, header = True)
     
     # Let the user know it was saved
     print("\nThe model was successfully saved!")
@@ -405,24 +430,125 @@ def testModelAccuracy(model):
 # Loads a model
 def loadModel():
     # Variables
+    global currentModel
     global currentModelFilename
     global currentTargetVariable
+    global currentTargetVariableOptions
+    global currentInputVariables
+    global currentInputVariableOptions
+    global X_TEST
+    global Y_TEST
+    loadedModel = NULL
+    target = ""
+    targetOptions = []
+    inputColumnNames = []
+    inputColumnOptions = []
+    x_test2 = NULL
+    y_test2 = NULL
     
     # Getting what model the user wants to load
-    modelName = input("What model would you like to load? Enter its name.\n")
+    modelName = input("What model would you like to load? Enter its name, not including the \".csv\".\n")
     
     # Attempting to open the model
     try:
         # Loading the model
         loadedModel = pickle.load(open(MODEL_FILENAME_PREFIX + modelName + MODEL_FILENAME_POSTFIX, 'rb'))
         
-        # Updating the filename
-        currentModelFilename = modelName
+        # Updating the tests
+        x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+        y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+        x_test2 = pd.read_csv(x_test_string)
+        y_test2 = pd.read_csv(y_test_string)
         
-        # Loading the target variable
+        # Opening the file with the extra data
         file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "r")
-        currentTargetVariable = file.read()
+        
+        # Reading all of the lines
+        lines = file.readlines()
+        
+        # Looping through and grabbing all of the data from the text
+        lineNum = 0
+        for line in lines:
+            # Getting rid of the \n at the end (and any unwanted spaces)
+            line = line.strip()
+            
+            # Seeing what line number it is and therefore what should be done
+            #
+            # Grabbing the target variable name
+            if (lineNum == 0):
+                target = line
+            # Grabbing the target variable possibilities
+            elif (lineNum == 1):
+                # Looping through all of the possiblities
+                while(not (line.find(",") == -1)):
+                    # Getting the name of an option
+                    targetOptions.append(line[:line.find(",")])
+                    
+                    # Removing that option
+                    line = line[line.find(",") + 1:]
+            # Grabbing the input column names
+            elif (lineNum == 2):
+                # Looping through all of the column names
+                while(not (line.find(",") == -1)):
+                    # Getting the name of an option
+                    inputColumnNames.append(line[:line.find(",")])
+                    
+                    # Removing that option
+                    line = line[line.find(",") + 1:]
+            # Grabbing the options for the input columns
+            elif (lineNum == 3): #inputColumnOptions
+                # Variable to keep track of which column number we're on
+                colNum = 0
+                # Looping through each column individually
+                while(not (line.find("-") == -1)):
+                    # Cutting the line down so it only includes one column
+                    columnLine = line[:line.find("-")]
+                    
+                    # Appending another list
+                    inputColumnOptions.append([])
+                    
+                    # Looping through each of the possibilities
+                    while(not (columnLine.find(",") == -1)):
+                        # Getting the name of an option
+                        inputColumnOptions[colNum].append(columnLine[:columnLine.find(",")])
+                        
+                        # Removing that option
+                        columnLine = columnLine[columnLine.find(",") + 1:]
+                    
+                    # Removing that column option
+                    line = line[line.find("-") + 1:]
+                    
+                    # Incrementing colNum
+                    colNum = colNum + 1
+            # Uh oh, it shouldn't be here
+            else:
+                # error, this shouldn't ever go here
+                i = 0
+            
+            # Increment lineNum
+            lineNum = lineNum + 1
+        
+        # Closing the file
         file.close()
+        
+        # If everything was successful, load all of the temporary variables
+        # into the global ones 
+        #
+        # Model
+        currentModel = loadedModel
+        # Filename
+        currentModelFilename = modelName
+        # Target variable
+        currentTargetVariable = pd.DataFrame(targetOptions, columns = [target])
+        # Target variable options
+        currentTargetVariableOptions = targetOptions
+        # Input variables
+        currentInputVariables = pd.DataFrame(inputColumnOptions, columns = inputColumnNames)
+        # Input variable options
+        currentInputVariableOptions = inputColumnOptions
+        # X and Y tests
+        X_TEST = x_test2
+        Y_TEST = y_test2
         
         # Letting the user know the model was successfully loaded
         print("\nThe model was successfully loaded!")
@@ -465,9 +591,6 @@ def py_nb():
             if (isValidDataFrame(df)):
                 # Generating an NB Classification model
                 currentModel = generateNaiveBayesianClassifier(df)
-                
-                # Telling the user the model was successfully created
-                print("\nThe model was succesfully created!")
         elif (selection == "2"):
             # Save the model
             saveModel(currentModel)
@@ -482,18 +605,5 @@ def py_nb():
             # to do
             i = 0
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    # Telling the user they're quitting
+    print("\nExiting...")
