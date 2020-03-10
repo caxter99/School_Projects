@@ -1,7 +1,7 @@
 # README for Project 2
 By: Devin Hopkins
 
-# For Part 1
+# How to Operate my Project
 In a terminal, navigate to the directory containing the project.
 In that directory, type:
 
