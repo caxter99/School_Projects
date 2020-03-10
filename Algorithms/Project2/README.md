@@ -9,7 +9,7 @@ In that directory, type:
 
 This will make the necessary files. To run the program, type:
 
-- ./your <Algorithm> <Filename>
+- ./your [Algorithm] <Filename>
 
 - <Algorithm> is G for Graham Scan, J for Jarvis March, or Q for Quickhull.
 - <Filename> is the filename that contains the points you would like to test.
