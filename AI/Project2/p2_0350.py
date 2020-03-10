@@ -10,8 +10,6 @@ Created on Fri Mar  6 13:30:12 2020
 # Imports
 import pandas as pd
 import numpy as np
-from math import sqrt
-#from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
@@ -71,8 +69,10 @@ def equalLists(list1, list2):
 
 # Displays a confusion matrix
 def displayConfusionMatrix(targetOptions, cm):
-    # Getting the limit for the loops
-    limit = len(cm) + 1
+    # Variables
+    limit = len(cm) + 1 # Limit for how far the loops will go
+    fillerSpace = " " # What is filled in between the gaps
+    numberOfReservedSpaces = 15 # How many spots are reserved per "square"
     
     # Looping through and displaying the confusion matrix
     for y in range(limit):
@@ -81,18 +81,18 @@ def displayConfusionMatrix(targetOptions, cm):
             if (not (y == 0)):
                 # x != 0
                 if (not (x == 0)):
-                    print(cm[y - 1][x - 1], end=":")
+                    print((str(cm[y - 1][x - 1])).ljust(numberOfReservedSpaces, fillerSpace), end="")
                 # x == 0
                 else:
-                    print(targetOptions[y - 1], end=":")
+                    print((str(targetOptions[y - 1])).ljust(numberOfReservedSpaces, fillerSpace), end="")
             # y == 0
             else:
-                # x != 0s
+                # x != 0
                 if (not (x == 0)):
-                    print(targetOptions[x - 1], end=":")
+                    print((str(targetOptions[x - 1])).ljust(numberOfReservedSpaces, fillerSpace), end="")
                 # x == 0
                 else:
-                    print("", end=":")
+                    print(fillerSpace.ljust(numberOfReservedSpaces, fillerSpace), end="")
                     
         # At the end of a row
         print()
@@ -449,6 +449,7 @@ def generateNaiveBayesianClassifier(df):
     
     # Getting the user's input for the test to train ration
     gotValidData = False
+    noExcept = True
     testToTrainRatio = 0
     while (not gotValidData):
         # Getting the user's input
@@ -461,15 +462,21 @@ def generateNaiveBayesianClassifier(df):
         
         # Making sure the user entered properly
         try:
+            # Resetting the no except variable
+            noExcept = True
+            
             # If this is true, they entered an in range number
             if (float(testToTrainRatio) > 0 and float(testToTrainRatio) < 1):
                 gotValidData = True
+            
+            # They didn't go into the except
+            noExcept = False
         except:
-            # Do nothing
-            uselessVariable = 0
+            # Tell the user they entered an invalid answer
+            print("That was an invalid answer. Please enter a number between 0 and 1.")
         
-        # They entered an out of range number
-        if (not gotValidData):
+        # They entered an out of range number and didn't go into the except
+        if ((not gotValidData) and (not noExcept)):
             print("That was an invalid answer. Please enter a number between 0 and 1.")
     
     # Making sure testToTrainRatio is a float
@@ -573,15 +580,9 @@ def testModelAccuracy(model):
     
     # Making sure the data is valid
     if (isValidDataFrame(df)):
-        # Creating a copy of the original dataframe (as numbers)
-        #dfCopy = convertDataFrameToNumbers(copyDataFrame(df))
-        
         # Getting the target data and removing it from the data
         target = getTestingTarget(df)
         df = df.drop(target, axis='columns')
-        
-        # Creating a copy of the target
-        #targetCopy = convertDataFrameToNumbers(copyDataFrame(target))
         
         # Converting both of them to numbers
         target = convertDataFrameToNumbers(target)
@@ -595,6 +596,9 @@ def testModelAccuracy(model):
         
         # Displaying the confusion matrix in a nice, orderly fashion
         displayConfusionMatrix(currentTargetVariableOptions, confusionMatrix)
+        
+        # Letting the user know that the model was successfully tested
+        print("\nThe model was successfully tested and the results are displayed above!")
 
 #
 # The following functions are for part 3

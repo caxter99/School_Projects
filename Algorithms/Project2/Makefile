@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named prj
+# Target rules for targets named your
 
 # Build rule for target.
-prj: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 prj
-.PHONY : prj
+your: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 your
+.PHONY : your
 
 # fast build rule for target.
-prj/fast:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/build
-.PHONY : prj/fast
+your/fast:
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/build
+.PHONY : your/fast
 
 Project2.o: Project2.cpp.o
 
@@ -129,7 +129,7 @@ Project2.o: Project2.cpp.o
 
 # target to build an object file
 Project2.cpp.o:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Project2.cpp.o
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/Project2.cpp.o
 .PHONY : Project2.cpp.o
 
 Project2.i: Project2.cpp.i
@@ -138,7 +138,7 @@ Project2.i: Project2.cpp.i
 
 # target to preprocess a source file
 Project2.cpp.i:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Project2.cpp.i
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/Project2.cpp.i
 .PHONY : Project2.cpp.i
 
 Project2.s: Project2.cpp.s
@@ -147,7 +147,7 @@ Project2.s: Project2.cpp.s
 
 # target to generate assembly for a file
 Project2.cpp.s:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/Project2.cpp.s
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/Project2.cpp.s
 .PHONY : Project2.cpp.s
 
 # Help Target
@@ -158,7 +158,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... prj"
+	@echo "... your"
 	@echo "... Project2.o"
 	@echo "... Project2.i"
 	@echo "... Project2.s"

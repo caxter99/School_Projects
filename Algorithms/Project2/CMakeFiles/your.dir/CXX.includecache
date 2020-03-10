@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/devin/Desktop/School_Projects/Algorithms/Project2/Project2.cpp
+string
+-
+iostream
+-
+stdlib.h
+-
+stack
+-
+fstream
+-
+vector
+-
+set
+-
+time.h
+-
+chrono
+-
+cmath
+-
+

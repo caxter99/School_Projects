@@ -53,12 +53,12 @@ CMAKE_BINARY_DIR = /Users/devin/Desktop/School_Projects/Algorithms/Project2
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/prj.dir/all
+all: CMakeFiles/your.dir/all
 
 .PHONY : all
 
 # The main recursive "clean" target.
-clean: CMakeFiles/prj.dir/clean
+clean: CMakeFiles/your.dir/clean
 
 .PHONY : clean
 
@@ -68,31 +68,31 @@ preinstall:
 .PHONY : preinstall
 
 #=============================================================================
-# Target rules for target CMakeFiles/prj.dir
+# Target rules for target CMakeFiles/your.dir
 
 # All Build rule for target.
-CMakeFiles/prj.dir/all:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/depend
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=1,2 "Built target prj"
-.PHONY : CMakeFiles/prj.dir/all
+CMakeFiles/your.dir/all:
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/depend
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles --progress-num=1,2 "Built target your"
+.PHONY : CMakeFiles/your.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/prj.dir/rule: cmake_check_build_system
+CMakeFiles/your.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/prj.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/your.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/devin/Desktop/School_Projects/Algorithms/Project2/CMakeFiles 0
-.PHONY : CMakeFiles/prj.dir/rule
+.PHONY : CMakeFiles/your.dir/rule
 
 # Convenience name for target.
-prj: CMakeFiles/prj.dir/rule
+your: CMakeFiles/your.dir/rule
 
-.PHONY : prj
+.PHONY : your
 
 # clean rule for target.
-CMakeFiles/prj.dir/clean:
-	$(MAKE) -f CMakeFiles/prj.dir/build.make CMakeFiles/prj.dir/clean
-.PHONY : CMakeFiles/prj.dir/clean
+CMakeFiles/your.dir/clean:
+	$(MAKE) -f CMakeFiles/your.dir/build.make CMakeFiles/your.dir/clean
+.PHONY : CMakeFiles/your.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
