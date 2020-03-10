@@ -9,10 +9,10 @@ In that directory, type:
 
 This will make the necessary files. To run the program, type:
 
-- ./your [Algorithm] <Filename>
+- ./your [Algorithm] [Filename]
 
-- <Algorithm> is G for Graham Scan, J for Jarvis March, or Q for Quickhull.
-- <Filename> is the filename that contains the points you would like to test.
+- [Algorithm] is G for Graham Scan, J for Jarvis March, or Q for Quickhull.
+- [Filename] is the filename that contains the points you would like to test.
 
 This will then start the program. The method chosen, as well as the filename
 (without the extension) are displayed as the program works to solve it.
@@ -28,6 +28,10 @@ After this, to view the points on the Java program provided for this project,
 type:
 
 - cd GUI4ConvexHall
+
+If you have not compiled the Java program yet, type the following to compile it:
+
+- javac ConvexHull_GUI.java
 
 This will get you into the directory with the answers to the program and the
 Java program. To run the Java program, simply type:
