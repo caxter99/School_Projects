@@ -73,8 +73,8 @@ def displayConfusionMatrix(targetOptions, cm):
     limit = len(cm) + 1 # Limit for how far the loops will go
     fillerSpace = " " # What is filled in between the gaps
     numberOfReservedSpaces = 15 # How many spots are reserved per "square"
-    topRowMessage = "Prediction" # What's displayed on the very top row
-    leftColumnMessage = "Actual" # What's displayed in the very left column
+    topRowMessage = "Actual" # What's displayed on the very top row
+    leftColumnMessage = "Prediction" # What's displayed in the very left column
     
     # Displaying the the top row
     print(topRowMessage.center(numberOfReservedSpaces * (limit + 2)))
@@ -409,6 +409,9 @@ def convertColumnToNumbers(col):
     keywordDict = {}
     uniqueEntries = col.unique()
     numberOfUniqueEntries = len(uniqueEntries)
+    
+    # Alphabetize them
+    uniqueEntries.sort()
     
     # Creating integers based on how many entries there are, each integer
     # corresponding to one integer
