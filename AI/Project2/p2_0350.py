@@ -73,9 +73,20 @@ def displayConfusionMatrix(targetOptions, cm):
     limit = len(cm) + 1 # Limit for how far the loops will go
     fillerSpace = " " # What is filled in between the gaps
     numberOfReservedSpaces = 15 # How many spots are reserved per "square"
+    topRowMessage = "Prediction" # What's displayed on the very top row
+    leftColumnMessage = "Actual" # What's displayed in the very left column
+    
+    # Displaying the the top row
+    print(topRowMessage.center(numberOfReservedSpaces * (limit + 2)))
     
     # Looping through and displaying the confusion matrix
     for y in range(limit):
+        # Midway down the rows
+        if (y == int(limit / 2)):
+            print(leftColumnMessage.ljust(numberOfReservedSpaces, fillerSpace), end="")
+        # Making sure the formatting stays nice
+        else:
+            print(fillerSpace.ljust(numberOfReservedSpaces, fillerSpace), end="")
         for x in range(limit):
             # y != 0
             if (not (y == 0)):
