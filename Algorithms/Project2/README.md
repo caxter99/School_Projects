@@ -63,21 +63,27 @@ this, you will have the convex hull.
 # Exaplaining Jarvis March
 
 First, find the point on the left most side of all the points (the point with
-the smallest x value). Then proceed to find the point with the smallest angle
-relative to this point (as though the angle started at 90 degrees).
+the smallest x value). Next, pick a point that has the potential to be another
+point on the convex hull (the next point). In this example, I will be going
+clockwise. Then, after picking the hopeful next point, see if there are any
+points above the line created by connecting the starting point and the point
+that was just picked. If there is, replace the original next point with the
+point above the line. Repeat this process until there is no point above the
+line.
 
-Then, do the same for the next point. Keep going until the next point will
-be the starting point.
+Repeat this process for the newest point. The algorithm stops when the next
+point is the starting point.
 
 # Explaining Quick Hull
 
 Find the right and left most points in the set of points. Then, draw a line
 connecting these two points. Then, find the point that's the farthest from
-this line on either side of the line. If this isn't the first itme it's been
+this line on either side of the line. If this isn't the first time it's been
 done, ignore any points on the inside of the convex hull.
 
 Use the point that's farthest away along with the right (or left) most point
 to form a new line. Repeat these steps until no point is outside of the
+convex hull. All of the created lines on the outside will form the complete
 convex hull.
 
 # Unusual Findings in My Code
