@@ -410,7 +410,7 @@ def convertColumnToNumbers(col):
     uniqueEntries = col.unique()
     numberOfUniqueEntries = len(uniqueEntries)
     
-    # Alphabetize them
+    # Sort the entires by alhpabetical order
     uniqueEntries.sort()
     
     # Creating integers based on how many entries there are, each integer
@@ -643,17 +643,17 @@ def loadModel():
     
     # Attempting to open the model
     try:
-        # Loading the model
+        # Loading the model using pickle
         loadedModel = pickle.load(open(MODEL_FILENAME_PREFIX + modelName + MODEL_FILENAME_POSTFIX, 'rb'))
         
         # Updating the tests
-        x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
-        y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+        x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + modelName + TEST_DATAFRAME_FILENAME_POSTFIX
+        y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + modelName + TEST_DATAFRAME_FILENAME_POSTFIX
         x_test2 = pd.read_csv(x_test_string)
         y_test2 = pd.read_csv(y_test_string)
         
         # Opening the file with the extra data
-        file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "r")
+        file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + modelName + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "r")
         
         # Reading all of the lines
         lines = file.readlines()
