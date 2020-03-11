@@ -69,7 +69,7 @@ relative to this point (as though the angle started at 90 degrees).
 Then, do the same for the next point. Keep going until the next point will
 be the starting point.
 
-# Explaining the Quick Hull
+# Explaining Quick Hull
 
 Find the right and left most points in the set of points. Then, draw a line
 connecting these two points. Then, find the point that's the farthest from
