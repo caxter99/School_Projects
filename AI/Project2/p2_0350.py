@@ -446,7 +446,6 @@ def getTarget(df):
     return target, df
 
 # Converts a column of non-integer values into a column of integer values
-#def convertColumnToNumbers(col):
 def convertColumnToNumbers(col, options):
     # If the column is already numeric, no need to convert anything
     if (np.issubdtype(col.dtype, np.number)):
@@ -892,6 +891,45 @@ def getUserInputs():
     # Return the inputs
     return userInputs
 
+# Converts the integer of the prediction into the actual data point
+def convertPrediction(prediction):
+    # Variables
+    global currentTargetVariableOptions
+    
+    # If the target options are empty, that means the target variable is
+    # numeric. Thus, the prediction is what should be displayed and so it's
+    # returned
+    if (len(currentTargetVariableOptions) == 0):
+        return prediction
+    
+    # Get all of the possiblities
+    possibilities = sorted(currentTargetVariableOptions[0])
+    
+    # Figure out which number it matches and return it
+    for x in range(len(possibilities)):
+        # It matches a possibility
+        if (x == prediction):
+            # Return that possibility
+            return possibilities[x]
+    
+    # It didn't match a single possiblity...
+    return "?"
+
+# Gets all of the necessary information and displays the prediction
+def allowUserToMakePrediction():
+    # Getting the user inputs
+    userInputs = getUserInputs()
+    
+    # Creating the dataframe
+    df = pd.DataFrame([userInputs], columns=getColumnsNames(currentInputVariables))
+    
+    # Converting the user's inputs into integers
+    df = convertDataFrameToNumbers(df)
+    
+    # Performing the prediction and silpaying it to the user
+    print("\nPredicted Outcome:")
+    print(convertPrediction(currentModel.predict(df)[0]))
+
 #
 # The following function is the driver function
 #
@@ -949,17 +987,8 @@ def py_nb():
                 if (selection2 == "1"):
                     # Making sure the current model isn't NULL
                     if (not (currentModel == NULL)):
-                        # Getting the user inputs
-                        userInputs = getUserInputs()
-                        
-                        # Creating the dataframe
-                        df = pd.DataFrame([userInputs], columns=getColumnsNames(currentInputVariables))
-                        
-                        # Converting the user's inputs into integers
-                        df = convertDataFrameToNumbers(df)
-                        
-                        # Performing the prediction and silpaying it to the user
-                        print(currentModel.predict(df))
+                        # Allow the user to make their prediction
+                        allowUserToMakePrediction()
                     else:
                         # Tell the user there's currently no model loaded
                         print("\nThere's currently no model loaded, so no tests can be performed. Please load a model and try again.")
