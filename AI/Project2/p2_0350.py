@@ -17,6 +17,8 @@ import pickle
 
 # Constants
 NULL = "null" # Null value
+RANDOM_VALUE = "naANFID3rR$II$#OQMf4m$Fimio4$FKgg" # Random value stored so
+    # the AI can recognize to ignore it
 TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
     # off
 MODEL_FILENAME_PREFIX = "Models/" # The prefix for where all models are saved
@@ -171,6 +173,7 @@ def isValidDataFrame(df):
 def getColumnsPossibilities(col):
     # Variables
     possibilities = []
+    
     # Checks to make sure there's at least one value in the column
     if (len(col) == 0):
         return possibilities
@@ -218,6 +221,45 @@ def getOptionsForColumns(df):
     
     # Return a matrix of all of the option names
     return options
+    """# Variables
+    options = [[]]
+    allPossibilities = [[]]
+    longestArray = -1
+    
+    # If it's not a valid data frame, return an empty matrix
+    if (not isValidDataFrame(df)):
+        return options
+    
+    # Get all of the possibilities for each column, one at a time
+    x = 0
+    for col in df.columns:
+        if (x == 0):
+            allPossibilities[0] = getColumnsPossibilities(df[col])
+        else:
+            allPossibilities.append(getColumnsPossibilities(df[col]))
+        if (len(allPossibilities[x]) > longestArray):
+            longestArray = len(allPossibilities[x])
+        x = x + 1
+        
+    # Looping through and making options[[]] the correct size
+    for y in range(longestArray):
+        for x in range(len(allPossibilities)):
+            if (y == 0 and x == 0):
+                options[0].append(RANDOM_VALUE)
+            elif (x == 0):
+                options.append([RANDOM_VALUE])
+            else:
+                options[y].append(RANDOM_VALUE)
+    
+    # Putting the possibilities in the correct manner so they can be used
+    # by data frames in the future
+    for y in range(len(allPossibilities)):
+        for x in range(longestArray):
+            if (not (x >= len(allPossibilities[y]))):
+                options[x][y] = allPossibilities[y][x]
+    
+    # Returning the contents
+    return options"""
 
 # Gets the name of a data file and returns the data after reading it in
 def getTestingData():
@@ -452,7 +494,7 @@ def convertDataFrameToNumbers(df, isTarget = False):
         # Looping through an converting each column individually
         x = 0
         for col in currentInputVariables:
-            df[col] = convertColumnToNumbers(df[col], currentInputVariableOptions[x])
+            df[str(col)] = convertColumnToNumbers(df[str(col)], currentInputVariableOptions[x])
             x = x + 1
     
     # Returning the changed dataframe
@@ -911,7 +953,7 @@ def py_nb():
                         userInputs = getUserInputs()
                         
                         # Creating the dataframe
-                        df = pd.DataFrame([userInputs], columns=currentInputVariables)
+                        df = pd.DataFrame([userInputs], columns=getColumnsNames(currentInputVariables))
                         
                         # Converting the user's inputs into integers
                         df = convertDataFrameToNumbers(df)
