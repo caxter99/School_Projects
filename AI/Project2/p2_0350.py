@@ -373,11 +373,8 @@ def getTarget(df):
     # Creating a copy of the dataframe
     dfCopy = copyDataFrame(df)
     
-    # Setting the target to the global target variable
-    currentTargetVariable = target
-    
     # Setting the current location of the target column
-    currentTargetVariableLocation = df.columns.get_loc(currentTargetVariable)
+    currentTargetVariableLocation = df.columns.get_loc(target)
     
     # Dropping every column but the target column
     x = 0
@@ -387,6 +384,9 @@ def getTarget(df):
         else:
             x = x + 1
     target = dfCopy
+    
+    # Setting the target to the global target variable
+    currentTargetVariable = target
     
     # Dropping the target column from the dataframe
     df = df.drop(target, axis='columns')
@@ -404,23 +404,26 @@ def getTarget(df):
     return target, df
 
 # Converts a column of non-integer values into a column of integer values
-def convertColumnToNumbers(col):
+#def convertColumnToNumbers(col):
+def convertColumnToNumbers(col, options):
+    # If the column is already numeric, no need to convert anything
+    if (np.issubdtype(col.dtype, np.number)):
+        return col
+    
     # Variables
     keywordDict = {}
-    uniqueEntries = col.unique()
-    numberOfUniqueEntries = len(uniqueEntries)
     
     # Sort the entires by alhpabetical order
-    uniqueEntries.sort()
+    options.sort()
     
     # Creating integers based on how many entries there are, each integer
     # corresponding to one integer
-    for x in range(numberOfUniqueEntries):
-        keywordDict[uniqueEntries[x]] = x
+    for x in range(len(options)):
+        keywordDict[str(options[x])] = x
     
     # Converting the column from the original values into integers
     for x in range(len(col)):
-        col[x] = keywordDict[col[x]]
+        col[x] = keywordDict[str(col[x])]
 
     # Making sure the column is of type 'int'
     col = col.astype('int')
@@ -429,18 +432,30 @@ def convertColumnToNumbers(col):
     return col
 
 # Converts the dataframe to integers
-def convertDataFrameToNumbers(df):    
-    # Getting all of the column names into a list
-    columnNames = []
-    for col in df.columns:
-        columnNames.append(str(col))
+def convertDataFrameToNumbers(df, isTarget = False):
+    # Variables
+    global currentInputVariables
+    global currentInputVariableOptions
+    global currentTargetVariable
+    global currentTargetVariableOptions
     
-    # Looping through each column to convert it to a number
-    limit = len(df.columns)
-    for x in range(limit):
-        df[columnNames[x]] = convertColumnToNumbers(df[columnNames[x]])
+    # If it's the target
+    if (isTarget):
+        # Looping through an converting each column individually (even though
+        # there should only be one column in the target)
+        x = 0
+        for col in currentTargetVariable:
+            df[col] = convertColumnToNumbers(df[col], currentTargetVariableOptions[0])
+            x = x + 1
+    # If it's not the target
+    else:
+        # Looping through an converting each column individually
+        x = 0
+        for col in currentInputVariables:
+            df[col] = convertColumnToNumbers(df[col], currentInputVariableOptions[x])
+            x = x + 1
     
-    # Returning the dataframe
+    # Returning the changed dataframe
     return df
 
 # Returns a 1D array that was a single column dataframe
@@ -498,7 +513,10 @@ def generateNaiveBayesianClassifier(df):
     
     # Making it easier to understand
     inputsForTest = convertDataFrameToNumbers(copyDataFrame(df))
-    targetForTest = convertOneColumnDataFrameToSeries(convertDataFrameToNumbers(copyDataFrame(target)))
+    targetForTest = convertOneColumnDataFrameToSeries(convertDataFrameToNumbers(copyDataFrame(target), True))
+    """targetForTest = copyDataFrame(target)
+    targetForTest = convertDataFrameToNumbers(targetForTest, True)
+    targetForTest = convertOneColumnDataFrameToSeries(targetForTest)"""
     
     # Splitting the training and the test data
     x_train2, x_test2, y_train2, y_test2 = train_test_split(inputsForTest, targetForTest, test_size=testToTrainRatio)
@@ -546,7 +564,7 @@ def saveModel(model):
     file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "w")
     
     # Writing the current target variables
-    file.write(currentTargetVariable)
+    file.write(getColumnsNames(currentTargetVariable)[0])
     file.write("\n")
     
     # Writing the options for the target variable
@@ -596,10 +614,10 @@ def testModelAccuracy(model):
     if (isValidDataFrame(df)):
         # Getting the target data and removing it from the data
         target = getTestingTarget(df)
-        df = df.drop(target, axis='columns')
+        df = df.drop(getColumnsNames(target), axis='columns')
         
         # Converting both of them to numbers
-        target = convertDataFrameToNumbers(target)
+        target = convertDataFrameToNumbers(target, True)
         df = convertDataFrameToNumbers(df)
         
         # Predicting what they are
@@ -609,7 +627,7 @@ def testModelAccuracy(model):
         confusionMatrix = confusion_matrix(target, predictions)
         
         # Displaying the confusion matrix in a nice, orderly fashion
-        displayConfusionMatrix(currentTargetVariableOptions, confusionMatrix)
+        displayConfusionMatrix(currentTargetVariableOptions[0], confusionMatrix)
         
         # Letting the user know that the model was successfully tested
         print("\nThe model was successfully tested and the results are displayed above!")
@@ -632,7 +650,7 @@ def loadModel():
     global Y_TEST
     loadedModel = NULL
     target = ""
-    targetOptions = []
+    targetOptions = [[]]
     inputColumnNames = []
     inputColumnOptions = []
     x_test2 = NULL
@@ -670,11 +688,11 @@ def loadModel():
             if (lineNum == 0):
                 target = line
             # Grabbing the target variable possibilities
-            elif (lineNum == 1):
+            elif (lineNum == 1):                
                 # Looping through all of the possiblities
                 while(not (line.find(",") == -1)):
                     # Getting the name of an option
-                    targetOptions.append(line[:line.find(",")])
+                    targetOptions[0].append(line[:line.find(",")])
                     
                     # Removing that option
                     line = line[line.find(",") + 1:]
@@ -691,6 +709,7 @@ def loadModel():
             elif (lineNum == 3): #inputColumnOptions
                 # Variable to keep track of which column number we're on
                 colNum = 0
+                
                 # Looping through each column individually
                 while(not (line.find("-") == -1)):
                     # Cutting the line down so it only includes one column
@@ -731,9 +750,10 @@ def loadModel():
         # Filename
         currentModelFilename = modelName
         # Target variable
-        currentTargetVariable = pd.DataFrame(targetOptions, columns = [target])
+        currentTargetVariable = pd.DataFrame(targetOptions[0], columns = [target])
         # Target variable options
-        currentTargetVariableOptions = targetOptions
+        #currentTargetVariableOptions = getOptionsForColumns(currentTargetVariable) # New
+        currentTargetVariableOptions = targetOptions # Old
         # Input variables
         currentInputVariables = pd.DataFrame(inputColumnOptions, columns = inputColumnNames)
         # Input variable options
@@ -754,6 +774,82 @@ def loadModel():
     # If it gets to here, no model was loaded, so return NULL
     return NULL
 
+# Returns true if the input is a valid selection for the menu
+def isValidSubMenuInput(selection):
+    # Looping through all of the valid inputs
+    for x in range(1, 3):
+        # If the user's input matches a valid input, return true
+        if (str(x) == selection):
+            return True
+    
+    # If it doesn't match anything, return false
+    return False
+
+# Returns the menu string
+def getSubMenuString():
+    # Creating the string and returning it
+    menuString = "1. Enter a case based on the currently loaded model\n"
+    menuString = menuString + "2. Quit\n"
+    menuString = menuString + "Enter the number you would like to do: "
+    return menuString
+
+# This displays the menu and returns the input as an integer
+def displaySubMenu():
+    # Displaying the menu and getting what the user wants to do
+    selection = input(getSubMenuString())
+    
+    # Making sure it's a valid input
+    while(not isValidSubMenuInput(selection)):
+        # Displaying the menu and getting what the user wants to do
+        print("\nThat was not a valid selection. Please select a valid option.")
+        selection = input(getSubMenuString())
+    
+    # Returning the selection
+    return selection
+
+# Gets the user's inputs for and return a 2D array with them
+def getUserInputs():
+    # Variables
+    global currentInputVariables
+    global currentInputVariableOptions
+    userInputs = []
+    
+    # Looping through all of the columns
+    x = -1
+    for item in currentInputVariables:
+        # Keeping track of whether the user input is valid or not
+        validInput = False
+        
+        # Keeping track of the variable number
+        x = x + 1
+        
+        # Looping through until valid data has been gotten
+        while (not validInput):
+            # Displaying the current variable and the options for it
+            print("\nCurrent Variable: ", item, "\nOptions: ", sep="", end="")
+            for options in currentInputVariableOptions[x]:
+                print(str(options), end=", ")
+            
+            # Getting the input from the user
+            currentInput = input("What would you like to enter for this variable?\n")
+            
+            # Checking to see if the user input is valid
+            for options in currentInputVariableOptions[x]:
+                # The user's input matches one of the column names
+                if (str(options) == currentInput):
+                    validInput = True
+            
+            # The user's input did not match any of the column names
+            if (not validInput):
+                print("\nYou did not enter a valid option. Please enter it EXACTLY as it appears.")
+            # The user did input something valid
+            else:
+                # Add the user's input to the 2D list
+                userInputs.append(currentInput)
+        
+    # Return the inputs
+    return userInputs
+
 #
 # The following function is the driver function
 #
@@ -762,7 +858,12 @@ def loadModel():
 def py_nb():
     # Variables
     global currentModel
+    global currentInputVariables
     selection = "1" # The user's selection
+    
+    # MAking sure the model is set to NULL in case so they know what they're
+    # working with before they do anything
+    currentModel = NULL
     
     # If the warnings should be turned off
     if (TURN_OFF_ALL_WARNINGS):
@@ -794,8 +895,36 @@ def py_nb():
             if (not (currentModel == NULL)):
                 testModelAccuracy(currentModel)
         elif (selection == "4"):
-            # to do
-            i = 0
+            # This allows keeping track of if the user wants to continue or not
+            goOn = "y"
+            
+            # While the user wants to keep going
+            while (goOn == "y"):
+                # Get the next selection
+                selection2 = displaySubMenu()
+                
+                # The user wants to input a case
+                if (selection2 == "1"):
+                    # Making sure the current model isn't NULL
+                    if (not (currentModel == NULL)):
+                        # Getting the user inputs
+                        userInputs = getUserInputs()
+                        
+                        # Creating the dataframe
+                        df = pd.DataFrame([userInputs], columns=currentInputVariables)
+                        
+                        # Converting the user's inputs into integers
+                        df = convertDataFrameToNumbers(df)
+                        
+                        # Performing the prediction and silpaying it to the user
+                        print(currentModel.predict(df))
+                    else:
+                        # Tell the user there's currently no model loaded
+                        print("\nThere's currently no model loaded, so no tests can be performed. Please load a model and try again.")
+                # The user wants to quit
+                elif (selection2 == "2"):
+                    # Setting this variable so the loop doesn't continue on
+                    goOn = "n"
     
     # Telling the user they're quitting
     print("\nExiting...")
