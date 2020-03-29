@@ -21,9 +21,9 @@ RANDOM_VALUE = "naANFID3rR$II$#OQMf4m$Fimio4$FKgg" # Random value stored so
     # the AI can recognize to ignore it
 TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
     # off
-MODEL_FILENAME_PREFIX = "Models/" # The prefix for where all models are saved
+MODEL_FILENAME_PREFIX = "Models_" # The prefix for where all models are saved
 MODEL_FILENAME_POSTFIX = ".bin" # The postfix for where all models are saved
-EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info/" # The prefix for all of
+EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info_" # The prefix for all of
     # the extra information that must be stored with the models
 EXTRA_DATA_MODEL_FILENAME_POSTFIX = ".txt" # The postfix for all of the extra
     # information that must be stored with the models
