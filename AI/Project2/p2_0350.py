@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix
 import pickle
+import re
 
 # Constants
 NULL = "null" # Null value
@@ -21,9 +22,9 @@ RANDOM_VALUE = "naANFID3rR$II$#OQMf4m$Fimio4$FKgg" # Random value stored so
     # the AI can recognize to ignore it
 TURN_OFF_ALL_WARNINGS = True # If true, all possible code warnings are turned
     # off
-MODEL_FILENAME_PREFIX = "Models_" # The prefix for where all models are saved
+MODEL_FILENAME_PREFIX = "Models/" # The prefix for where all models are saved
 MODEL_FILENAME_POSTFIX = ".bin" # The postfix for where all models are saved
-EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info_" # The prefix for all of
+EXTRA_DATA_MODEL_FILENAME_PREFIX = "Extra_Model_Info/" # The prefix for all of
     # the extra information that must be stored with the models
 EXTRA_DATA_MODEL_FILENAME_POSTFIX = ".txt" # The postfix for all of the extra
     # information that must be stored with the models
@@ -273,7 +274,7 @@ def getTestingData():
     # Getting the data from the user
     while(not gotValidData):
         # Prompting the user
-        filename = input("What is the name of the csv file? Enter the ENTIRE filename (excluding the .csv extension) or \"Q\" to quit.\n")
+        filename = input("What is the name of the testing csv file? Enter the ENTIRE filename (excluding the .csv extension) or \"Q\" to quit.\n")
         
         # Filename not equal to "Q"
         if (not (filename == "Q")):
@@ -591,6 +592,7 @@ def saveModel(model):
     global currentTargetVariableLocation
     global X_TEST
     global Y_TEST
+    filename = ""
     
     # Checking to see if the model is null
     if (model == NULL):
@@ -598,11 +600,16 @@ def saveModel(model):
         print("\nThere is no model currently loaded, and therefore nothing can be saved.")
         return
     
+    while(len(filename) < 1):
+        filename = input("Enter a filename to save the model as. Do NOT include the \".bin\".\n")
+        
+        #filename = re.findall("^[\w\-. ]+$", filename)
+    
     # If it's a valid model, save it
-    pickle.dump(model, open(MODEL_FILENAME_PREFIX + currentModelFilename + MODEL_FILENAME_POSTFIX, 'wb'))
+    pickle.dump(model, open(MODEL_FILENAME_PREFIX + filename + MODEL_FILENAME_POSTFIX, 'wb'))
     
     # Also, save all of the additional information necessary
-    file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + currentModelFilename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "w")
+    file = open(EXTRA_DATA_MODEL_FILENAME_PREFIX + filename + EXTRA_DATA_MODEL_FILENAME_POSTFIX, "w")
     
     # Writing the current target variables
     file.write(getColumnsNames(currentTargetVariable)[0])
@@ -634,13 +641,13 @@ def saveModel(model):
     file.close()
     
     # Saving the test cases
-    x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
-    y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + currentModelFilename + TEST_DATAFRAME_FILENAME_POSTFIX
+    x_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "x" + filename + TEST_DATAFRAME_FILENAME_POSTFIX
+    y_test_string = TEST_DATAFRAME_FILENAME_PREFIX + "y" + filename + TEST_DATAFRAME_FILENAME_POSTFIX
     X_TEST.to_csv(x_test_string, header = True)
     Y_TEST.to_csv(y_test_string, header = True)
     
     # Let the user know it was saved
-    print("\nThe model was successfully saved!")
+    print("\nThe model was successfully saved! It was saved as", MODEL_FILENAME_PREFIX + filename + MODEL_FILENAME_POSTFIX)
 
 # Tests and displays the model's accuracy
 def testModelAccuracy(model):
@@ -698,7 +705,7 @@ def loadModel():
     y_test2 = NULL
     
     # Getting what model the user wants to load
-    modelName = input("What model would you like to load? Enter its name, not including the \".csv\".\n")
+    modelName = input("What model would you like to load? Enter its name, not including the \".bin\".\n")
     
     # Attempting to open the model
     try:
@@ -810,7 +817,7 @@ def loadModel():
         return loadedModel
     except:
         # Letting the user know their model wasn't valid
-        print("\nThe filename you entered was not a valid model name.")
+        print("\nThe filename you entered was not a valid model name. If a model had been loaded or created previously, it is no longer active.")
     
     # If it gets to here, no model was loaded, so return NULL
     return NULL
