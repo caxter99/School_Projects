@@ -72,11 +72,15 @@ def equalLists(list1, list2):
 # Displays a confusion matrix
 def displayConfusionMatrix(targetOptions, cm):
     # Variables
+    global currentTargetVariable
     limit = len(cm) + 1 # Limit for how far the loops will go
     fillerSpace = " " # What is filled in between the gaps
     numberOfReservedSpaces = 15 # How many spots are reserved per "square"
     topRowMessage = "Actual" # What's displayed on the very top row
     leftColumnMessage = "Prediction" # What's displayed in the very left column
+    
+    # Printing what the target variable is
+    print(currentTargetVariable.columns[0])
     
     # Displaying the the top row
     print(topRowMessage.center(numberOfReservedSpaces * (limit + 2)))
@@ -221,45 +225,6 @@ def getOptionsForColumns(df):
     
     # Return a matrix of all of the option names
     return options
-    """# Variables
-    options = [[]]
-    allPossibilities = [[]]
-    longestArray = -1
-    
-    # If it's not a valid data frame, return an empty matrix
-    if (not isValidDataFrame(df)):
-        return options
-    
-    # Get all of the possibilities for each column, one at a time
-    x = 0
-    for col in df.columns:
-        if (x == 0):
-            allPossibilities[0] = getColumnsPossibilities(df[col])
-        else:
-            allPossibilities.append(getColumnsPossibilities(df[col]))
-        if (len(allPossibilities[x]) > longestArray):
-            longestArray = len(allPossibilities[x])
-        x = x + 1
-        
-    # Looping through and making options[[]] the correct size
-    for y in range(longestArray):
-        for x in range(len(allPossibilities)):
-            if (y == 0 and x == 0):
-                options[0].append(RANDOM_VALUE)
-            elif (x == 0):
-                options.append([RANDOM_VALUE])
-            else:
-                options[y].append(RANDOM_VALUE)
-    
-    # Putting the possibilities in the correct manner so they can be used
-    # by data frames in the future
-    for y in range(len(allPossibilities)):
-        for x in range(longestArray):
-            if (not (x >= len(allPossibilities[y]))):
-                options[x][y] = allPossibilities[y][x]
-    
-    # Returning the contents
-    return options"""
 
 # Gets the name of a data file and returns the data after reading it in
 def getTestingData():
@@ -391,12 +356,16 @@ def fillNumpyArrays(originalNumpyArray):
     for x in range(len(originalNumpyArray)):
         if (len(originalNumpyArray[x]) > maxLength):
             maxLength = len(originalNumpyArray[x])
+            
+    # Correcting the max length, if necessary
+    if (maxLength < len(originalNumpyArray)):
+        maxLength = len(originalNumpyArray)
     
     # Creating a new numpy array with them all being the max length
     newNumpyArray = []
     for x in range(len(originalNumpyArray)):
         newNumpyArray.append([])
-        for x2 in range(maxLength + 1):
+        for x2 in range(maxLength):
             if (x2 < len(originalNumpyArray[x])):
                 newNumpyArray[x].append(originalNumpyArray[x][x2])
             else:
@@ -460,34 +429,10 @@ def getTarget(df):
     
     # Getting all of the possible options for the columns (inputs)
     currentInputVariableOptions = getOptionsForColumns(df)
-    
-    """# Converting the input to acceptable pandas dataframe input
-    tempCurrentVariableOptions = []
-    for y in range(len(currentInputVariableOptions[0])):
-        tempList = []
-        for x2 in range(len(currentInputVariableOptions)):
-            tempList.append(currentInputVariableOptions[x2][y])
-        tempCurrentVariableOptions.append(tempList)
-    currentInputVariableOptions = tempCurrentVariableOptions"""
-    """# Making sure they all are the same length
-    print("before")
-    maxLength = -1
-    for x2 in range(len(currentInputVariableOptions)):
-        if (len(currentInputVariableOptions[x2]) > maxLength):
-            maxLength = len(currentInputVariableOptions[x2])
-    print("max length:", maxLength)
-    for x2 in range(len(currentInputVariableOptions)):
-        if (len(currentInputVariableOptions[x2]) < maxLength):
-            for y in range(maxLength + 1):
-                if (y >= maxLength):
-                    currentInputVariableOptions[x2].append(np.nan)
-                    print("filled")"""
     currentInputVariableOptions = fillNumpyArrays(currentInputVariableOptions)
-    print("before 2")
     
     # Getting all of the remaining columns (inputs)
     currentInputVariables = pd.DataFrame(currentInputVariableOptions, columns = getColumnsNames(df))
-    print("after")
     
     # Getting the target's options
     currentTargetVariableOptions = getOptionsForColumns(target)
@@ -604,14 +549,12 @@ def generateNaiveBayesianClassifier(df):
     testToTrainRatio = float(testToTrainRatio)"""
     
     # Be sure to comment this out if the user is entering the test to train ratio
+    # Setting up the test to train ratio
     testToTrainRatio = 0.01
     
     # Making it easier to understand
     inputsForTest = convertDataFrameToNumbers(copyDataFrame(df))
     targetForTest = convertOneColumnDataFrameToSeries(convertDataFrameToNumbers(copyDataFrame(target), True))
-    """targetForTest = copyDataFrame(target)
-    targetForTest = convertDataFrameToNumbers(targetForTest, True)
-    targetForTest = convertOneColumnDataFrameToSeries(targetForTest)"""
     
     # Splitting the training and the test data
     x_train2, x_test2, y_train2, y_test2 = train_test_split(inputsForTest, targetForTest, test_size=testToTrainRatio)
@@ -669,11 +612,8 @@ def saveModel(model):
     file.write("\n")
     
     # Writing the options for the target variable
-    print(type(currentTargetVariableOptions))
     for listt in currentTargetVariableOptions:
-        print(type(listt))
         for string in listt:
-            print(type(string))
             file.write(str(string) + ",")
     file.write("\n")
     
@@ -932,7 +872,8 @@ def getUserInputs():
             # Displaying the current variable and the options for it
             print("\nCurrent Variable: ", item, "\nOptions: ", sep="", end="")
             for options in currentInputVariableOptions[x]:
-                print(str(options), end=", ")
+                if (not (str(options) == "nan")):
+                    print(str(options), end=", ")
             
             # Getting the input from the user
             currentInput = input("What would you like to enter for this variable?\n")
@@ -940,7 +881,7 @@ def getUserInputs():
             # Checking to see if the user input is valid
             for options in currentInputVariableOptions[x]:
                 # The user's input matches one of the column names
-                if (str(options) == currentInput):
+                if ((str(options) == currentInput) and not (currentInput == "nan")):
                     validInput = True
             
             # The user's input did not match any of the column names
