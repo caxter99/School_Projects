@@ -179,8 +179,8 @@ def getColumnsPossibilities(col):
         return possibilities
     
     # Checks to see if it's numeric
-    if (np.issubdtype(col.dtype, np.number)):
-        return possibilities
+    """if (np.issubdtype(col.dtype, np.number)):
+        return possibilities"""
     
     # Return all of the possibilities
     return col.unique()
@@ -381,6 +381,31 @@ def getTestingTarget(df):
     # Returning the target
     return dfCopy
 
+# Creates a 2D numpy array that is filled to the max length of one of the
+# numpy arrays and returns it
+def fillNumpyArrays(originalNumpyArray):
+    # Setting up the max length variable
+    maxLength = -1
+    
+    # Figuring out the largest length
+    for x in range(len(originalNumpyArray)):
+        if (len(originalNumpyArray[x]) > maxLength):
+            maxLength = len(originalNumpyArray[x])
+    
+    # Creating a new numpy array with them all being the max length
+    newNumpyArray = []
+    for x in range(len(originalNumpyArray)):
+        newNumpyArray.append([])
+        for x2 in range(maxLength + 1):
+            if (x2 < len(originalNumpyArray[x])):
+                newNumpyArray[x].append(originalNumpyArray[x][x2])
+            else:
+                newNumpyArray[x].append(np.nan)
+    
+    # Creating the new numpy array and returning it
+    numpyArray = np.array(newNumpyArray)
+    return numpyArray
+
 # Returns the name of the target column and the new data frame without the
 # target column
 def getTarget(df):
@@ -436,8 +461,33 @@ def getTarget(df):
     # Getting all of the possible options for the columns (inputs)
     currentInputVariableOptions = getOptionsForColumns(df)
     
+    """# Converting the input to acceptable pandas dataframe input
+    tempCurrentVariableOptions = []
+    for y in range(len(currentInputVariableOptions[0])):
+        tempList = []
+        for x2 in range(len(currentInputVariableOptions)):
+            tempList.append(currentInputVariableOptions[x2][y])
+        tempCurrentVariableOptions.append(tempList)
+    currentInputVariableOptions = tempCurrentVariableOptions"""
+    """# Making sure they all are the same length
+    print("before")
+    maxLength = -1
+    for x2 in range(len(currentInputVariableOptions)):
+        if (len(currentInputVariableOptions[x2]) > maxLength):
+            maxLength = len(currentInputVariableOptions[x2])
+    print("max length:", maxLength)
+    for x2 in range(len(currentInputVariableOptions)):
+        if (len(currentInputVariableOptions[x2]) < maxLength):
+            for y in range(maxLength + 1):
+                if (y >= maxLength):
+                    currentInputVariableOptions[x2].append(np.nan)
+                    print("filled")"""
+    currentInputVariableOptions = fillNumpyArrays(currentInputVariableOptions)
+    print("before 2")
+    
     # Getting all of the remaining columns (inputs)
     currentInputVariables = pd.DataFrame(currentInputVariableOptions, columns = getColumnsNames(df))
+    print("after")
     
     # Getting the target's options
     currentTargetVariableOptions = getOptionsForColumns(target)
@@ -619,9 +669,12 @@ def saveModel(model):
     file.write("\n")
     
     # Writing the options for the target variable
+    print(type(currentTargetVariableOptions))
     for listt in currentTargetVariableOptions:
+        print(type(listt))
         for string in listt:
-            file.write(string + ",")
+            print(type(string))
+            file.write(str(string) + ",")
     file.write("\n")
     
     # Writing the current column names (inputs)
@@ -632,7 +685,7 @@ def saveModel(model):
     # Writing the options for each column (inputs)
     for listt in currentInputVariableOptions:
         for string in listt:
-            file.write(string + ",")
+            file.write(str(string) + ",")
         file.write("-")
     file.write("\n")
     
