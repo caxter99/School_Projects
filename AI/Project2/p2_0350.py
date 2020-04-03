@@ -518,7 +518,8 @@ def generateNaiveBayesianClassifier(df):
     # Getting the target column and the modified dataframe
     target, df = getTarget(df)
     
-    # Getting the user's input for the test to train ration
+    # Uncomment if I want the user to enter the test to train ratio
+    """# Getting the user's input for the test to train ration
     gotValidData = False
     noExcept = True
     testToTrainRatio = 0
@@ -551,7 +552,10 @@ def generateNaiveBayesianClassifier(df):
             print("That was an invalid answer. Please enter a number between 0 and 1.")
     
     # Making sure testToTrainRatio is a float
-    testToTrainRatio = float(testToTrainRatio)
+    testToTrainRatio = float(testToTrainRatio)"""
+    
+    # Be sure to comment this out if the user is entering the test to train ratio
+    testToTrainRatio = 0.01
     
     # Making it easier to understand
     inputsForTest = convertDataFrameToNumbers(copyDataFrame(df))
