@@ -10,7 +10,7 @@ This is the Fashion MNIST example
 import tensorflow as tf
 #from tensorflow import keras
 import numpy as np
-import datetime
+#import datetime
 
 mnist = tf.keras.datasets.mnist
 
@@ -51,7 +51,7 @@ model.compile(optimizer='adam',
 
 model.fit(x=x_train, 
           y=y_train, 
-          epochs=5, 
+          epochs=50, 
           validation_data=(x_test, y_test), 
           callbacks=[tensorboard_callback])
 
