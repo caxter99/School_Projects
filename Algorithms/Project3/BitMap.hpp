@@ -16,6 +16,7 @@ public:
 	BitMap(std::string bitMapFilepath);
 	void loadBitMap(std::string bitMapFilepath);
 	void viewBitMap();
+	bool hasBitMapLoaded();
 
 private:
 	// Functions
@@ -28,4 +29,5 @@ private:
 	int _width = -1; // The width of the map in pixels
 	int _range = -1; // The range of color or greyscale the pixels have
 	std::vector<std::vector<int>> _bitMap; // The actual bit map
+	bool _hasBitMapLoaded = false; // True if this object has a bit map loaded, false otherwise
 };

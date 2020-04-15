@@ -57,6 +57,9 @@ void BitMap::loadBitMap(std::string bitMapFilepath)
 	// Creating the bit map
 	createBitMap(&input);
 
+	// Setting _hasBitMapLoaded to true since a bit map has been loaded
+	_hasBitMapLoaded = true;
+
 	// Closing the file
 	input.close();
 }
@@ -83,7 +86,7 @@ void BitMap::createBitMap(std::ifstream* input)
 void BitMap::viewBitMap()
 {
 	// Making sure this funciton isn't called early, before a bit map has been set up
-	if (_width <= 0 || _height <= 0)
+	if (!_hasBitMapLoaded)
 	{
 		std::cout << "Please load a bit map before trying to display it\n";
 		return;
@@ -107,6 +110,11 @@ void BitMap::viewBitMap()
 		std::cout << "\n";
 	}
 	std::cout << "\n";
+}
+
+bool BitMap::hasBitMapLoaded()
+{
+	return _hasBitMapLoaded;
 }
 
 
