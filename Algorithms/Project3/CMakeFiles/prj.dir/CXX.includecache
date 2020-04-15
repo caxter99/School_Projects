@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/devin/Desktop/School_Projects/Algorithms/Project3/BitMap.cpp
+BitMap.hpp
+/Users/devin/Desktop/School_Projects/Algorithms/Project3/BitMap.hpp
+
+/Users/devin/Desktop/School_Projects/Algorithms/Project3/BitMap.hpp
+iostream
+-
+string
+-
+vector
+-
+fstream
+-
+
