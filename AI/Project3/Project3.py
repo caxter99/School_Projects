@@ -28,13 +28,11 @@ DISPLAY_DEBUG_VARIABLES = True # True if the variables that help with
 SAVE_DIRECTORY_BASE = os.path.join(os.getcwd(), 'logs\\') # Where the log will be
 #    saved to
 NUM_OF_CLASSES = 10 # Must remain at 10 for this data set
+
 # This function takes two integers (min, max) and returns an integer that was
-# entered by the user that is in between the min and max, inclusive.
-def getNumInRange(min, max):
-    # The output string that the user will see
-    inputString = "Enter an integer between " + str(min) + " and " + str(max)
-    inputString += ", inclusive: "
-    
+# entered by the user that is in between the min and max, inclusive. It also
+# takes a string which is display to the user as the prompt for their input
+def getNumInRange(min, max, inputString):    
     # The error string that the user will see if they enter the information
     # wrong
     errorString = "That was not an integer between " + str(min) + " and "
@@ -417,11 +415,70 @@ def performKerasExample(data_aug, batch, epoch, dir_name, mod_name):
     print('Test loss:', scores[0])
     print('Test accuracy:', scores[1])
 
-# This function allows the user to define input variables. It then uses the
-# Keras Example, but uses the user's inputs instead of the baseline
-def performPersonalTest():
-    i = 0
+# This function runs many tests using the Keras Example
+# WARNING: This function will take MANY HOURS, LIKELY a DAY or so
+def performNumerousTests():
+   # Performing a crap ton of tests
+   #
+   # Pattern of input:
+   # performKerasExample(data_aug, batch, epoch, dir_name, mod_name)
+   
+   # These tests all use data augmentation, a batch size of 32, but use
+   # different epochs
+   performKerasExample(True, 32, 100, "test_1_32_Y_100", "cifar-10.h5")
+   performKerasExample(True, 32, 150, "test_2_32_Y_150", "cifar-10.h5")
+   performKerasExample(True, 32, 200, "test_3_32_Y_200", "cifar-10.h5")
+   performKerasExample(True, 32, 250, "test_4_32_Y_250", "cifar-10.h5")
+   performKerasExample(True, 32, 300, "test_5_32_Y_300", "cifar-10.h5")
+   
+   # These tests all don't use data augmentation, a batch of 32, but use
+   # different epochs
+   performKerasExample(False, 32, 100, "test_6_32_N_100", "cifar-10.h5")
+   performKerasExample(False, 32, 150, "test_7_32_N_150", "cifar-10.h5")
+   performKerasExample(False, 32, 200, "test_8_32_N_200", "cifar-10.h5")
+   performKerasExample(False, 32, 250, "test_9_32_N_250", "cifar-10.h5")
+   performKerasExample(False, 32, 300, "test_10_32_N_300", "cifar-10.h5")
+   
+   # These tests all use data augmentation, 100 epochs, but use different batch
+   # sizes
+   performKerasExample(True, 1, 100, "test_11_1_Y_100", "cifar-10.h5")
+   performKerasExample(True, 8, 100, "test_12_8_Y_100", "cifar-10.h5")
+   performKerasExample(True, 16, 100, "test_13_16_Y_100", "cifar-10.h5")
+   performKerasExample(True, 32, 100, "test_14_32_Y_100", "cifar-10.h5")
+   performKerasExample(True, 64, 100, "test_15_64_Y_100", "cifar-10.h5")
+   performKerasExample(True, 128, 100, "test_16_128_Y_100", "cifar-10.h5")
+   performKerasExample(True, 10000, 100, "test_17_10000_Y_100", "cifar-10.h5")
+   performKerasExample(True, 50000, 100, "test_18_50000_Y_100", "cifar-10.h5")
 
+# This function is the optimal solution that I have found for the CIFAS-10
+# dataset
+def performOptimalSolution():
+    print("Perform optimal solution")
+
+# This function gets the menu input and calls the appropriate functions
+def menu():
+    # Creating the menu string
+    menuString = "Menu:\n"
+    menuString += "1. Perform Keras 2010 Baseline test\n"
+    menuString += "2. Perform my optimal solution to the CIFAS-10 data set\n"
+    menuString += "3. Perform several tests on the Keras 2010 example\n"
+    menuString += "4. Perform every option\n"
+    menuString += "Enter your selection here: "
+    
+    # Getting the user's input
+    userChoice = getNumInRange(1, 4, menuString)
+    
+    # Performing the user's choice
+    if (userChoice == 1):
+        performBaselineKerasTest()
+    elif (userChoice == 2):
+        performOptimalSolution()
+    elif (userChoice == 3):
+        performNumerousTests()
+    else:
+        performBaselineKerasTest()
+        performOptimalSolution()
+        performNumerousTests()
 
 #
 #
@@ -434,8 +491,8 @@ if (not DISPLAY_DEBUG_VARIABLES):
     # Turning off all warnings from tensorflow
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-# Call the test
-performBaselineKerasTest()
+# See what the user wants to do
+menu()
 
 
 
