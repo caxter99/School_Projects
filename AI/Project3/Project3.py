@@ -71,11 +71,12 @@ def getNumInRange(min, max):
 #
 # This version is completely filled with comments explaining what everything
 # does (to the best of my ability). It is also configured to perform at the 2010
-# basline (see link directly above)
-def performKerasExample():
+# basline (see link directly above). Note that the actual performance is done
+# in the performKerasExample() function
+def performBaselineKerasTest():
     # Defining some local constants
     #
-    # True yields better results (see below for why) [baseline = True]
+    # Use data augmentation? [baseline = True]
     USE_DATA_AUGMENTATION = True
     # The number of training examples used in each iteration [baseline = 32]
     BATCH_SIZE = 32
@@ -83,14 +84,31 @@ def performKerasExample():
     # [baseline = 50]
     EPOCHS = 2
     # The name within the log directory where this model will be saved
-    DIRECTORY_NAME = "keras_example\\"
+    DIRECTORY_NAME = "keras_baseline\\"
+    # The specific model name given to the model that will be generated in this
+    # function (professor wants it to be cifar-10.h5)
+    MODEL_NAME = "cifar-10.h5"
+    
+    # Performing the Keras Example using the baseline arguments
+    performKerasExample(USE_DATA_AUGMENTATION, BATCH_SIZE, EPOCHS,
+        DIRECTORY_NAME, MODEL_NAME)
+
+# This creates a Conv2D model using the same layers as the example given at the
+# official Keras website (found here: https://keras.io/examples/cifar10_cnn/)
+def performKerasExample(data_aug, batch, epoch, dir_name, mod_name):
+    # Defining some local constants
+    #
+    # True yields better results (see below for why)
+    USE_DATA_AUGMENTATION = data_aug
+    # The number of training examples used in each iteration
+    BATCH_SIZE = batch
+    # The number of times the model will work through the entire data set
+    EPOCHS = epoch
+    # The name within the log directory where this model will be saved
+    DIRECTORY_NAME = dir_name
     # The specific model name given to the model that will be generated in this
     # function
-    """
-    MODEL_NAME = "keras_example_2010_baseline_"
-    MODEL_NAME += datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".h5"
-    """
-    MODEL_NAME = "cifar-10.h5"
+    MODEL_NAME = mod_name
     # Combining the base save directory with the specific save directory to
     # form the save directory for the model that will be generated
     SAVE_DIRECTORY = os.path.join(SAVE_DIRECTORY_BASE, DIRECTORY_NAME)
@@ -399,6 +417,11 @@ def performKerasExample():
     print('Test loss:', scores[0])
     print('Test accuracy:', scores[1])
 
+# This function allows the user to define input variables. It then uses the
+# Keras Example, but uses the user's inputs instead of the baseline
+def performPersonalTest():
+    i = 0
+
 
 #
 #
@@ -407,13 +430,12 @@ def performKerasExample():
 #
 
 # If I do NOT want to show debug variables (or messages, in this case)
-#if (not DISPLAY_DEBUG_VARIABLES):
-if (DISPLAY_DEBUG_VARIABLES): # TEST
+if (not DISPLAY_DEBUG_VARIABLES):
     # Turning off all warnings from tensorflow
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 # Call the test
-performKerasExample()
+performBaselineKerasTest()
 
 
 
