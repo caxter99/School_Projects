@@ -29,7 +29,7 @@ from tensorflow.python.keras.layers import Conv2D, MaxPooling2D
 batch_size = 32
 num_classes = 10
 epochs = 2 # default: 100
-data_augmentation = False # defualt: True
+data_augmentation = True # defualt: True
 
 num_predictions = 20
 save_dir = os.path.join(os.getcwd(), 'logs')
@@ -40,8 +40,6 @@ model_name = 'keras_cifar10_trained_model.h5'
 #tensorboard = TensorBoard(log_dir="logs/")
 #log_dir = save_dir + format(time())
 log_dir = save_dir + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-print(log_dir)
-print(save_dir)
 tensorboard = TensorBoard(log_dir=save_dir, histogram_freq=1, profile_batch=10000000000)
 
 # The data, split between train and test sets:
