@@ -80,7 +80,7 @@ def performBaselineKerasTest():
     BATCH_SIZE = 32
     # The number of times the model will work through the entire data set
     # [baseline = 50]
-    EPOCHS = 2
+    EPOCHS = 50
     # The name within the log directory where this model will be saved
     DIRECTORY_NAME = "keras_baseline\\"
     # The specific model name given to the model that will be generated in this
@@ -425,30 +425,30 @@ def performNumerousTests():
    
    # These tests all use data augmentation, a batch size of 32, but use
    # different epochs
-   performKerasExample(True, 32, 100, "test_1_32_Y_100", "cifar-10.h5")
-   performKerasExample(True, 32, 150, "test_2_32_Y_150", "cifar-10.h5")
-   performKerasExample(True, 32, 200, "test_3_32_Y_200", "cifar-10.h5")
-   performKerasExample(True, 32, 250, "test_4_32_Y_250", "cifar-10.h5")
-   performKerasExample(True, 32, 300, "test_5_32_Y_300", "cifar-10.h5")
+   """performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 32, 150, "test_2_32_Y_150\\", "cifar-10.h5")
+   performKerasExample(True, 32, 200, "test_3_32_Y_200\\", "cifar-10.h5")
+   performKerasExample(True, 32, 250, "test_4_32_Y_250\\", "cifar-10.h5")
+   performKerasExample(True, 32, 300, "test_5_32_Y_300\\", "cifar-10.h5")
    
    # These tests all don't use data augmentation, a batch of 32, but use
    # different epochs
-   performKerasExample(False, 32, 100, "test_6_32_N_100", "cifar-10.h5")
-   performKerasExample(False, 32, 150, "test_7_32_N_150", "cifar-10.h5")
-   performKerasExample(False, 32, 200, "test_8_32_N_200", "cifar-10.h5")
-   performKerasExample(False, 32, 250, "test_9_32_N_250", "cifar-10.h5")
-   performKerasExample(False, 32, 300, "test_10_32_N_300", "cifar-10.h5")
+   performKerasExample(False, 32, 100, "test_6_32_N_100\\", "cifar-10.h5")
+   performKerasExample(False, 32, 150, "test_7_32_N_150\\", "cifar-10.h5")
+   performKerasExample(False, 32, 200, "test_8_32_N_200\\", "cifar-10.h5")
+   performKerasExample(False, 32, 250, "test_9_32_N_250\\", "cifar-10.h5")
+   performKerasExample(False, 32, 300, "test_10_32_N_300\\", "cifar-10.h5")
    
    # These tests all use data augmentation, 100 epochs, but use different batch
    # sizes
-   performKerasExample(True, 1, 100, "test_11_1_Y_100", "cifar-10.h5")
-   performKerasExample(True, 8, 100, "test_12_8_Y_100", "cifar-10.h5")
-   performKerasExample(True, 16, 100, "test_13_16_Y_100", "cifar-10.h5")
-   performKerasExample(True, 32, 100, "test_14_32_Y_100", "cifar-10.h5")
-   performKerasExample(True, 64, 100, "test_15_64_Y_100", "cifar-10.h5")
-   performKerasExample(True, 128, 100, "test_16_128_Y_100", "cifar-10.h5")
-   performKerasExample(True, 10000, 100, "test_17_10000_Y_100", "cifar-10.h5")
-   performKerasExample(True, 50000, 100, "test_18_50000_Y_100", "cifar-10.h5")
+   performKerasExample(True, 1, 100, "test_11_1_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 8, 100, "test_12_8_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 16, 100, "test_13_16_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 32, 100, "test_14_32_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 64, 100, "test_15_64_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 128, 100, "test_16_128_Y_100\\", "cifar-10.h5")"""
+   performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
 
 # This function is the optimal solution that I have found for the CIFAS-10
 # dataset
@@ -476,7 +476,7 @@ def menu():
     elif (userChoice == 3):
         performNumerousTests()
     else:
-        performBaselineKerasTest()
+        #performBaselineKerasTest()
         performOptimalSolution()
         performNumerousTests()
 
