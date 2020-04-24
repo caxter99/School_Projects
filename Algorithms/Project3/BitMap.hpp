@@ -15,12 +15,19 @@ public:
 	BitMap();
 	BitMap(std::string bitMapFilepath);
 	void loadBitMap(std::string bitMapFilepath);
+	void saveBitMap(std::string filepath);
 	void viewBitMap();
-	bool hasBitMapLoaded();
+	bool hasBitMapLoaded() { return _hasBitMapLoaded; };
+	bool isBitMapEmpty() { return _isEmpty; };
+	void removeVerticalSeams(int numberOfSeams = 1);
+	void removeHorizontalSeams(int numberOfSeams = 1);
 
 private:
 	// Functions
 	void createBitMap(std::ifstream* input);
+	void removeVerticalSeam();
+	void transpose(bool reverse = false);
+	void copy(std::vector<std::vector<int>>* theOriginal, std::vector<std::vector<int>>* theCopy);
 
 	// Variables
 	std::string _bitMapFilepath = ""; // The map's filepath
@@ -30,4 +37,5 @@ private:
 	int _range = -1; // The range of color or greyscale the pixels have
 	std::vector<std::vector<int>> _bitMap; // The actual bit map
 	bool _hasBitMapLoaded = false; // True if this object has a bit map loaded, false otherwise
+	bool _isEmpty = false; // True if all of the seams have been removed
 };
