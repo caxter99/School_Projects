@@ -446,8 +446,8 @@ def performNumerousTests():
    performKerasExample(True, 16, 100, "test_13_16_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 32, 100, "test_14_32_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 64, 100, "test_15_64_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 128, 100, "test_16_128_Y_100\\", "cifar-10.h5")"""
-   performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 128, 100, "test_16_128_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")"""
    performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
 
 # This function is the optimal solution that I have found for the CIFAS-10
