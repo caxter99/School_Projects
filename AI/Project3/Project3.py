@@ -450,8 +450,14 @@ def performNumerousTests():
    performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 256, 100, "test_19_256_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 512, 100, "test_20_512_Y_100\\", "cifar-10.h5")"""
-   performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 512, 100, "test_20_512_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")"""
+   
+   # These are starting to figure out the optimal solution tests from data gathered
+   performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")
+   performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
+   performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
+   performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")
 
 # This function is the optimal solution that I have found for the CIFAS-10
 # dataset
