@@ -1,0 +1,5 @@
+clas
+cancelled,late,on time,very late,
+day,season,wind,rain,
+holiday,saturday,sunday,weekday,-autumn,spring,summer,winter,-high,none,normal,-heavy,none,slight,-
+4

@@ -1,0 +1,5 @@
+humidity
+high,normal,
+outlook,temperature,windy,play,
+nan,overcast,rainy,sunny,-cool,hot,mild,nan,-False,True,nan,nan,-nan,nan,no,yes,-
+2

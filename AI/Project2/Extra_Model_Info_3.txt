@@ -1,0 +1,5 @@
+E
+0,1,
+A,B,C,F,D,
+0.0,1.0,nan,nan,nan,-0.0,1.0,nan,nan,nan,-1.0,0.0,nan,nan,nan,-0.0,1.0,nan,nan,nan,-1.0,2.0,3.0,nan,nan,-
+3

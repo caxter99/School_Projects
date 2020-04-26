@@ -72,24 +72,18 @@ def getNumInRange(min, max, inputString):
 # basline (see link directly above). Note that the actual performance is done
 # in the performKerasExample() function
 def performBaselineKerasTest():
-    # Defining some local constants
+    # Defining the baseline variables
     #
     # Use data augmentation? [baseline = True]
-    USE_DATA_AUGMENTATION = True
     # The number of training examples used in each iteration [baseline = 32]
-    BATCH_SIZE = 32
     # The number of times the model will work through the entire data set
-    # [baseline = 50]
-    EPOCHS = 50
+    #     [baseline = 50]
     # The name within the log directory where this model will be saved
-    DIRECTORY_NAME = "keras_baseline\\"
     # The specific model name given to the model that will be generated in this
-    # function (professor wants it to be cifar-10.h5)
-    MODEL_NAME = "cifar-10.h5"
-    
+    #     function (professor wants it to be cifar-10.h5)
+    #
     # Performing the Keras Example using the baseline arguments
-    performKerasExample(USE_DATA_AUGMENTATION, BATCH_SIZE, EPOCHS,
-        DIRECTORY_NAME, MODEL_NAME)
+    performKerasExample(True, 32, 50, "keras_baseline\\", "cifar-10.h5")
 
 # This creates a Conv2D model using the same layers as the example given at the
 # official Keras website (found here: https://keras.io/examples/cifar10_cnn/)
@@ -120,7 +114,7 @@ def performKerasExample(data_aug, batch, epoch, dir_name, mod_name):
     # The CIFAR-10 dataset is an established computer-vision dataset used for
     # recognition. It has 60,000 images, which are each 32x32 in size, and use
     # the RGB color system (keep these numbers in mind, as the shape of the
-    # arrays will directly correlate to these numbers).
+    # arrays will directly correlate to these numbers)
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
     if (DISPLAY_DEBUG_VARIABLES):
@@ -259,7 +253,7 @@ def performKerasExample(data_aug, batch, epoch, dir_name, mod_name):
 
     # Adding another layer
     #
-    # A Flatten layer will take the input from a multidimencional array and
+    # A Flatten layer will take the input from a multidimensional array and
     # reshape it into a 1 dimensional array. I believe this helps the output
     # from getting too crazy and difficult for the nuerons to understand
     model.add(Flatten())
@@ -425,13 +419,13 @@ def performNumerousTests():
    
    # These tests all use data augmentation, a batch size of 32, but use
    # different epochs
-   """performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 32, 150, "test_2_32_Y_150\\", "cifar-10.h5")
    performKerasExample(True, 32, 200, "test_3_32_Y_200\\", "cifar-10.h5")
    performKerasExample(True, 32, 250, "test_4_32_Y_250\\", "cifar-10.h5")
    performKerasExample(True, 32, 300, "test_5_32_Y_300\\", "cifar-10.h5")
    
-   # These tests all don't use data augmentation, a batch of 32, but use
+   # These tests all don't use data augmentation, a batch size of 32, but use
    # different epochs
    performKerasExample(False, 32, 100, "test_6_32_N_100\\", "cifar-10.h5")
    performKerasExample(False, 32, 150, "test_7_32_N_150\\", "cifar-10.h5")
@@ -457,7 +451,7 @@ def performNumerousTests():
    performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")
    performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
    performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
-   performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")"""
+   performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")
    performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")
 
 # This function is the optimal solution that I have found for the CIFAS-10
