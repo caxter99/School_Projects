@@ -10,8 +10,7 @@ File for Project 3
 
 # Imports
 import os
-import datetime
-import tensorflow as tf # TEST
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.python.keras.callbacks import TensorBoard
 from tensorflow.python.keras.datasets import cifar10
@@ -19,6 +18,7 @@ from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense, Dropout, Activation, Flatten
 from tensorflow.python.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.python.keras import regularizers
 
 # Global Variables
 DISPLAY_IMPORTANT_VARIABLES = True # True if variables that help with
@@ -63,6 +63,219 @@ def getNumInRange(min, max, inputString):
     
     # Returning the number
     return number
+
+# This creates a Conv2D model using the almost same layers as the example given
+# at the official Keras website
+# (found here: https://keras.io/examples/cifar10_cnn/)
+# I have added some layers to improve upon the example
+def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
+    # Defining some local constants
+    #
+    # True yields better results (see below for why)
+    USE_DATA_AUGMENTATION = data_aug
+    # The number of training examples used in each iteration
+    BATCH_SIZE = batch
+    # The number of times the model will work through the entire data set
+    EPOCHS = epoch
+    # The name within the log directory where this model will be saved
+    DIRECTORY_NAME = dir_name
+    # The specific model name given to the model that will be generated in this
+    # function
+    MODEL_NAME = mod_name
+    # Combining the base save directory with the specific save directory to
+    # form the save directory for the model that will be generated
+    SAVE_DIRECTORY = os.path.join(SAVE_DIRECTORY_BASE, DIRECTORY_NAME)
+    # The rate of decay
+    DECAY = 1e-6
+
+    # Creating the tensorboard so it can be used for callbacks
+    tensorboard = TensorBoard(log_dir=SAVE_DIRECTORY, histogram_freq=1,
+                              profile_batch=10000000000)
+    
+    # Creating the keras regulizer
+    keras_regularizer = regularizers.l2(DECAY)
+
+    # Getting the CIFAR-10 data set and splitting it into training and testing
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+
+    if (DISPLAY_DEBUG_VARIABLES):
+        # The type of the training and testing sets
+        print()
+        print("x_train type:", type(x_train))
+        print("x_test type:", type(x_test))
+        print("y_train type:", type(y_train))
+        print("y_test type:", type(y_test))
+
+    if (DISPLAY_IMPORTANT_VARIABLES or DISPLAY_DEBUG_VARIABLES):
+        # The shape of the numpy arrays
+        print()
+        print('x_train shape:', x_train.shape)
+        print('x_test shape:', x_test.shape)
+        print(x_train.shape[0], 'train samples')
+        print(x_test.shape[0], 'test samples')
+        print()
+        print('y_train shape:', y_train.shape)
+        print('y_test shape:', y_test.shape)
+        print(y_train.shape[0], 'train samples')
+        print(y_test.shape[0], 'test samples')
+
+    # Convert class vectors to binary class matrices
+    y_train = keras.utils.to_categorical(y_train, NUM_OF_CLASSES)
+    y_test = keras.utils.to_categorical(y_test, NUM_OF_CLASSES)
+
+    if (DISPLAY_IMPORTANT_VARIABLES or DISPLAY_DEBUG_VARIABLES):
+        # The shape of the numpy arrays
+        print()
+        print("After reshaping:")
+        print('y_train shape:', y_train.shape)
+        print('y_test shape:', y_test.shape)
+        print(y_train.shape[0], 'train samples')
+        print(y_test.shape[0], 'test samples')
+
+    # Creating a sequential model
+    model = Sequential()
+    
+    model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:]))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(32, (3, 3)))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Dropout(0.25))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same'))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3)))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Dropout(0.25))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Flatten())
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Dense(512))
+    model.add(Activation('relu'))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Dropout(0.5))
+    
+    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Activation('relu'))
+    
+    model.add(Dense(NUM_OF_CLASSES))
+    model.add(Activation('softmax'))
+
+    # Initiate the Adam Optimizer
+    opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
+
+    # Now it's time to compile the model
+    model.compile(loss='categorical_crossentropy', optimizer=opt,
+              metrics=['accuracy'])
+    
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    x_train /= 255
+    x_test /= 255
+
+    # Not using data augmentation for the model
+    if not USE_DATA_AUGMENTATION:
+        model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS,
+              validation_data=(x_test, y_test), shuffle=True,
+              callbacks=[tensorboard])
+    # Using data augmentation for the model
+    else:
+        # This will do preprocessing and realtime data augmentation
+        datagen = ImageDataGenerator(
+                featurewise_center=False,  # set input mean to 0 over the
+                # dataset
+                samplewise_center=False,  # set each sample mean to 0
+                featurewise_std_normalization=False,  # divide inputs by std of
+                # the dataset
+                samplewise_std_normalization=False,  # divide each input by its
+                # std
+                zca_whitening=False,  # apply ZCA whitening
+                zca_epsilon=1e-06,  # epsilon for ZCA whitening
+                rotation_range=0,  # randomly rotate images in the range
+                # (degrees, 0 to 180)
+                # randomly shift images horizontally (fraction of total width)
+                width_shift_range=0.1,
+                # randomly shift images vertically (fraction of total height)
+                height_shift_range=0.1,
+                shear_range=0.,  # set range for random shear
+                zoom_range=0.,  # set range for random zoom
+                channel_shift_range=0.,  # set range for random channel shifts
+                # set mode for filling points outside the input boundaries
+                fill_mode='nearest',
+                cval=0.,  # value used for fill_mode = "constant"
+                horizontal_flip=True,  # randomly flip images
+                vertical_flip=False,  # randomly flip images
+                # set rescaling factor (applied before any other
+                # transformation)
+                rescale=None,
+                # set function that will be applied on each input
+                preprocessing_function=None,
+                # image data format, either "channels_first" or "channels_last"
+                data_format=None,
+                # fraction of images reserved for validation (strictly between
+                # 0 and 1)
+                validation_split=0.0)
+
+        # Compute quantities required for feature-wise normalization
+        datagen.fit(x_train)
+
+        # Fit the model on the batches generated by datagen.flow()
+        model.fit_generator(datagen.flow(x_train, y_train,
+                batch_size=BATCH_SIZE), epochs=EPOCHS,
+                validation_data=(x_test, y_test), workers=4,
+                callbacks=[tensorboard])
+
+    # Save model and weights
+    if not os.path.isdir(SAVE_DIRECTORY):
+        os.makedirs(SAVE_DIRECTORY)
+    # Creating the new model path with the specific model name and saving it
+    model_path = os.path.join(SAVE_DIRECTORY, MODEL_NAME)
+    model.save(model_path)
+    
+    # Letting the user know where the model is saved at and what it's name is
+    print('Saved trained model at %s ' % model_path)
+
+    # Score trained model
+    scores = model.evaluate(x_test, y_test, verbose=1)
+    print('Test loss:', scores[0])
+    print('Test accuracy:', scores[1])
 
 # This function performs the example given by the official Keras website found
 # at: https://keras.io/examples/cifar10_cnn/
@@ -218,8 +431,8 @@ def performKerasExample(data_aug, batch, epoch, dir_name, mod_name):
 
     # Adding another layer, a Dropout layer
     #
-    # rate: This is the 0.25, and specifies what percentage (so, in this case,
-    #    25%) of the nuerons to drop out of the network when this layer is hit.
+    # rate: This is the 0.25, and specifies what chance (so, in this case,
+    #    25%) the nueron has to drop out of the network when this layer is hit.
     #    It will select randomly every time. The goal of this is to train the
     #    network without having each nueron rely on its neighbors. If that
     #    happens, the network will become too focused on the training data and
@@ -416,10 +629,14 @@ def performNumerousTests():
    #
    # Pattern of input:
    # performKerasExample(data_aug, batch, epoch, dir_name, mod_name)
+   #
+   # Any test that is commented out by a "#" is because these tests are likely
+   # to cause Spyder to crash. Therefore, they are performed at the end of the
+   # function in order of least likely to crash to most likely to crash
    
    # These tests all use data augmentation, a batch size of 32, but use
    # different epochs
-   performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
+   """performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 32, 150, "test_2_32_Y_150\\", "cifar-10.h5")
    performKerasExample(True, 32, 200, "test_3_32_Y_200\\", "cifar-10.h5")
    performKerasExample(True, 32, 250, "test_4_32_Y_250\\", "cifar-10.h5")
@@ -441,18 +658,32 @@ def performNumerousTests():
    performKerasExample(True, 32, 100, "test_14_32_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 64, 100, "test_15_64_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 128, 100, "test_16_128_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
+   #performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
+   #performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 256, 100, "test_19_256_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 512, 100, "test_20_512_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")
+   #performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")
    
-   # These are starting to figure out the optimal solution tests from data gathered
+   # These are starting to figure out the optimal solution tests from data
+   # gathered
    performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")
    performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
-   performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
+   #performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
    performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")
-   performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")
+   performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")"""
+   
+   # These tests are also run on my model to compare
+   performMyExample(False, 128, 110, "test_27_128_N_110_MyModel\\", "cifar-10.h5")
+   performMyExample(True, 128, 110, "test_28_128_Y_110_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 64, 110, "test_29_64_N_110_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 64, 120, "test_30_64_N_120_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 256, 110, "test_31_256_N_110_MyModel\\", "cifar-10.h5") # THIS TEST MUST TO GO THE PART WHERE THEY MIGHT CRASH AT THE END
+   
+   # Tests that are (somewhat) likely to crash Spyder
+   """performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
+   performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")"""
 
 # This function is the optimal solution that I have found for the CIFAS-10
 # dataset
@@ -467,22 +698,41 @@ def menu():
     menuString += "2. Perform my optimal solution to the CIFAS-10 data set\n"
     menuString += "3. Perform several tests on the Keras 2010 example\n"
     menuString += "4. Perform every option\n"
+    menuString += "5. Quit\n"
     menuString += "Enter your selection here: "
     
-    # Getting the user's input
-    userChoice = getNumInRange(1, 4, menuString)
+    # Creating the warning string in case the user chooses 3 or 4
+    warningString = "WARNING! The amout of tests that will be performed will "
+    warningString += "take anywhere from several days to a week to complete! "
+    warningString += "Are you sure you would like to continue?\n"
+    warningString += "1. Yes\n"
+    warningString += "2. No\n"
+    warningString += "Enter your selection here: "
     
-    # Performing the user's choice
-    if (userChoice == 1):
-        performBaselineKerasTest()
-    elif (userChoice == 2):
-        performOptimalSolution()
-    elif (userChoice == 3):
-        performNumerousTests()
-    else:
-        #performBaselineKerasTest()
-        performOptimalSolution()
-        performNumerousTests()
+    # Default setting for userChoice to make sure the loop is entered
+    userChoice = 1
+    
+    while(userChoice != 5):
+        # Getting the user's input
+        userChoice = getNumInRange(1, 5, menuString)
+    
+        # Performing the user's choice
+        if (userChoice == 1):
+            performBaselineKerasTest()
+        elif (userChoice == 2):
+            performOptimalSolution()
+        elif (userChoice == 3):
+            # Making sure the user actually wants to do this
+            userChoice = getNumInRange(1, 2, warningString)
+            if (userChoice == 1):
+                performNumerousTests()
+        elif (userChoice == 4):
+            # Making sure the user actually wants to do this
+            userChoice = getNumInRange(1, 2, warningString)
+            if (userChoice == 1):
+                performBaselineKerasTest()
+                performOptimalSolution()
+                performNumerousTests()
 
 #
 #
