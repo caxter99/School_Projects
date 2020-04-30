@@ -135,21 +135,15 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     # Creating a sequential model
     model = Sequential()
     
-    model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:]))
+    model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=keras_regularizer, input_shape=x_train.shape[1:]))
     model.add(Activation('relu'))
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(32, (3, 3)))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(MaxPooling2D(pool_size=(2, 2)))
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(Dropout(0.25))
@@ -157,45 +151,27 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
-    model.add(Conv2D(64, (3, 3), padding='same'))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(64, (3, 3)))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(64, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(MaxPooling2D(pool_size=(2, 2)))
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(Dropout(0.25))
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(Flatten())
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(Dense(512))
-    model.add(Activation('relu'))
-    
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
+    model.add(Dense(512, kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
     model.add(Dropout(0.5))
     
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(Dense(NUM_OF_CLASSES))
+    model.add(Dense(NUM_OF_CLASSES, kernel_regularizer=keras_regularizer))
     model.add(Activation('softmax'))
 
     # Initiate the Adam Optimizer
@@ -696,7 +672,7 @@ def menu():
     menuString = "Menu:\n"
     menuString += "1. Perform Keras 2010 Baseline test\n"
     menuString += "2. Perform my optimal solution to the CIFAS-10 data set\n"
-    menuString += "3. Perform several tests on the Keras 2010 example\n"
+    menuString += "3. Perform many tests (31)\n"
     menuString += "4. Perform every option\n"
     menuString += "5. Quit\n"
     menuString += "Enter your selection here: "
