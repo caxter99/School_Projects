@@ -16,7 +16,7 @@ from tensorflow.python.keras.callbacks import TensorBoard
 from tensorflow.python.keras.datasets import cifar10
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Dropout, Activation, Flatten
+from tensorflow.python.keras.layers import Dense, Dropout, Activation, Flatten, BatchNormalization
 from tensorflow.python.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.python.keras import regularizers
 
@@ -138,44 +138,73 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=keras_regularizer, input_shape=x_train.shape[1:]))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
+    
+    model.add(BatchNormalization())
     
     model.add(MaxPooling2D(pool_size=(2, 2)))
     
+    model.add(BatchNormalization())
+    
     model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(Dropout(0.25))
+    
+    model.add(BatchNormalization())
     
     model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(Conv2D(64, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(BatchNormalization())
     
     model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
+    
+    model.add(BatchNormalization())
     
     model.add(Dropout(0.25))
     
+    model.add(BatchNormalization())
+    
     model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(Flatten())
+    
+    model.add(BatchNormalization())
     
     model.add(Dense(512, kernel_regularizer=keras_regularizer))
     model.add(Activation('relu'))
     
+    model.add(BatchNormalization())
+    
     model.add(Dropout(0.5))
+    
+    model.add(BatchNormalization())
     
     model.add(Dense(NUM_OF_CLASSES, kernel_regularizer=keras_regularizer))
     model.add(Activation('softmax'))
 
     # Initiate the Adam Optimizer
-    opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
+    #opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
+    opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=1e-6)
 
     # Now it's time to compile the model
     model.compile(loss='categorical_crossentropy', optimizer=opt,
@@ -642,18 +671,21 @@ def performNumerousTests():
    
    # These are starting to figure out the optimal solution tests from data
    # gathered
-   performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")
-   performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
+   performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")"""
+   performKerasExample(False, 128, 120, "test_32_128_N_120\\", "cifar-10.h5")
+   """performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
    #performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
    performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")
-   performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")"""
+   performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")
    
    # These tests are also run on my model to compare
-   performMyExample(False, 128, 110, "test_27_128_N_110_MyModel\\", "cifar-10.h5")
-   performMyExample(True, 128, 110, "test_28_128_Y_110_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 128, 110, "test_27_128_N_110_MyModel\\", "cifar-10.h5")"""
+   performKerasExample(False, 128, 120, "test_33_128_N_120\\", "cifar-10.h5")
+   """performMyExample(True, 128, 110, "test_28_128_Y_110_MyModel\\", "cifar-10.h5")
    performMyExample(False, 64, 110, "test_29_64_N_110_MyModel\\", "cifar-10.h5")
    performMyExample(False, 64, 120, "test_30_64_N_120_MyModel\\", "cifar-10.h5")
-   performMyExample(False, 256, 110, "test_31_256_N_110_MyModel\\", "cifar-10.h5") # THIS TEST MUST TO GO THE PART WHERE THEY MIGHT CRASH AT THE END
+   performMyExample(False, 256, 110, "test_31_256_N_110_MyModel\\", "cifar-10.h5")"""
+   # NEXT MODEL IS  NOT TEST #32, BUT TEST #34 (see between tests 22 and 23 and tests 27 and 28)
    
    # Tests that are (somewhat) likely to crash Spyder
    """performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
