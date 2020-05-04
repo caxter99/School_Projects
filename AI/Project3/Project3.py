@@ -93,7 +93,7 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
                               profile_batch=10000000000)
     
     # Creating the keras regulizer
-    keras_regularizer = regularizers.l2(DECAY)
+    #keras_regularizer = regularizers.l2(DECAY)
 
     # Getting the CIFAR-10 data set and splitting it into training and testing
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -135,35 +135,12 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     # Creating a sequential model
     model = Sequential()
     
-    model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=keras_regularizer, input_shape=x_train.shape[1:]))
+    model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:]))
     model.add(Activation('relu'))
     
     model.add(BatchNormalization())
     
-    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(BatchNormalization())
-    
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    
-    model.add(BatchNormalization())
-    
-    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(BatchNormalization())
-    
-    model.add(Dropout(0.25))
-    
-    model.add(BatchNormalization())
-    
-    model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras_regularizer))
-    model.add(Activation('relu'))
-    
-    model.add(BatchNormalization())
-    
-    model.add(Conv2D(64, (3, 3), kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation('relu'))
     
     model.add(BatchNormalization())
@@ -172,7 +149,7 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     
     model.add(BatchNormalization())
     
-    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation('relu'))
     
     model.add(BatchNormalization())
@@ -181,7 +158,30 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     
     model.add(BatchNormalization())
     
-    model.add(Conv2D(32, (3, 3), kernel_regularizer=keras_regularizer))
+    model.add(Conv2D(64, (3, 3), padding='same'))
+    model.add(Activation('relu'))
+    
+    model.add(BatchNormalization())
+    
+    model.add(Conv2D(64, (3, 3)))
+    model.add(Activation('relu'))
+    
+    model.add(BatchNormalization())
+    
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    
+    model.add(BatchNormalization())
+    
+    model.add(Conv2D(32, (3, 3)))
+    model.add(Activation('relu'))
+    
+    model.add(BatchNormalization())
+    
+    model.add(Dropout(0.25))
+    
+    model.add(BatchNormalization())
+    
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation('relu'))
     
     model.add(BatchNormalization())
@@ -190,7 +190,7 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     
     model.add(BatchNormalization())
     
-    model.add(Dense(512, kernel_regularizer=keras_regularizer))
+    model.add(Dense(512))
     model.add(Activation('relu'))
     
     model.add(BatchNormalization())
@@ -199,12 +199,12 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
     
     model.add(BatchNormalization())
     
-    model.add(Dense(NUM_OF_CLASSES, kernel_regularizer=keras_regularizer))
+    model.add(Dense(NUM_OF_CLASSES))
     model.add(Activation('softmax'))
 
     # Initiate the Adam Optimizer
-    #opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
-    opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=1e-6)
+    opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
+    #opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=1e-6)
 
     # Now it's time to compile the model
     model.compile(loss='categorical_crossentropy', optimizer=opt,
@@ -641,7 +641,7 @@ def performNumerousTests():
    
    # These tests all use data augmentation, a batch size of 32, but use
    # different epochs
-   """performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
+   performKerasExample(True, 32, 100, "test_1_32_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 32, 150, "test_2_32_Y_150\\", "cifar-10.h5")
    performKerasExample(True, 32, 200, "test_3_32_Y_200\\", "cifar-10.h5")
    performKerasExample(True, 32, 250, "test_4_32_Y_250\\", "cifar-10.h5")
@@ -671,27 +671,28 @@ def performNumerousTests():
    
    # These are starting to figure out the optimal solution tests from data
    # gathered
-   performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")"""
+   performKerasExample(False, 128, 110, "test_22_128_N_110\\", "cifar-10.h5")
    performKerasExample(False, 128, 120, "test_32_128_N_120\\", "cifar-10.h5")
-   """performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
+   performKerasExample(True, 128, 110, "test_23_128_Y_110\\", "cifar-10.h5")
    #performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
    performKerasExample(False, 64, 110, "test_25_64_N_110\\", "cifar-10.h5")
    performKerasExample(False, 64, 120, "test_26_64_N_120\\", "cifar-10.h5")
+   performKerasExample(True, 128, 150, "test_34_128_Y_150\\", "cifar-10.h5")
    
    # These tests are also run on my model to compare
-   performMyExample(False, 128, 110, "test_27_128_N_110_MyModel\\", "cifar-10.h5")"""
-   performKerasExample(False, 128, 120, "test_33_128_N_120\\", "cifar-10.h5")
-   """performMyExample(True, 128, 110, "test_28_128_Y_110_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 128, 110, "test_27_128_N_110_MyModel\\", "cifar-10.h5")
+   performMyExample(False, 128, 120, "test_33_128_N_120_MyModel\\", "cifar-10.h5")
+   performMyExample(True, 128, 110, "test_28_128_Y_110_MyModel\\", "cifar-10.h5")
    performMyExample(False, 64, 110, "test_29_64_N_110_MyModel\\", "cifar-10.h5")
    performMyExample(False, 64, 120, "test_30_64_N_120_MyModel\\", "cifar-10.h5")
-   performMyExample(False, 256, 110, "test_31_256_N_110_MyModel\\", "cifar-10.h5")"""
-   # NEXT MODEL IS  NOT TEST #32, BUT TEST #34 (see between tests 22 and 23 and tests 27 and 28)
+   performMyExample(False, 256, 110, "test_31_256_N_110_MyModel\\", "cifar-10.h5")
+   performMyExample(True, 128, 150, "test_35_128_Y_150_MyModel\\", "cifar-10.h5")
    
    # Tests that are (somewhat) likely to crash Spyder
-   """performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
+   performKerasExample(False, 256, 110, "test_24_256_N_110\\", "cifar-10.h5")
    performKerasExample(True, 1024, 100, "test_21_1024_Y_100\\", "cifar-10.h5")
    performKerasExample(True, 10000, 100, "test_17_10000_Y_100\\", "cifar-10.h5")
-   performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")"""
+   performKerasExample(True, 50000, 100, "test_18_50000_Y_100\\", "cifar-10.h5")
 
 # This function is the optimal solution that I have found for the CIFAS-10
 # dataset
@@ -704,7 +705,7 @@ def menu():
     menuString = "Menu:\n"
     menuString += "1. Perform Keras 2010 Baseline test\n"
     menuString += "2. Perform my optimal solution to the CIFAS-10 data set\n"
-    menuString += "3. Perform many tests (31)\n"
+    menuString += "3. Perform many tests (35)\n"
     menuString += "4. Perform every option\n"
     menuString += "5. Quit\n"
     menuString += "Enter your selection here: "
