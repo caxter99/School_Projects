@@ -204,7 +204,7 @@ def performMyExample(data_aug, batch, epoch, dir_name, mod_name):
 
     # Initiate the Adam Optimizer
     opt = keras.optimizers.Adam(learning_rate=0.0001, decay=DECAY)
-    #opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=1e-6)
+    #opt = keras.optimizers.RMSprop(learning_rate=0.0001, decay=DECAY)
 
     # Now it's time to compile the model
     model.compile(loss='categorical_crossentropy', optimizer=opt,
@@ -697,7 +697,8 @@ def performNumerousTests():
 # This function is the optimal solution that I have found for the CIFAS-10
 # dataset
 def performOptimalSolution():
-    print("Perform optimal solution")
+    # This is the same as test 35
+   performMyExample(True, 128, 150, "optimal_solution\\", "cifar-10.h5")
 
 # This function gets the menu input and calls the appropriate functions
 def menu():
