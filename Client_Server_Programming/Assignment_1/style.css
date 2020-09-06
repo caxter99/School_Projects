@@ -1,0 +1,30 @@
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding 6px;
+  width: 200px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+caption {
+  font-size: 150%;
+  font-weight: bold;
+}
+
+h4 {
+  font-family: verdana
+}
+
+p.grab {
+  font-weight: bold;
+  font-style: italic;
+  color: red;
+}
+
+body {
+  background-image: url("blue.jpg");
+  background-size: 500px 500px;
+}
