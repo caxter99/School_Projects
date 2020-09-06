@@ -19,9 +19,9 @@ img.inline {
 img.review {
   padding: 1px;
   width: 100px;
-  height: 75px;
+  height: 25px;
 }
 
-div.top-break-line {
+header.top-break-line {
   border-top: 5px solid black;
 }

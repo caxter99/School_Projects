@@ -10,7 +10,7 @@
 <title>My Sample Art Store</title>
 
 <body>
-  <div>
+  <header>
     <p>
       <a href="#">Home</a> |
       <a href="#">Artists</a> |
@@ -24,11 +24,12 @@
     <p>
       by <a href="#">Devin Hopkins</a>
     </p>
+  </header>
 
-  </div>
-
-  <div>
-    <img class="portrait" src="images/Mademoiselle_Caroline_Rivière.jpg" alt="Portrait of Mademoiselle Caroline Rivière" title="Portrait of Mademoiselle Caroline Rivière"/>
+  <header>
+    <figure>
+      <img class="portrait" src="images/Mademoiselle_Caroline_Rivière.jpg" alt="Portrait of Mademoiselle Caroline Rivière" title="Portrait of Mademoiselle Caroline Rivière"/>
+    </figure>
 
     <p>
       The portrait of Mademoiselle Caroline Rivière was painted in 1806 by the French Neoclassical artist Jean<br/>
@@ -47,178 +48,44 @@
       <a href="#"><img class="tiny" src="images/shopping_cart.png" alt="Picture of a shopping cart."/>Add to Cart</a>
       <a href="#"><img class="tiny" src="images/add_to_favorites.png" alt="Picture of a star."/>Add to Favorites</a>
     </p>
-  </div>
+  </header>
 
-  <div>
+  <header>
     <h2>Related Paintings</h2>
 
-    <img class="inline" src="images/bertin.jpg" alt="Portrait of Monsieur Bertin" title="Portrait of Monsieur Bertin"/>
-    <img class="inline" src="images/homer.jpg" alt="The Apotheosis of Homer" title="The Apotheosis of Homer"/>
-    <img class="inline" src="images/la_fornarina.jpg" alt="La Fornarina" title="La Fornarina"/>
-    <img class="inline" src="images/napolean_on_the_throne.jpg" alt="Napoléon on his Imperial Throne" title="Napoléon on his Imperial Throne"/>
-  </div>
+    <figure>
+      <img class="inline" src="images/bertin.jpg" alt="Portrait of Monsieur Bertin" title="Portrait of Monsieur Bertin"/>
+      <img class="inline" src="images/homer.jpg" alt="The Apotheosis of Homer" title="The Apotheosis of Homer"/>
+      <img class="inline" src="images/la_fornarina.jpg" alt="La Fornarina" title="La Fornarina"/>
+      <img class="inline" src="images/napolean_on_the_throne.jpg" alt="Napoléon on his Imperial Throne" title="Napoléon on his Imperial Throne"/>
+    </figure>
+  </header>
 
-  <div>
+  <header>
     <h2>Reviews</h2>
 
     <p>
       <b>Love this painting</b><br/>
-      John Smith <img class="review" src="images/4_out_of_5_stars.png" alt="Review" title="Review"/>
+      John Smith <img class="review" src="images/4_out_of_5_stars.jpeg" alt="Review" title="Review"/>
     </p>
-  </div>
 
-  <div class="top-break-line">
+    <p>
+      This is one of my favorites!
+    </p>
+  </header>
+
+  <header class="top-break-line">
     <p>
       <a href="#">Home</a> |
       <a href="#">Artists</a> |
       <a href="#">Artworks</a> |
-      <a href="#">About Us</a> |
-      <a href="#">Search</a>
+      <a href="#">About Us</a>
     </p>
 
     <p>
       <i>Copyright &copy; 2020 My Sample Art Store</i>
     </p>
-  </div>
-
-	<!-- <p> Completed on: September 10, 2018 at 8:49 pm </p>
-
-	<p> Sign in: </p>
-
-	<form action="">
-		<p><label> Username: <input type="text" name="Username" value="" /></label></p>
-		<p><label> Password: <input type="password" name="Password" value="" /></label></p>
-	</form>
-
-	<img src="ocean.jpg" alt="Something went wrong, no picture :(">
-
-	<table style = "width:99%">
-	<caption> Major Oceans </caption>
-		<tr>
-			<th> </th>
-			<th> Arctic Ocean </th>
-			<th> Atlantic Ocean </th>
-			<th> Indian Ocean </th>
-			<th> Pacific Ocean </th>
-			<th> Southern Ocean </th>
-		</tr>
-
-		<tr>
-			<th> Area (in Million <br /> Miles Squared) </th>
-			<td> 5.427 </td>
-			<td> 41.1 </td>
-			<td> 27.24 </td>
-			<td> 62.64 </td>
-			<td> 7.849 </td>
-		</tr>
-
-		<tr>
-			<th> Fish Found </th>
-			<td>
-				<ul>
-					<li> Capelin </li>
-					<li> Arctic Char </li>
-					<li> Atlantic Cod </li>
-					<li> Common Seasnail </li>
-				</ul>
-			</td>
-			<td>
-				<ul>
-					<li> Black Sea Bass </li>
-					<li> Sheepshead </li>
-					<li> Scup </li>
-					<li> Red Drum </li>
-				</ul>
-			</td>
-			<td>
-				<ul>
-					<li> Butter Fish </li>
-					<li> Surmai </li>
-					<li> Bangda Mackerel </li>
-					<li> Bombay Duck </li>
-				</ul>
-			</td>
-			<td>
-				<ul>
-					<li> Flatfish </li>
-					<li> Alaska Pollock </li>
-					<li> Japanese Horse Mackerel </li>
-					<li> Amberjack </li>
-				</ul>
-			</td>
-			<td>
-				<ul>
-					<li> Antarctic Toothfish </li>
-					<li> Toothfish </li>
-					<li> Cod </li>
-					<li> Krill </li>
-				</ul>
-			</td>
-		</tr>
-
-		<tr>
-			<th> Brief Overview </th>
-			<td><p> The Arctic Ocean is the smallest of the world's oceans. It is also the most shallow. It's located in the north polar region in the North Hemisphere. </p></td>
-			<td><p> The Altantic Ocean is unique in that it separates the Old World from the New World. It lies between Europe and Africa on the east, and the Americas on the west. </p></td>
-			<td><p> The Indian Ocean contains roughly 20% of all of Earth's water. As you may have been able to guess, the Indian Ocean is named after India. </p></td>
-			<td><p> The Pacific Ocean is larger than all the dry land on Earth's surface combined. It also has the deepest point in the world in it: the Mariana Trench. </p></td>
-			<td><p> The Southern Ocean is the opposite of the Arctic Ocean, in the sense that it covers the south polar region in the Southern Hemisphere.Not all countries consider the Southern Ocean an
-					actual ocean, however. </p></td>
-		</tr>
-
-		<tr>
-			<th> Link for More <br /> Information </th>
-			<td><a href="https://en.wikipedia.org/wiki/Arctic_Ocean" target="_blank"> Arctic Ocean </a></td>
-			<td><a href="https://en.wikipedia.org/wiki/Atlantic_Ocean" target="_blank"> Atlantic Ocean </a></td>
-			<td><a href="https://en.wikipedia.org/wiki/Indian_Ocean" target="_blank"> Indian Ocean </a></td>
-			<td><a href="https://en.wikipedia.org/wiki/Pacific_Ocean" target="_blank"> Pacific Ocean </a></td>
-			<td><a href="https://en.wikipedia.org/wiki/Southern_Ocean" target="_blank"> Southern Ocean </a></td>
-	</table>
-
-	<br />
-	<img src="ocean2.jpg" alt="Something went wrong, no picture :(" >
-
-	<p> Got you in the mood to listen to some relaxing ocean waves? Listen below! </p>
-
-	<audio controls="controls">
-		<source src="oceanNoise.wav">
-	</audio>
-
-	<h4> My Favorite to Least Favorite Ocean </h4>
-	<ol>
-		<li> Pacific Ocean </li>
-		<li> Arctic Ocean </li>
-		<li> Indian Ocean </li>
-		<li> Atlantic Ocean </li>
-		<li> Southern Ocean </li>
-	</ol>
-
-	<video width="500" height="300" controls="controls">
-		<source src="surfingVideo.mp4">
-		Sadly, this video cannot play in your browser's current conditions.
-	</video>
-
-	<hr>
-
-	<p style = "font-size: 1.5em"> Lastly, I hope you are enjoying oceans as much as I am. But here's a paragraph of precaution: </p>
-
-	<blockquote>
-		The oceans require a lot of care from us. For instance, our love of fishing has driven oceans to the point of nearly
-		being devoid of life, especially when compared to long ago. It's not just fish getting killed, however, large predators
-		are being hunted for their fins. This not only leads to small amounts of predators, but it ruins ecosystems because of
-		the shift in the food chain. Another problem is that we are burning so much fossil fuels and putting a crap ton of CO2
-		into the atmosphere. The ocean naturally takes in CO2 and thus the more we put into the atmosphere, the more the ocean
-		absorbs. As the ocean absorbs more CO2, it becomes more acidic. Making the ocean more acidic isn't our only problem. The
-		amount of trash we dump into the ocean is also killing wildlife. This massive killing of wildlife is creating ocean dead
-		zones, which are places where no living things remain. This includes coral reefs. Coral reefs are a huge deal when it
-		comes to protecting the oceans. This is because coral reefs protect smaller ocean life from larger ocean life, and thus
-		protects ecosystems. Curious for more?
-		<a href="https://www.treehugger.com/clean-technology/the-ocean-has-issues-7-biggest-problems-facing-our-seas-and-how-to-fix-them.html"
-		target="_blank"> Click here! </a>
-	</blockquote>
-
-	<p class="demand"> Thank you for visiting this website! </p>
-	<p style = "font-size: 1.5em"> Come again! </p> -->
+  </header>
 </body>
 </head>
 </html>
