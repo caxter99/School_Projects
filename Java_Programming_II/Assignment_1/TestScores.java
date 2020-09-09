@@ -36,7 +36,7 @@ public class TestScores
       
       int[] validTestScores = testScoreGenerator.generateValidTestScores(10);
       TestScores validScores = new TestScores(validTestScores);
-      // testsds
+      // testsdsdsds
       validScores.displayTestScores();
       System.out.println("The average of the valid test scores is: " + validScores.getAverageTestScore());
    }
