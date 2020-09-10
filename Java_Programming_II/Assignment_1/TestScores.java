@@ -1,6 +1,7 @@
 import java.util.stream.*;
+import java.io.*;
 
-public class TestScores
+public class TestScores implements Serializable
 {
    final int MAX_SCORE = 100;
    final int MIN_SCORE = 0;
@@ -53,15 +54,39 @@ public class TestScores
    
    public static void main(String[] args) throws Exception
    {
+      final int NUM_OF_TEST_SCORES_OBJECTS = 6;
+      final String SERIALIZED_FILENAME = "serializedTestScores.ser";
+      
       GenerateTestScores testScoreGenerator = new GenerateTestScores();
       
-      int[] validTestScores = testScoreGenerator.generateValidTestScores(10);
-      TestScores validScores = new TestScores(validTestScores);
+      TestScores[] validScores = new TestScores[NUM_OF_TEST_SCORES_OBJECTS];
+      for (int x = 0; x < validScores.length; x++)
+      {
+         validScores[x] = new TestScores(testScoreGenerator.generateValidTestScores((x + 1) * 2));
+      }
       
-      validScores.displayTestScores();
-      System.out.println("The average of the valid test scores is: " + validScores.getAverageTestScore());
+      System.out.println("Displaying all of the scores and their averages in each TestScores object:");
+      for (int x = 0; x < validScores.length; x++)
+      {
+         validScores[x].displayTestScores();
+         System.out.println("The average of the valid test scores is: " + validScores[x].getAverageTestScore());
+         System.out.println();
+      }
       
-      int[] invalidTestScores = testScoreGenerator.generateInvalidTestScores(10);
-      TestScores invalidScores = new TestScores(invalidTestScores);
+      System.out.println("Serializing the TestScores objects...");
+      
+      TestScoreSerializer testScoreSerializer = new TestScoreSerializer(SERIALIZED_FILENAME);
+      
+      for (int x = 0; x < validScores.length; x++)
+      {
+         testScoreSerializer.serializeTestScores(validScores[x]);
+      }
+      
+      testScoreSerializer.closeSerializer();
+      
+      System.out.println("Finished serializing the TestScores objects.");
+      
+      //int[] invalidTestScores = testScoreGenerator.generateInvalidTestScores(10);
+      //TestScores invalidScores = new TestScores(invalidTestScores);
    }
 }
