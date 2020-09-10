@@ -86,7 +86,23 @@ public class TestScores implements Serializable
       
       System.out.println("Finished serializing the TestScores objects.");
       
-      //int[] invalidTestScores = testScoreGenerator.generateInvalidTestScores(10);
-      //TestScores invalidScores = new TestScores(invalidTestScores);
+      TestScoreDeserializer testScoreDeserializer = new TestScoreDeserializer(SERIALIZED_FILENAME);
+      
+      System.out.println("Deserializing those TestScores objects...");
+      
+      validScores = testScoreDeserializer.deserializeAllTestScores(validScores.length);
+      
+      System.out.println("Finished deserializing the TestScores objects.");
+      
+      System.out.println("Displaying all of the scores and their averages in each TestScores object after being deserialized:");
+      for (int x = 0; x < validScores.length; x++)
+      {
+         validScores[x].displayTestScores();
+         System.out.println("The average of the valid test scores is: " + validScores[x].getAverageTestScore());
+         System.out.println();
+      }
+      
+      int[] invalidTestScores = testScoreGenerator.generateInvalidTestScores(10);
+      TestScores invalidScores = new TestScores(invalidTestScores);
    }
 }
