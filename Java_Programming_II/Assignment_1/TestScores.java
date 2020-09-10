@@ -23,8 +23,6 @@ public class TestScores
          if (x < testScores.length - 1)
          {
             System.out.print(", ");
-         } else {
-            System.out.println();
          }
       }
       System.out.println();
@@ -36,7 +34,10 @@ public class TestScores
       
       int[] validTestScores = testScoreGenerator.generateValidTestScores(10);
       TestScores validScores = new TestScores(validTestScores);
-      // testsdsdsdssdasdsa
+      
+      int[] invalidTestScores = testScoreGenerator.generateInvalidTestScores(10);
+      TestScores invalidScores = new TestScores(invalidTestScores);
+      
       validScores.displayTestScores();
       System.out.println("The average of the valid test scores is: " + validScores.getAverageTestScore());
    }
