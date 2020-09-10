@@ -12,3 +12,6 @@ __pycache__
 
 # For Algorithms
 your
+
+# For Java
+*.class
