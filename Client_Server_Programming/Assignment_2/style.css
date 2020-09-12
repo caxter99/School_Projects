@@ -6,24 +6,36 @@
   border: 0px solid black;
 }
 
-.title_width {
+.title_box {
   width: 30%;
-}
-
-.title_height {
-  width: 20%;
-}
-
-.body_width {
-  width: 30%;
-}
-
-.body_height {
-  height: 75%;
-}
-
-.header_box_color {
+  height: 15%;
+  padding: 1%;
+  margin: 1%;
   background-color: rgba(33, 33, 33, 0.5);
+}
+
+.body_box {
+  width: 30%;
+  height: 30%;
+  padding: 1%;
+  margin: 1%;
+  background-color: rgba(224, 224, 224, 0.5);
+}
+
+.main_body_box {
+  width: 90%;
+  height: 80%;
+  padding: 1%;
+  margin: 1%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.sub_body_box {
+  width: 90%;
+  height: 40%;
+  padding: 1%;
+  margin: 1%;
+  background-color: rgba(66, 66, 66, 0.5);
 }
 
 .white {
@@ -44,16 +56,4 @@
 
 .merriweather_font {
   font-family: 'Merriweather';
-}
-
-.main_box_title_area_color {
-  background-color: rgba(224, 224, 224, 0.5);
-}
-
-.main_box_body_area_color {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.main_box_sub_body_area_color {
-  background-color: rgba(66, 66, 66, 0.5);
 }
