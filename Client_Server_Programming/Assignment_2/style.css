@@ -7,7 +7,7 @@
 }
 
 .title_box {
-  width: 30%;
+  width: 50%;
   height: 15%;
   padding: 1%;
   margin: 1%;
@@ -15,7 +15,7 @@
 }
 
 .body_box {
-  width: 30%;
+  width: 50%;
   height: 30%;
   padding: 1%;
   margin: 1%;
@@ -36,6 +36,20 @@
   padding: 1%;
   margin: 1%;
   background-color: rgba(66, 66, 66, 0.5);
+}
+
+.recent_acquisitions_box {
+  width: 50%;
+  height: 35%;
+  padding: 1%;
+  margin: 1%;
+  background-color: rgba(33, 33, 33, 0.5);
+}
+
+.recent_acquisitions_image {
+  width: 30%;
+  height: 75%;
+  border: 5px solid black;
 }
 
 .white {
