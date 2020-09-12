@@ -16,3 +16,36 @@
   color: white;
   font-family: 'Merriweather';
 }
+
+.main_box_title_area {
+  background-color: rgba(224, 224, 224, 0.5);
+  width: 30%;
+  height: 20%;
+}
+
+.main_box_title_area_text {
+  color: black;
+  font-family: 'Merriweather';
+}
+
+.main_box_body_area {
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 30%;
+  height: 20%;
+}
+
+.main_box_body_area_text {
+  color: black;
+  font-family: 'Merriweather';
+}
+
+.main_box_sub_body_area {
+  background-color: rgba(66, 66, 66, 0.5);
+  width: 30%;
+  height: 20%;
+}
+
+.main_box_sub_body_area_text {
+  color: white;
+  font-family: 'Merriweather';
+}
