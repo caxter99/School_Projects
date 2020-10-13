@@ -21,11 +21,15 @@ public class EmployeeMap
    
    public String toString()
    {
-      String mapString = "Displaying all employees in the map nicely:\n";
+      String mapString = "Displaying all employees in the map raw:\n";
+      mapString += employeeMap + "\n";
+      
+      mapString += "\nDisplaying all employees in the map nicely:\n";
       for (Map.Entry<Integer, Employee> mapElement : employeeMap.entrySet())
       {
          mapString += "ID: " + mapElement.getKey() + ", Name: " + mapElement.getValue().name + "\n";
-      } 
+      }
+      
       return mapString;
    }
 }
