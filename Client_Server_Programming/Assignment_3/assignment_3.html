@@ -67,26 +67,26 @@ beforeSubmit = function() {
       <tbody>
         <tr>
           <th class="blue_alternating">Customer Name</th>
-          <td class="blue_alternating"><input type="text" /></td>
+          <td class="blue_alternating"><input type="text" name="name" /></td>
         </tr>
         <tr>
           <th class="blue_alternating">Customer Email</th>
-          <td class="blue_alternating"><input type="email" placeholder="example@gmail.com" id="customerEmail"/></td>
+          <td class="blue_alternating"><input type="email" placeholder="example@gmail.com" id="customerEmail" name="email" /></td>
         </tr>
         <tr>
           <th class="blue_alternating">Customer Phone</th>
-          <td class="blue_alternating"><input type="tel" placeholder="123-456-7890" id="customerPhone" /></td>
+          <td class="blue_alternating"><input type="tel" placeholder="123-456-7890" id="customerPhone" name="phoneNumber" /></td>
         </tr>
         <tr>
           <th class="blue_alternating">Rental Number of Days</th>
-          <td class="blue_alternating"><input type="number" /></td>
+          <td class="blue_alternating"><input type="number" name="numberOfRentalDays" /></td>
         </tr>
         <tr>
           <th class="blue_alternating">Car Size</th>
           <td class="blue_alternating">
-            <input type="radio" name="car_size" checked /><label>Full</label>
-            <input type="radio" name="car_size" /><label>Medium</label>
-            <input type="radio" name="car_size" /><label>Small</label>
+            <input type="radio" value="full" name="carSize" checked /><label>Full</label>
+            <input type="radio" value="medium" name="carSize" /><label>Medium</label>
+            <input type="radio" value="small" name="carSize" /><label>Small</label>
           </td>
         </tr>
         <tr>
