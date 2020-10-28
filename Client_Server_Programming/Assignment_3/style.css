@@ -6,12 +6,12 @@ tbody tr:nth-child(even){
   background-color: #FFFFFF;
 }
 
-.blue_alternating {
+.blue-alternating {
   border: 1px solid #0066FF;
   border-collapse: collapse;
 }
 
-.blue_top_row {
+.blue-top-row {
   background-color: #0066FF;
 }
 
@@ -23,7 +23,7 @@ tbody tr:nth-child(even){
   color: #0066FF;
 }
 
-.adapt_to_above {
+.inherit-formatting {
   display: inline-block;
 }
 
