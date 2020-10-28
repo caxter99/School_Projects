@@ -1,9 +1,17 @@
-table, td, th.blue_alternating {
+tbody tr:nth-child(odd){
+  background-color: #00CCFF;
+}
+
+tbody tr:nth-child(even){
+  background-color: #FFFFFF;
+}
+
+.blue_alternating {
   border: 1px solid #0066FF;
   border-collapse: collapse;
 }
 
-th.blue_top_row {
+.blue_top_row {
   background-color: #0066FF;
 }
 
@@ -15,15 +23,7 @@ th.blue_top_row {
   color: #0066FF;
 }
 
-tbody tr:nth-child(odd){
-  background-color: #00CCFF;
-}
-
-tbody tr:nth-child(even){
-  background-color: #FFFFFF;
-}
-
-form.adapt_to_above {
+.adapt_to_above {
   display: inline-block;
 }
 
@@ -32,6 +32,8 @@ form.adapt_to_above {
 }
 
 /*
+Color Info:
+
 #FFFFFF = white
 #0066FF = deep, somewhat dark blue
 #00CCFF = light, baby blue
