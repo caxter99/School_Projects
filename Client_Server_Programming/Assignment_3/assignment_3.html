@@ -9,50 +9,53 @@ Assignment 3
 <meta charset = "utf-8">
 <link rel="stylesheet" type="text/css" href="style.css" />
 
-<h1>XYZ Car Rental</h1>
 <title>XYZ Car Rental</title>
 
-<body>
+<body class="center">
+  <h1 class="blue">XYZ Car Rental</h1>
 
-  <form>
-    <table>
-      <tr>
-        <th> XYZ Car Rental </th>
-      </tr>
-      <tr>
-        <th> Customer Name</th>
-        <td><input type="text"/></td>
-      </tr>
-      <tr>
-        <th>Customer Email</th>
-        <td><input type="email"/></td>
-      </tr>
-      <tr>
-        <th>Customer Phone</th>
-        <td><input type="telphone"/></td>
-      </tr>
-      <tr>
-        <th>Rental Number of Days</th>
-        <td><input type="text"/></td>
-      </tr>
-      <tr>
-        <th>Car Size</th>
-        <td>
-          <input type="radio"/><label>Full</label>
-          <input type="radio"/><label>Medium</label>
-          <input type="radio"/><label>Small</label>
-        </td>
-      </tr>
-      <tr>
-        <th></th>
-        <td>
-          <button type="submit">Submit</button>
-          <button type="reset">Reset</button>
-        </td>
-      </tr>
+  <form class="adapt_to_above">
+    <table class="blue_alternating center">
+      <thead>
+        <tr>
+          <th class="blue_top_row white" colspan="2">XYZ Car Rental</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="blue_alternating">Customer Name</th>
+          <td class="blue_alternating"><input type="text" /></td>
+        </tr>
+        <tr>
+          <th class="blue_alternating">Customer Email</th>
+          <td class="blue_alternating"><input type="email" /></td>
+        </tr>
+        <tr>
+          <th class="blue_alternating">Customer Phone</th>
+          <td class="blue_alternating"><input type="telphone" /></td>
+        </tr>
+        <tr>
+          <th class="blue_alternating">Rental Number of Days</th>
+          <td class="blue_alternating"><input type="number" /></td>
+        </tr>
+        <tr>
+          <th class="blue_alternating">Car Size</th>
+          <td class="blue_alternating">
+            <input type="radio" name="car_size" checked /><label>Full</label>
+            <input type="radio" name="car_size" /><label>Medium</label>
+            <input type="radio" name="car_size" /><label>Small</label>
+          </td>
+        </tr>
+        <tr>
+          <th></th>
+          <td class="blue_alternating">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </form>
-
 </body>
 </head>
 </html>
