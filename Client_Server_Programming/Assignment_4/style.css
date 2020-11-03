@@ -1,0 +1,40 @@
+tbody tr:nth-child(odd){
+  background-color: #00CCFF;
+}
+
+tbody tr:nth-child(even){
+  background-color: #FFFFFF;
+}
+
+.blue-alternating {
+  border: 1px solid #0066FF;
+  border-collapse: collapse;
+}
+
+.blue-top-row {
+  background-color: #0066FF;
+}
+
+.white {
+  color: #FFFFFF;
+}
+
+.blue {
+  color: #0066FF;
+}
+
+.inherit-formatting {
+  display: inline-block;
+}
+
+.center {
+  text-align: center;
+}
+
+/*
+Color Info:
+
+#FFFFFF = white
+#0066FF = deep, somewhat dark blue
+#00CCFF = light, baby blue
+*/
