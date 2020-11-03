@@ -46,7 +46,7 @@ hasValidRentalDays = function() {
 };
 
 setFormAction = function() {
-  document.getElementById('carRentalForm').action = 'mailto:' + getCustomerEmail();
+  document.getElementById('carRentalForm').action = 'assignment_4.php';
 };
 
 beforeSubmit = function() {
@@ -54,6 +54,13 @@ beforeSubmit = function() {
   var invalidPhoneMessage = 'Your phone number is not valid. Please be sure to only have 10 digits. If you choose to use dashes, make sure it is in this format: 123-456-7890';
   var invalidNameMessage = 'Your name cannot be blank.';
   var invalidRentalDaysMessage = 'You must specify the number of days you plan on renting the car.';
+
+  // EASY TESTING ONLY
+  document.getElementById('customerName').value = 'devin hopkins';
+  document.getElementById('customerEmail').value = 'example@gmail.com';
+  document.getElementById('customerPhone').value = '1234567890';
+  document.getElementById('numberOfRentalDays').value = '2';
+
 
   if (!hasValidName()) {
     alert(invalidNameMessage);

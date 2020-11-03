@@ -1,0 +1,3 @@
+Command to get to htdocs quickly:
+
+cd ~/.bitnami/stackman/machines/xampp/volumes/root/htdocs/csp_assignment_4
