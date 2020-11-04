@@ -60,7 +60,8 @@
 	}
 
 	function getTotalCostOfCarRental() {
-		return getCarCostPerDay() * getNumberOfRentalDays();
+		$totalCost = getCarCostPerDay() * getNumberOfRentalDays();
+		return number_format((float)$totalCost, 2, '.', '');
 	}
 ?>
 
@@ -85,7 +86,7 @@
       <td class="blue-alternating"><?php echo getPhoneNumber(); ?></td>
     </tr>
     <tr>
-      <th class="blue-alternating">Rental Number of Days</th>
+      <th class="blue-alternating">Number of Car Rental Days</th>
       <td class="blue-alternating"><?php echo getNumberOfRentalDays(); ?></td>
     </tr>
     <tr>

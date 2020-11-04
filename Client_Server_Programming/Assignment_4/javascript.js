@@ -55,12 +55,6 @@ beforeSubmit = function() {
   var invalidNameMessage = 'Your name cannot be blank.';
   var invalidRentalDaysMessage = 'You must specify the number of days you plan on renting the car.';
 
-  // EASY TESTING ONLY
-  document.getElementById('customerName').value = 'devin hopkins';
-  document.getElementById('customerEmail').value = 'example@gmail.com';
-  document.getElementById('customerPhone').value = '1234567890';
-  document.getElementById('numberOfRentalDays').value = '2';
-
 
   if (!hasValidName()) {
     alert(invalidNameMessage);
