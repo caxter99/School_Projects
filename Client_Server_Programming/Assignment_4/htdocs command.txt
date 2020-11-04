@@ -1,3 +1,11 @@
 Command to get to htdocs quickly:
 
 cd ~/.bitnami/stackman/machines/xampp/volumes/root/htdocs/csp_assignment_4
+
+Command to view it once XAMPP is up and running (note that the IP address may change):
+
+http://192.168.64.2/csp_assignment_4/assignment_4.html
+
+Extra location based on IP address (if the IP address changes, copy this in after
+the domain name to find my project):
+/csp_assignment_4/assignment_4.html

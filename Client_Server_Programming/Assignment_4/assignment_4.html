@@ -1,9 +1,9 @@
 <!--
 Devin Hopkins
-October 27th, 2020
-Assignment 3
+November 4th, 2020
+Assignment 4
 Description: This project uses CSS, tables, and forms to create a car rental situation in which the user enters
-  information and then has it emailed to a chosen email address.
+  information and then displays it using PHP.
 -->
 
 <html>
@@ -18,7 +18,8 @@ Description: This project uses CSS, tables, and forms to create a car rental sit
 <body class="center">
   <h1 class="blue">Car Rental</h1>
 
-  <form class="inherit-formatting" method="post" enctype="text/plain" id="carRentalForm">
+  <!-- <form class="inherit-formatting" action="assignment_4.php" method="post" id="carRentalForm" name="carRentalForm"> -->
+  <form class="inherit-formatting" method="post" id="carRentalForm" name="carRentalForm">
     <table class="blue-alternating center">
       <thead>
         <tr>
@@ -39,7 +40,7 @@ Description: This project uses CSS, tables, and forms to create a car rental sit
           <td class="blue-alternating"><input type="tel" placeholder="123-456-7890" id="customerPhone" name="phoneNumber" /></td>
         </tr>
         <tr>
-          <th class="blue-alternating">Rental Number of Days</th>
+          <th class="blue-alternating">Number of Rental Days</th>
           <td class="blue-alternating"><input type="number" id="numberOfRentalDays" name="numberOfRentalDays" /></td>
         </tr>
         <tr>
@@ -54,6 +55,7 @@ Description: This project uses CSS, tables, and forms to create a car rental sit
           <th></th>
           <td class="blue-alternating">
             <button type="button" onclick="beforeSubmit();">Submit</button>
+            <!-- <button type="submit">Submit</button> -->
             <button type="reset">Reset</button>
           </td>
         </tr>
