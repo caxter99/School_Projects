@@ -1,5 +1,12 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.scene.control.Menu;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.MenuBar;
 
 public class CellSolutions extends Application
 {
@@ -11,6 +18,33 @@ public class CellSolutions extends Application
    
    public void start(Stage stage)
    {
+      Menu planMenu = new Menu("Text");
+      
+      RadioMenuItem planA = new RadioMenuItem("Plan A");
+      RadioMenuItem planB = new RadioMenuItem("Plan B");
+      RadioMenuItem planC = new RadioMenuItem("Plan C");
+      planA.setSelected(true);
+      
+      ToggleGroup planToggleGroup = new ToggleGroup();
+      planA.setToggleGroup(planToggleGroup);
+      planB.setToggleGroup(planToggleGroup);
+      planC.setToggleGroup(planToggleGroup);
+      
+      // set actions for each button and plan
+      
+      planMenu.getItems().add(planA);
+      planMenu.getItems().add(planB);
+      planMenu.getItems().add(planC);
+      
+      MenuBar mb = new MenuBar();
+      mb.getMenus().add(planMenu);
+      
+      VBox vb = new VBox(mb);
+      
+      Scene seePhoneBillScene = new Scene(vb, 500, 500);
+      
+      stage.setScene(seePhoneBillScene);
+      
       stage.show();
    }
 }
