@@ -11,6 +11,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+import javafx.scene.layout.VBox;
 
 public class CellSolutions extends Application
 {
@@ -28,6 +29,7 @@ public class CellSolutions extends Application
       // Stuff to Delete Later
       blah = 0;
       
+      
       // Plan Stuff
       RadioButton planA = new RadioButton("Plan A");
       RadioButton planB = new RadioButton("Plan B");
@@ -40,6 +42,10 @@ public class CellSolutions extends Application
       planA.setOnAction(event -> calculateTotalBill());
       planB.setOnAction(event -> calculateTotalBill());
       planC.setOnAction(event -> calculateTotalBill());
+      VBox planVBox = new VBox();
+      planVBox.getChildren().add(planA);
+      planVBox.getChildren().add(planB);
+      planVBox.getChildren().add(planC);
       
       // Model Stuff
       RadioButton model100 = new RadioButton("Model 100");
@@ -53,32 +59,39 @@ public class CellSolutions extends Application
       model100.setOnAction(event -> calculateTotalBill());
       model110.setOnAction(event -> calculateTotalBill());
       model200.setOnAction(event -> calculateTotalBill());
+      VBox modelVBox = new VBox();
+      modelVBox.getChildren().add(model100);
+      modelVBox.getChildren().add(model110);
+      modelVBox.getChildren().add(model200);
       
       // Extra Options Stuff
-      CheckBox insurance = new CheckBox("Model 100");
-      CheckBox hotspot = new CheckBox("Model 110");
+      CheckBox insurance = new CheckBox("Phone Replacement Insurance");
+      CheckBox hotspot = new CheckBox("WiFi HotSpot Capability");
       insurance.setOnAction(event -> calculateTotalBill());
       hotspot.setOnAction(event -> calculateTotalBill());
+      VBox extraOptionsVBox = new VBox();
+      extraOptionsVBox.getChildren().add(insurance);
+      extraOptionsVBox.getChildren().add(hotspot);
       
       // Output Label Stuff
       outputLabel = new Label("Output Label 0");
       
       // Tile Pane Stuff
-      TilePane r = new TilePane();
-      r.getChildren().add(planA);
-      r.getChildren().add(planB);
-      r.getChildren().add(planC);
-      r.getChildren().add(model100);
-      r.getChildren().add(model110);
-      r.getChildren().add(model200);
-      r.getChildren().add(insurance);
-      r.getChildren().add(hotspot);
-      r.getChildren().add(outputLabel);
+      TilePane tile = new TilePane();
+      tile.getChildren().add(planVBox);
+      tile.getChildren().add(modelVBox);
+      tile.getChildren().add(extraOptionsVBox);
+      tile.getChildren().add(outputLabel);
       
       // Scene/Stage Stuff
-      Scene seePhoneBillScene = new Scene(r, 500, 500);
+      Scene seePhoneBillScene = new Scene(tile, 500, 500);
       stage.setScene(seePhoneBillScene);
       stage.show();
+   }
+   
+   private void buildDataPlans()
+   {
+      // to do
    }
    
    private void calculateTotalBill()
