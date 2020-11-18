@@ -1,31 +1,30 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
-import javafx.scene.control.Menu;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.Scene;
 import javafx.scene.layout.TilePane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 public class CellSolutions extends Application
 {
-
-   Label monthlyCostLabel;
-   Label initialCostLabel;
-   Label totalCostLabel;
-   Cart cart;
    final int PLAN_A_NUM = 1;
    final int PLAN_B_NUM = 2;
    final int PLAN_C_NUM = 3;
    final int MODEL_100_NUM = 1;
    final int MODEL_110_NUM = 2;
    final int MODEL_200_NUM = 3;
+   final int APPLICATION_WIDTH = 630;
+   final int APPLICATION_HEIGHT = 155;
+   Cart cart;
+   Label monthlyCostLabel;
+   Label initialCostLabel;
+   Label totalCostLabel;
    CheckBox insuranceCheckBox;
    CheckBox hotspotCheckBox;
    
@@ -40,7 +39,7 @@ public class CellSolutions extends Application
       TilePane tile = buildTilePane();
       calculateTotalBill();
       
-      Scene seeBillScene = new Scene(tile, 500, 500);
+      Scene seeBillScene = new Scene(tile, APPLICATION_WIDTH, APPLICATION_HEIGHT);
       stage.setScene(seeBillScene);
       
       stage.show();
@@ -55,69 +54,95 @@ public class CellSolutions extends Application
       monthlyCostLabel = new Label("");
       totalCostLabel = new Label("");
       
+      HBox selectionHBox = buildSelectionHBox(planVBox, modelVBox, extraOptionsVBox);
+      VBox costLabelsVBox = buildCostLabelsVBox(initialCostLabel, monthlyCostLabel, totalCostLabel);
+      
       TilePane tilePane = new TilePane();
-      tilePane.getChildren().add(planVBox);
-      tilePane.getChildren().add(modelVBox);
-      tilePane.getChildren().add(extraOptionsVBox);
-      tilePane.getChildren().add(initialCostLabel);
-      tilePane.getChildren().add(monthlyCostLabel);
-      tilePane.getChildren().add(totalCostLabel);
+      tilePane.getChildren().add(selectionHBox);
+      tilePane.getChildren().add(costLabelsVBox);
       
       return tilePane;
    }
    
+   private HBox buildSelectionHBox(VBox planVBox, VBox modelVBox, VBox optionsVBox)
+   {
+      HBox selectionHBox = new HBox();
+      selectionHBox.setPadding(new Insets(15, 5, 15, 5));
+      selectionHBox.setSpacing(25);
+      selectionHBox.setAlignment(Pos.CENTER_LEFT);
+      
+      selectionHBox.getChildren().add(planVBox);
+      selectionHBox.getChildren().add(modelVBox);
+      selectionHBox.getChildren().add(optionsVBox);
+      
+      return selectionHBox;
+   }
+   
+   private VBox buildCostLabelsVBox(Label initialCostLabel, Label monthlyCostLabel, Label totalCostLabel)
+   {
+      VBox costLabelsVBox = new VBox();
+      costLabelsVBox.setPadding(new Insets(15, 5, 15, 5));
+      costLabelsVBox.setAlignment(Pos.CENTER_LEFT);
+      
+      costLabelsVBox.getChildren().add(initialCostLabel);
+      costLabelsVBox.getChildren().add(monthlyCostLabel);
+      costLabelsVBox.getChildren().add(totalCostLabel);
+      
+      return costLabelsVBox;
+   }
+   
    private VBox buildPlansVBox()
    {
-      RadioButton planA = new RadioButton("Plan A");
-      RadioButton planB = new RadioButton("Plan B");
-      RadioButton planC = new RadioButton("Plan C");
-      planA.setSelected(true);
+      RadioButton planARadioButton = new RadioButton("8 GB for $45 per month");
+      RadioButton planBRadioButton = new RadioButton("16 GB for $65 per month");
+      RadioButton planCRadioButton = new RadioButton("20 GB for $99 per month");
+      planARadioButton.setSelected(true);
       
       ToggleGroup planToggleGroup = new ToggleGroup();
-      planA.setToggleGroup(planToggleGroup);
-      planB.setToggleGroup(planToggleGroup);
-      planC.setToggleGroup(planToggleGroup);
+      planARadioButton.setToggleGroup(planToggleGroup);
+      planBRadioButton.setToggleGroup(planToggleGroup);
+      planCRadioButton.setToggleGroup(planToggleGroup);
       
-      planA.setOnAction(event -> updatePlan(PLAN_A_NUM));
-      planB.setOnAction(event -> updatePlan(PLAN_B_NUM));
-      planC.setOnAction(event -> updatePlan(PLAN_C_NUM));
+      planARadioButton.setOnAction(event -> updatePlan(PLAN_A_NUM));
+      planBRadioButton.setOnAction(event -> updatePlan(PLAN_B_NUM));
+      planCRadioButton.setOnAction(event -> updatePlan(PLAN_C_NUM));
       
       VBox planVBox = new VBox();
-      planVBox.getChildren().add(planA);
-      planVBox.getChildren().add(planB);
-      planVBox.getChildren().add(planC);
+      planVBox.getChildren().add(planARadioButton);
+      planVBox.getChildren().add(planBRadioButton);
+      planVBox.getChildren().add(planCRadioButton);
       
       return planVBox;
    }
    
    private VBox buildModelsVBox()
    {
-      RadioButton model100 = new RadioButton("Model 100");
-      RadioButton model110 = new RadioButton("Model 110");
-      RadioButton model200 = new RadioButton("Model 200");
-      model100.setSelected(true);
+      RadioButton model100RadioButton = new RadioButton("Model 100 for $299.95");
+      RadioButton model110RadioButton = new RadioButton("Model 110 for $399.95");
+      RadioButton model200RadioButton = new RadioButton("Model 200 for $499.95");
+      model100RadioButton.setSelected(true);
       
       ToggleGroup modelToggleGroup = new ToggleGroup();
-      model100.setToggleGroup(modelToggleGroup);
-      model110.setToggleGroup(modelToggleGroup);
-      model200.setToggleGroup(modelToggleGroup);
+      model100RadioButton.setToggleGroup(modelToggleGroup);
+      model110RadioButton.setToggleGroup(modelToggleGroup);
+      model200RadioButton.setToggleGroup(modelToggleGroup);
       
-      model100.setOnAction(event -> updatePhoneModel(MODEL_100_NUM));
-      model110.setOnAction(event -> updatePhoneModel(MODEL_110_NUM));
-      model200.setOnAction(event -> updatePhoneModel(MODEL_200_NUM));
+      model100RadioButton.setOnAction(event -> updatePhoneModel(MODEL_100_NUM));
+      model110RadioButton.setOnAction(event -> updatePhoneModel(MODEL_110_NUM));
+      model200RadioButton.setOnAction(event -> updatePhoneModel(MODEL_200_NUM));
       
       VBox modelVBox = new VBox();
-      modelVBox.getChildren().add(model100);
-      modelVBox.getChildren().add(model110);
-      modelVBox.getChildren().add(model200);
+      modelVBox.getChildren().add(model100RadioButton);
+      modelVBox.getChildren().add(model110RadioButton);
+      modelVBox.getChildren().add(model200RadioButton);
       
       return modelVBox;
    }
    
    private VBox buildExtraOptionsVBox()
    {
-      insuranceCheckBox = new CheckBox("Phone Replacement Insurance");
-      hotspotCheckBox = new CheckBox("WiFi HotSpot Capability");
+      insuranceCheckBox = new CheckBox("Phone Replacement Insurance for $5 per month");
+      hotspotCheckBox = new CheckBox("WiFi HotSpot Capability for $10 per month");
       
       insuranceCheckBox.setOnAction(event -> updateHasInsurance(insuranceCheckBox.isSelected()));
       hotspotCheckBox.setOnAction(event -> setHasHotspot(hotspotCheckBox.isSelected()));
@@ -159,8 +184,13 @@ public class CellSolutions extends Application
    
    private void calculateTotalBill()
    {
-      initialCostLabel.setText("Initial Cost: " + cart.getInitialCost());
-      monthlyCostLabel.setText("Monthly Cost: " + cart.getMonthlyCost());
-      totalCostLabel.setText("Total Cost (Monthly + Initial): " + cart.getTotalCost());
+      initialCostLabel.setText("Initial Cost: $" + convertAndFormatDoubleToString(cart.getInitialCost()));
+      monthlyCostLabel.setText("Monthly Cost: $" + convertAndFormatDoubleToString(cart.getMonthlyCost()));
+      totalCostLabel.setText("Total Cost (Monthly + Initial): $" + convertAndFormatDoubleToString(cart.getTotalCost()));
+   }
+   
+   private String convertAndFormatDoubleToString(double num)
+   {
+      return String.format("%.2f", num);
    }
 }
