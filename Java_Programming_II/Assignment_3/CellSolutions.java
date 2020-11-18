@@ -26,6 +26,8 @@ public class CellSolutions extends Application
    final int MODEL_100_NUM = 1;
    final int MODEL_110_NUM = 2;
    final int MODEL_200_NUM = 3;
+   CheckBox insuranceCheckBox;
+   CheckBox hotspotCheckBox;
    
    public static void main(String[] args)
    {
@@ -114,15 +116,15 @@ public class CellSolutions extends Application
    
    private VBox buildExtraOptionsVBox()
    {
-      CheckBox insurance = new CheckBox("Phone Replacement Insurance");
-      CheckBox hotspot = new CheckBox("WiFi HotSpot Capability");
+      insuranceCheckBox = new CheckBox("Phone Replacement Insurance");
+      hotspotCheckBox = new CheckBox("WiFi HotSpot Capability");
       
-      insurance.setOnAction(event -> calculateTotalBill());
-      hotspot.setOnAction(event -> calculateTotalBill());
+      insuranceCheckBox.setOnAction(event -> updateHasInsurance(insuranceCheckBox.isSelected()));
+      hotspotCheckBox.setOnAction(event -> setHasHotspot(hotspotCheckBox.isSelected()));
       
       VBox extraOptionsVBox = new VBox();
-      extraOptionsVBox.getChildren().add(insurance);
-      extraOptionsVBox.getChildren().add(hotspot);
+      extraOptionsVBox.getChildren().add(insuranceCheckBox);
+      extraOptionsVBox.getChildren().add(hotspotCheckBox);
       
       return extraOptionsVBox;
    }
