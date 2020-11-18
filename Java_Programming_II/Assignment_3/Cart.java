@@ -31,9 +31,29 @@ public class Cart
       options.setHasInsurance(insurance);
    }
    
-   public double getInitialCost()
+   public double getPhoneCost()
+   {
+      return currentPhoneModel.getPhoneCost();
+   }
+   
+   public double getPhoneTax()
+   {
+      return currentPhoneModel.getTax();
+   }
+   
+   public double getTotalPhoneCost()
    {
       return currentPhoneModel.getCost();
+   }
+   
+   public double getPlanCost()
+   {
+      return currentPlan.getCost();
+   }
+   
+   public double getExtraOptionsCost()
+   {
+      return options.getCost();
    }
    
    public double getMonthlyCost()
@@ -43,6 +63,6 @@ public class Cart
    
    public double getTotalCost()
    {
-      return getInitialCost() + getMonthlyCost();
+      return getTotalPhoneCost() + getMonthlyCost();
    }
 }

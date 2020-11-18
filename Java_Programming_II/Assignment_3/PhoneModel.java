@@ -28,4 +28,14 @@ public class PhoneModel
    {
       return cost + (cost * TAX_RATE);
    }
+   
+   public double getPhoneCost()
+   {
+      return cost;
+   }
+   
+   public double getTax()
+   {
+      return cost * TAX_RATE;
+   }
 }

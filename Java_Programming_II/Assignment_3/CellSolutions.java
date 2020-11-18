@@ -20,10 +20,15 @@ public class CellSolutions extends Application
    final int MODEL_110_NUM = 2;
    final int MODEL_200_NUM = 3;
    final int APPLICATION_WIDTH = 630;
-   final int APPLICATION_HEIGHT = 155;
+   final int APPLICATION_HEIGHT = 285;
+   final String TITLE = "Cell Solutions";
    Cart cart;
+   Label phoneSubTotalLabel;
+   Label phoneTaxLabel;
+   Label phoneCostLabel;
+   Label optionsCostLabel;
+   Label planCostLabel;
    Label monthlyCostLabel;
-   Label initialCostLabel;
    Label totalCostLabel;
    CheckBox insuranceCheckBox;
    CheckBox hotspotCheckBox;
@@ -41,6 +46,7 @@ public class CellSolutions extends Application
       
       Scene seeBillScene = new Scene(tile, APPLICATION_WIDTH, APPLICATION_HEIGHT);
       stage.setScene(seeBillScene);
+      stage.setTitle(TITLE);
       
       stage.show();
    }
@@ -50,12 +56,9 @@ public class CellSolutions extends Application
       VBox planVBox = buildPlansVBox();
       VBox modelVBox = buildModelsVBox();
       VBox extraOptionsVBox = buildExtraOptionsVBox();
-      initialCostLabel = new Label("");
-      monthlyCostLabel = new Label("");
-      totalCostLabel = new Label("");
       
       HBox selectionHBox = buildSelectionHBox(planVBox, modelVBox, extraOptionsVBox);
-      VBox costLabelsVBox = buildCostLabelsVBox(initialCostLabel, monthlyCostLabel, totalCostLabel);
+      VBox costLabelsVBox = buildCostLabelsVBox();
       
       TilePane tilePane = new TilePane();
       tilePane.getChildren().add(selectionHBox);
@@ -78,13 +81,25 @@ public class CellSolutions extends Application
       return selectionHBox;
    }
    
-   private VBox buildCostLabelsVBox(Label initialCostLabel, Label monthlyCostLabel, Label totalCostLabel)
+   private VBox buildCostLabelsVBox()
    {
+      phoneSubTotalLabel = new Label("");
+      phoneTaxLabel = new Label("");
+      phoneCostLabel = new Label("");
+      optionsCostLabel = new Label("");
+      planCostLabel = new Label("");
+      monthlyCostLabel = new Label("");
+      totalCostLabel = new Label("");
+      
       VBox costLabelsVBox = new VBox();
       costLabelsVBox.setPadding(new Insets(15, 5, 15, 5));
       costLabelsVBox.setAlignment(Pos.CENTER_LEFT);
       
-      costLabelsVBox.getChildren().add(initialCostLabel);
+      costLabelsVBox.getChildren().add(phoneSubTotalLabel);
+      costLabelsVBox.getChildren().add(phoneTaxLabel);
+      costLabelsVBox.getChildren().add(phoneCostLabel);
+      costLabelsVBox.getChildren().add(optionsCostLabel);
+      costLabelsVBox.getChildren().add(planCostLabel);
       costLabelsVBox.getChildren().add(monthlyCostLabel);
       costLabelsVBox.getChildren().add(totalCostLabel);
       
@@ -96,6 +111,7 @@ public class CellSolutions extends Application
       RadioButton planARadioButton = new RadioButton("8 GB for $45 per month");
       RadioButton planBRadioButton = new RadioButton("16 GB for $65 per month");
       RadioButton planCRadioButton = new RadioButton("20 GB for $99 per month");
+      Label titleLabel = new Label("Select a Plan:");
       planARadioButton.setSelected(true);
       
       ToggleGroup planToggleGroup = new ToggleGroup();
@@ -108,6 +124,7 @@ public class CellSolutions extends Application
       planCRadioButton.setOnAction(event -> updatePlan(PLAN_C_NUM));
       
       VBox planVBox = new VBox();
+      planVBox.getChildren().add(titleLabel);
       planVBox.getChildren().add(planARadioButton);
       planVBox.getChildren().add(planBRadioButton);
       planVBox.getChildren().add(planCRadioButton);
@@ -120,6 +137,7 @@ public class CellSolutions extends Application
       RadioButton model100RadioButton = new RadioButton("Model 100 for $299.95");
       RadioButton model110RadioButton = new RadioButton("Model 110 for $399.95");
       RadioButton model200RadioButton = new RadioButton("Model 200 for $499.95");
+      Label titleLabel = new Label("Select a Phone Model:");
       model100RadioButton.setSelected(true);
       
       ToggleGroup modelToggleGroup = new ToggleGroup();
@@ -132,6 +150,7 @@ public class CellSolutions extends Application
       model200RadioButton.setOnAction(event -> updatePhoneModel(MODEL_200_NUM));
       
       VBox modelVBox = new VBox();
+      modelVBox.getChildren().add(titleLabel);
       modelVBox.getChildren().add(model100RadioButton);
       modelVBox.getChildren().add(model110RadioButton);
       modelVBox.getChildren().add(model200RadioButton);
@@ -143,11 +162,13 @@ public class CellSolutions extends Application
    {
       insuranceCheckBox = new CheckBox("Phone Replacement Insurance for $5 per month");
       hotspotCheckBox = new CheckBox("WiFi HotSpot Capability for $10 per month");
+      Label titleLabel = new Label("Select any Extras:");
       
       insuranceCheckBox.setOnAction(event -> updateHasInsurance(insuranceCheckBox.isSelected()));
       hotspotCheckBox.setOnAction(event -> setHasHotspot(hotspotCheckBox.isSelected()));
       
       VBox extraOptionsVBox = new VBox();
+      extraOptionsVBox.getChildren().add(titleLabel);
       extraOptionsVBox.getChildren().add(insuranceCheckBox);
       extraOptionsVBox.getChildren().add(hotspotCheckBox);
       
@@ -184,9 +205,13 @@ public class CellSolutions extends Application
    
    private void calculateTotalBill()
    {
-      initialCostLabel.setText("Initial Cost: $" + convertAndFormatDoubleToString(cart.getInitialCost()));
-      monthlyCostLabel.setText("Monthly Cost: $" + convertAndFormatDoubleToString(cart.getMonthlyCost()));
-      totalCostLabel.setText("Total Cost (Monthly + Initial): $" + convertAndFormatDoubleToString(cart.getTotalCost()));
+      phoneSubTotalLabel.setText("Phone Subtotal: $" + convertAndFormatDoubleToString(cart.getPhoneCost()));
+      phoneTaxLabel.setText("Phone Tax: $" + convertAndFormatDoubleToString(cart.getPhoneTax()));
+      phoneCostLabel.setText("Phone Total: $" + convertAndFormatDoubleToString(cart.getTotalPhoneCost()));
+      optionsCostLabel.setText("Extra Options (Monthly): $" + convertAndFormatDoubleToString(cart.getExtraOptionsCost()));
+      planCostLabel.setText("Plan Cost (Monthly): $" + convertAndFormatDoubleToString(cart.getPlanCost()));
+      monthlyCostLabel.setText("Total Monthly Cost: $" + convertAndFormatDoubleToString(cart.getMonthlyCost()));
+      totalCostLabel.setText("Total Cost (Total Monthly + Total Phone): $" + convertAndFormatDoubleToString(cart.getTotalCost()));
    }
    
    private String convertAndFormatDoubleToString(double num)
