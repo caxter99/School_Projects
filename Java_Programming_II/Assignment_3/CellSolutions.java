@@ -21,7 +21,7 @@ public class CellSolutions extends Application
    final int MODEL_110_NUM = 2;
    final int MODEL_200_NUM = 3;
    final int APPLICATION_WIDTH = 630;
-   final int APPLICATION_HEIGHT = 485;
+   final int APPLICATION_HEIGHT = 360;
    final String TITLE = "Cell Solutions";
    Cart cart;
    Label phoneSubTotalLabel;
@@ -78,7 +78,7 @@ public class CellSolutions extends Application
       VBox optionsVBox = buildExtraOptionsVBox();
       
       HBox selectionHBox = new HBox();
-      selectionHBox.setPadding(new Insets(15, 5, 15, 5));
+      selectionHBox.setPadding(new Insets(0, 5, 0, 5));
       selectionHBox.setSpacing(25);
       selectionHBox.setAlignment(Pos.CENTER_LEFT);
       
@@ -95,9 +95,7 @@ public class CellSolutions extends Application
       VBox costTextFieldsVBox = buildCostTextFieldsVBox();
       
       HBox costHBox = new HBox();
-      costHBox.setPadding(new Insets(15, 5, 15, 5));
-      costHBox.setSpacing(25);
-      costHBox.setAlignment(Pos.CENTER_LEFT);
+      costHBox.setAlignment(Pos.TOP_LEFT);
       
       costHBox.getChildren().add(costLabelsVBox);
       costHBox.getChildren().add(costTextFieldsVBox);
@@ -108,17 +106,18 @@ public class CellSolutions extends Application
    
    private VBox buildCostLabelsVBox()
    {
-      phoneSubTotalLabel = new Label("Phone Subtotal");
-      phoneTaxLabel = new Label("Phone Tax");
-      phoneCostLabel = new Label("Phone Total");
-      optionsCostLabel = new Label("Extra Options (Monthly)");
-      planCostLabel = new Label("Plan Cost (Monthly)");
-      monthlyCostLabel = new Label("Total Monthly Cost");
-      totalCostLabel = new Label("Total Cost (Total Monthly + Total Phone)");
+      phoneSubTotalLabel = new Label("Phone Subtotal:");
+      phoneTaxLabel = new Label("Phone Tax:");
+      phoneCostLabel = new Label("Phone Total:");
+      optionsCostLabel = new Label("Extra Options (Monthly):");
+      planCostLabel = new Label("Plan Cost (Monthly):");
+      monthlyCostLabel = new Label("Total Monthly Cost:");
+      totalCostLabel = new Label("Total Cost (Total Monthly + Total Phone):");
       
       VBox costLabelsVBox = new VBox();
-      costLabelsVBox.setPadding(new Insets(15, 5, 15, 5));
-      costLabelsVBox.setAlignment(Pos.CENTER_LEFT);
+      costLabelsVBox.setPadding(new Insets(0, 5, 0, 0));
+      costLabelsVBox.setSpacing(9);
+      costLabelsVBox.setAlignment(Pos.TOP_RIGHT);
       
       costLabelsVBox.getChildren().add(phoneSubTotalLabel);
       costLabelsVBox.getChildren().add(phoneTaxLabel);
@@ -150,8 +149,7 @@ public class CellSolutions extends Application
       totalCostTextField.setEditable(false);
       
       VBox costTextFieldsVBox = new VBox();
-      costTextFieldsVBox.setPadding(new Insets(15, 5, 15, 5));
-      costTextFieldsVBox.setAlignment(Pos.CENTER_LEFT);
+      costTextFieldsVBox.setAlignment(Pos.TOP_LEFT);
       
       costTextFieldsVBox.getChildren().add(phoneSubTotalTextField);
       costTextFieldsVBox.getChildren().add(phoneTaxTextField);
