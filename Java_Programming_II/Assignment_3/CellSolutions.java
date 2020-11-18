@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
 
 public class CellSolutions extends Application
 {
@@ -20,7 +21,7 @@ public class CellSolutions extends Application
    final int MODEL_110_NUM = 2;
    final int MODEL_200_NUM = 3;
    final int APPLICATION_WIDTH = 630;
-   final int APPLICATION_HEIGHT = 285;
+   final int APPLICATION_HEIGHT = 485;
    final String TITLE = "Cell Solutions";
    Cart cart;
    Label phoneSubTotalLabel;
@@ -30,6 +31,13 @@ public class CellSolutions extends Application
    Label planCostLabel;
    Label monthlyCostLabel;
    Label totalCostLabel;
+   TextField phoneSubTotalTextField;
+   TextField phoneTaxTextField;
+   TextField phoneCostTextField;
+   TextField optionsCostTextField;
+   TextField planCostTextField;
+   TextField monthlyCostTextField;
+   TextField totalCostTextField;
    CheckBox insuranceCheckBox;
    CheckBox hotspotCheckBox;
    
@@ -53,22 +61,22 @@ public class CellSolutions extends Application
    
    private TilePane buildTilePane()
    {
-      VBox planVBox = buildPlansVBox();
-      VBox modelVBox = buildModelsVBox();
-      VBox extraOptionsVBox = buildExtraOptionsVBox();
-      
-      HBox selectionHBox = buildSelectionHBox(planVBox, modelVBox, extraOptionsVBox);
-      VBox costLabelsVBox = buildCostLabelsVBox();
+      HBox selectionHBox = buildSelectionHBox();
+      HBox costHBox = buildCostHBox();
       
       TilePane tilePane = new TilePane();
       tilePane.getChildren().add(selectionHBox);
-      tilePane.getChildren().add(costLabelsVBox);
+      tilePane.getChildren().add(costHBox);
       
       return tilePane;
    }
    
-   private HBox buildSelectionHBox(VBox planVBox, VBox modelVBox, VBox optionsVBox)
+   private HBox buildSelectionHBox()
    {
+      VBox planVBox = buildPlansVBox();
+      VBox modelVBox = buildModelsVBox();
+      VBox optionsVBox = buildExtraOptionsVBox();
+      
       HBox selectionHBox = new HBox();
       selectionHBox.setPadding(new Insets(15, 5, 15, 5));
       selectionHBox.setSpacing(25);
@@ -81,15 +89,32 @@ public class CellSolutions extends Application
       return selectionHBox;
    }
    
+   private HBox buildCostHBox()
+   {
+      VBox costLabelsVBox = buildCostLabelsVBox();
+      VBox costTextFieldsVBox = buildCostTextFieldsVBox();
+      
+      HBox costHBox = new HBox();
+      costHBox.setPadding(new Insets(15, 5, 15, 5));
+      costHBox.setSpacing(25);
+      costHBox.setAlignment(Pos.CENTER_LEFT);
+      
+      costHBox.getChildren().add(costLabelsVBox);
+      costHBox.getChildren().add(costTextFieldsVBox);
+      
+      return costHBox;
+      
+   }
+   
    private VBox buildCostLabelsVBox()
    {
-      phoneSubTotalLabel = new Label("");
-      phoneTaxLabel = new Label("");
-      phoneCostLabel = new Label("");
-      optionsCostLabel = new Label("");
-      planCostLabel = new Label("");
-      monthlyCostLabel = new Label("");
-      totalCostLabel = new Label("");
+      phoneSubTotalLabel = new Label("Phone Subtotal");
+      phoneTaxLabel = new Label("Phone Tax");
+      phoneCostLabel = new Label("Phone Total");
+      optionsCostLabel = new Label("Extra Options (Monthly)");
+      planCostLabel = new Label("Plan Cost (Monthly)");
+      monthlyCostLabel = new Label("Total Monthly Cost");
+      totalCostLabel = new Label("Total Cost (Total Monthly + Total Phone)");
       
       VBox costLabelsVBox = new VBox();
       costLabelsVBox.setPadding(new Insets(15, 5, 15, 5));
@@ -104,6 +129,39 @@ public class CellSolutions extends Application
       costLabelsVBox.getChildren().add(totalCostLabel);
       
       return costLabelsVBox;
+   }
+   
+   private VBox buildCostTextFieldsVBox()
+   {
+      phoneSubTotalTextField = new TextField("");
+      phoneTaxTextField = new TextField("");
+      phoneCostTextField = new TextField("");
+      optionsCostTextField = new TextField("");
+      planCostTextField = new TextField("");
+      monthlyCostTextField = new TextField("");
+      totalCostTextField = new TextField("");
+      
+      phoneSubTotalTextField.setEditable(false);
+      phoneTaxTextField.setEditable(false);
+      phoneCostTextField.setEditable(false);
+      optionsCostTextField.setEditable(false);
+      planCostTextField.setEditable(false);
+      monthlyCostTextField.setEditable(false);
+      totalCostTextField.setEditable(false);
+      
+      VBox costTextFieldsVBox = new VBox();
+      costTextFieldsVBox.setPadding(new Insets(15, 5, 15, 5));
+      costTextFieldsVBox.setAlignment(Pos.CENTER_LEFT);
+      
+      costTextFieldsVBox.getChildren().add(phoneSubTotalTextField);
+      costTextFieldsVBox.getChildren().add(phoneTaxTextField);
+      costTextFieldsVBox.getChildren().add(phoneCostTextField);
+      costTextFieldsVBox.getChildren().add(optionsCostTextField);
+      costTextFieldsVBox.getChildren().add(planCostTextField);
+      costTextFieldsVBox.getChildren().add(monthlyCostTextField);
+      costTextFieldsVBox.getChildren().add(totalCostTextField);
+      
+      return costTextFieldsVBox;
    }
    
    private VBox buildPlansVBox()
@@ -205,13 +263,13 @@ public class CellSolutions extends Application
    
    private void calculateTotalBill()
    {
-      phoneSubTotalLabel.setText("Phone Subtotal: $" + convertAndFormatDoubleToString(cart.getPhoneCost()));
-      phoneTaxLabel.setText("Phone Tax: $" + convertAndFormatDoubleToString(cart.getPhoneTax()));
-      phoneCostLabel.setText("Phone Total: $" + convertAndFormatDoubleToString(cart.getTotalPhoneCost()));
-      optionsCostLabel.setText("Extra Options (Monthly): $" + convertAndFormatDoubleToString(cart.getExtraOptionsCost()));
-      planCostLabel.setText("Plan Cost (Monthly): $" + convertAndFormatDoubleToString(cart.getPlanCost()));
-      monthlyCostLabel.setText("Total Monthly Cost: $" + convertAndFormatDoubleToString(cart.getMonthlyCost()));
-      totalCostLabel.setText("Total Cost (Total Monthly + Total Phone): $" + convertAndFormatDoubleToString(cart.getTotalCost()));
+      phoneSubTotalTextField.setText("$" + convertAndFormatDoubleToString(cart.getPhoneCost()));
+      phoneTaxTextField.setText("$" + convertAndFormatDoubleToString(cart.getPhoneTax()));
+      phoneCostTextField.setText("$" + convertAndFormatDoubleToString(cart.getTotalPhoneCost()));
+      optionsCostTextField.setText("$" + convertAndFormatDoubleToString(cart.getExtraOptionsCost()));
+      planCostTextField.setText("$" + convertAndFormatDoubleToString(cart.getPlanCost()));
+      monthlyCostTextField.setText("$" + convertAndFormatDoubleToString(cart.getMonthlyCost()));
+      totalCostTextField.setText("$" + convertAndFormatDoubleToString(cart.getTotalCost()));
    }
    
    private String convertAndFormatDoubleToString(double num)
