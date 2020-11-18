@@ -16,8 +16,16 @@ import javafx.scene.layout.VBox;
 public class CellSolutions extends Application
 {
 
-   Label outputLabel;
-   int blah;
+   Label monthlyCostLabel;
+   Label initialCostLabel;
+   Label totalCostLabel;
+   Cart cart;
+   final int PLAN_A_NUM = 1;
+   final int PLAN_B_NUM = 2;
+   final int PLAN_C_NUM = 3;
+   final int MODEL_100_NUM = 1;
+   final int MODEL_110_NUM = 2;
+   final int MODEL_200_NUM = 3;
    
    public static void main(String[] args)
    {
@@ -26,77 +34,131 @@ public class CellSolutions extends Application
    
    public void start(Stage stage)
    {
-      // Stuff to Delete Later
-      blah = 0;
+      cart = new Cart();
+      TilePane tile = buildTilePane();
+      calculateTotalBill();
       
+      Scene seeBillScene = new Scene(tile, 500, 500);
+      stage.setScene(seeBillScene);
       
-      // Plan Stuff
+      stage.show();
+   }
+   
+   private TilePane buildTilePane()
+   {
+      VBox planVBox = buildPlansVBox();
+      VBox modelVBox = buildModelsVBox();
+      VBox extraOptionsVBox = buildExtraOptionsVBox();
+      initialCostLabel = new Label("");
+      monthlyCostLabel = new Label("");
+      totalCostLabel = new Label("");
+      
+      TilePane tilePane = new TilePane();
+      tilePane.getChildren().add(planVBox);
+      tilePane.getChildren().add(modelVBox);
+      tilePane.getChildren().add(extraOptionsVBox);
+      tilePane.getChildren().add(initialCostLabel);
+      tilePane.getChildren().add(monthlyCostLabel);
+      tilePane.getChildren().add(totalCostLabel);
+      
+      return tilePane;
+   }
+   
+   private VBox buildPlansVBox()
+   {
       RadioButton planA = new RadioButton("Plan A");
       RadioButton planB = new RadioButton("Plan B");
       RadioButton planC = new RadioButton("Plan C");
       planA.setSelected(true);
+      
       ToggleGroup planToggleGroup = new ToggleGroup();
       planA.setToggleGroup(planToggleGroup);
       planB.setToggleGroup(planToggleGroup);
       planC.setToggleGroup(planToggleGroup);
-      planA.setOnAction(event -> calculateTotalBill());
-      planB.setOnAction(event -> calculateTotalBill());
-      planC.setOnAction(event -> calculateTotalBill());
+      
+      planA.setOnAction(event -> updatePlan(PLAN_A_NUM));
+      planB.setOnAction(event -> updatePlan(PLAN_B_NUM));
+      planC.setOnAction(event -> updatePlan(PLAN_C_NUM));
+      
       VBox planVBox = new VBox();
       planVBox.getChildren().add(planA);
       planVBox.getChildren().add(planB);
       planVBox.getChildren().add(planC);
       
-      // Model Stuff
+      return planVBox;
+   }
+   
+   private VBox buildModelsVBox()
+   {
       RadioButton model100 = new RadioButton("Model 100");
       RadioButton model110 = new RadioButton("Model 110");
       RadioButton model200 = new RadioButton("Model 200");
       model100.setSelected(true);
+      
       ToggleGroup modelToggleGroup = new ToggleGroup();
       model100.setToggleGroup(modelToggleGroup);
       model110.setToggleGroup(modelToggleGroup);
       model200.setToggleGroup(modelToggleGroup);
-      model100.setOnAction(event -> calculateTotalBill());
-      model110.setOnAction(event -> calculateTotalBill());
-      model200.setOnAction(event -> calculateTotalBill());
+      
+      model100.setOnAction(event -> updatePhoneModel(MODEL_100_NUM));
+      model110.setOnAction(event -> updatePhoneModel(MODEL_110_NUM));
+      model200.setOnAction(event -> updatePhoneModel(MODEL_200_NUM));
+      
       VBox modelVBox = new VBox();
       modelVBox.getChildren().add(model100);
       modelVBox.getChildren().add(model110);
       modelVBox.getChildren().add(model200);
       
-      // Extra Options Stuff
+      return modelVBox;
+   }
+   
+   private VBox buildExtraOptionsVBox()
+   {
       CheckBox insurance = new CheckBox("Phone Replacement Insurance");
       CheckBox hotspot = new CheckBox("WiFi HotSpot Capability");
+      
       insurance.setOnAction(event -> calculateTotalBill());
       hotspot.setOnAction(event -> calculateTotalBill());
+      
       VBox extraOptionsVBox = new VBox();
       extraOptionsVBox.getChildren().add(insurance);
       extraOptionsVBox.getChildren().add(hotspot);
       
-      // Output Label Stuff
-      outputLabel = new Label("Output Label 0");
-      
-      // Tile Pane Stuff
-      TilePane tile = new TilePane();
-      tile.getChildren().add(planVBox);
-      tile.getChildren().add(modelVBox);
-      tile.getChildren().add(extraOptionsVBox);
-      tile.getChildren().add(outputLabel);
-      
-      // Scene/Stage Stuff
-      Scene seePhoneBillScene = new Scene(tile, 500, 500);
-      stage.setScene(seePhoneBillScene);
-      stage.show();
+      return extraOptionsVBox;
    }
    
-   private void buildDataPlans()
+   private void updatePlan(int planNum)
    {
-      // to do
+      cart.setPlan(planNum);
+      
+      calculateTotalBill();
+   }
+   
+   private void updatePhoneModel(int phoneModelNum)
+   {
+      cart.setPhoneModel(phoneModelNum);
+      
+      calculateTotalBill();
+   }
+   
+   private void updateHasInsurance(boolean insurance)
+   {
+      cart.setHasInsurance(insurance);
+      
+      calculateTotalBill();
+   }
+   
+   private void setHasHotspot(boolean hotspot)
+   {
+      cart.setHasHotspot(hotspot);
+      
+      calculateTotalBill();
    }
    
    private void calculateTotalBill()
    {
-      blah = blah + 1;
-      outputLabel.setText("Output Label " + blah);
+      initialCostLabel.setText("Initial Cost: " + cart.getInitialCost());
+      monthlyCostLabel.setText("Monthly Cost: " + cart.getMonthlyCost());
+      totalCostLabel.setText("Total Cost (Monthly + Initial): " + cart.getTotalCost());
    }
 }
